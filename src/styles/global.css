@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+:root {
+	--color-background: #121212;
+	--color-blue: #78a0ed;
+	--color-yellow: #ffe800;
+	--color-pale-pink: #f9dfdc;
+	--color-coral: #ff553e;
+	--color-royal-blue: #0b4fd3;
+	--color-salmon: #f47e62;
+	--color-red-coral: #eb6269;
+	--color-green: #39955e;
+	--color-mauve: #a15d7d;
+	--color-lime: #b4c173;
+	--color-tab: #e9dca5;
+	--color-card-shadow: #566565;
+}
