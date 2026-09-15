@@ -20,13 +20,14 @@ const navLinks = [
 	{ href: '/#accueil', label: 'Accueil' },
 	{ href: '/fonctionnalites', label: 'Fonctionnalités' },
 	{ href: '/a-propos', label: 'À propos' },
+	{ href: '/contact', label: 'Contact' },
 ];
 
 const LINK_BASE_DELAY = 100;
 const LINK_DELAY_STEP = 50;
 ---
 
-<header data-menu-open="false" class={`sticky top-0 z-50 ${headerBgClass}`}>
+<header data-menu-open="false" class:list={[`sticky top-0 z-50 ${headerBgClass}`, { 'landing-header': isHome }]}>
 	<div
 		id="topbar"
 		class={`relative z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-colors duration-300 md:px-10 ${headerBgClass}`}
@@ -96,7 +97,7 @@ const LINK_DELAY_STEP = 50;
 						<a
 							href={link.href}
 							data-mobile-link
-							class="group inline-flex translate-y-full items-center gap-3 text-3xl font-extrabold text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
+							class="group inline-flex translate-y-full items-center gap-3 text-3xl font-normal text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
 							style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
 						>
 							{link.label}
@@ -112,7 +113,7 @@ const LINK_DELAY_STEP = 50;
 				<a
 					href="/#telecharger"
 					data-mobile-link
-					class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-bold text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+					class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
 					style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
 				>
 					Essayer gratuitement
@@ -247,6 +248,20 @@ const LINK_DELAY_STEP = 50;
 </script>
 
 <style>
+	.landing-header { position: sticky; top: 0; background: #fcded6; }
+	.landing-header #topbar { max-width: none; height: 82px; padding: 0 clamp(24px, 3vw, 56px); gap: 24px; background: #fcded6; }
+	.landing-header #topbar > a:first-child { display: flex; align-items: center; }
+	.landing-header .logo-mask { display: block; width: 122px; height: 28px; background: #f26748; }
+	.landing-header nav { margin-left: auto; margin-right: clamp(0px, 3vw, 48px); gap: clamp(20px, 3vw, 44px); }
+	.landing-header nav a { font-size: 16px; font-weight: 400; color: black; white-space: nowrap; }
+	.landing-header nav[aria-label='Navigation principale'] a:last-child { display: none; }
+	.landing-header #topbar > a:last-of-type { flex-shrink: 0; padding: 13px 22px; background: #84a5f2; color: #f3e63e; font-size: 16px; white-space: nowrap; }
+	@media (max-width: 767px) {
+		.landing-header #topbar { height: 72px; padding: 0 24px; }
+		.landing-header .logo-mask { height: 26px; }
+		.landing-header #mobile-menu nav { margin: 0; gap: 4px; }
+		.landing-header #mobile-menu nav a { font-size: 30px; color: white; }
+	}
 	.logo-mask {
 		-webkit-mask-image: url('/images/zozzo-logo.svg');
 		mask-image: url('/images/zozzo-logo.svg');

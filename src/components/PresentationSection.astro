@@ -1,39 +1,26 @@
----
----
-
-<section id="a-propos" class="relative bg-[var(--color-pale-pink)] px-6 pt-16 pb-24 md:px-10 lg:pb-32">
-	<div class="mx-auto max-w-4xl text-center">
-		<p class="text-lg leading-relaxed text-neutral-900 sm:text-xl">
-			Découvrez Zozzo, l'application éducative pour apprendre la langue des signes aux enfants de
-			6 à 12 ans. Ludique, immersive et adaptée.
-		</p>
-		<p class="mt-4 text-lg leading-relaxed text-neutral-900 sm:text-xl">
-			Dans cette application, l'enfant entre dans la vie de Zozzo et la suit au fil de ses
-			journées, Zozzo à la maison, Zozzo à l'école ou encore Zozzo au zoo.
-		</p>
-		<p class="mt-4 text-lg leading-relaxed text-neutral-900 sm:text-xl">
-			Le seul souci c'est que Zozzo communique avec ses mains, son visage et ses émotions. Pour la
-			comprendre, il faut signer avec elle. L'enfant est obligé d'utiliser la langue des signes
-			pour communiquer avec Zozzo.
-		</p>
-	</div>
-
-	<div class="relative mx-auto mt-12 max-w-4xl">
-		<img
-			src="/images/tablet-section-2.avif"
-			alt="Interface de l'application Zozzo affichée sur un ordinateur 2 en 1, avec le dictionnaire de signes et le profil de l'utilisateur"
-			class="mx-auto -mb-24 w-full max-w-2xl md:-mb-32 lg:-mb-40"
-		/>
-	</div>
+<section id="a-propos" class="presentation-section">
+ <div class="presentation-copy">
+  <p>Découvrez Zozzo, l’application éducative pour apprendre la langue des signes aux enfants de 6 à 12 ans. Ludique, immersive et adaptée.</p>
+  <p>Dans cette application, l’enfant entre dans la vie de Zozzo et la suit au fil de ses journées, Zozzo à la maison, Zozzo à l’école ou encore Zozzo au zoo.</p>
+  <p>Le seul souci c’est que Zozzo communique avec ses mains, son visage et ses émotions. Pour la comprendre, il faut signer avec elle. L’enfant est obligé d’utiliser la langue des signes pour communiquer avec Zozzo.</p>
+ </div>
+ <img src="/images/tablet-section-2.avif" alt="L’application Zozzo sur une tablette : dictionnaire de signes et profil de l’enfant" width="2880" height="2250" loading="lazy" />
+ <a href="/fonctionnalites" id="fonctionnalites">Fonctionnalités <span aria-hidden="true">⟶</span></a>
 </section>
-
-<div class="relative bg-white px-6 pt-28 pb-16 text-center md:pt-36 lg:pt-44">
-	<a
-		href="/fonctionnalites"
-		id="fonctionnalites"
-		class="inline-flex items-center gap-3 rounded-full bg-[var(--color-coral)] px-8 py-3.5 text-lg font-bold text-white shadow-lg transition-transform duration-200 hover:scale-[1.02]"
-	>
-		Fonctionnalités
-		<span class="text-[var(--color-yellow)]" aria-hidden="true">→</span>
-	</a>
-</div>
+<style>
+.presentation-section { position: relative; height: 133.4vw; background: linear-gradient(to bottom, #fcded6 0 54.5%, white 54.5% 100%); }
+.presentation-copy { padding-top: 7.6vw; margin-left: 11.4%; width: 80%; font: 2.64vw / 1.16 Arial, sans-serif; color: #37332f; }
+p + p { margin-top: 3.1vw; }
+img { position: absolute; top: 41.3vw; left: 0; width: 100%; height: auto; }
+a { position: absolute; top: 108.4vw; left: 31.8%; display: flex; align-items: center; gap: 4.5vw; padding: 2.2vw 2vw 2.2vw 6.4vw; border-radius: 2.4vw; background: #f26748; color: #f3e63e; font-size: 3.1vw; }
+a span { font-size: 6.2vw; font-weight: 900; line-height: 1; }
+a:hover { background: #e95537; }
+@media (max-width: 640px) {
+.presentation-section { height: auto; padding: 45px 0 70px; background: linear-gradient(to bottom, #fcded6 0 73%, white 73% 100%); }
+.presentation-copy { width: auto; margin: 0 24px; padding: 0; font-size: 19px; line-height: 1.4; }
+p + p { margin-top: 24px; }
+img { position: relative; top: auto; margin: -10px 0 -35px; }
+a { position: relative; inset: auto; width: fit-content; margin: 0 auto; padding: 14px 24px; gap: 25px; border-radius: 18px; font-size: 21px; }
+a span { font-size: 42px; }
+}
+</style>

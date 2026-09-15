@@ -1,7 +1,9 @@
 ---
+interface Props { variant?: 'home' | 'default'; }
+const { variant = 'default' } = Astro.props;
 ---
 
-<footer class="bg-[var(--color-yellow)] px-6 py-12 md:px-10">
+<footer class:list={["bg-[var(--color-yellow)] px-6 py-12 md:px-10", { 'landing-footer': variant === 'home' }]}>
 	<div class="mx-auto max-w-6xl">
 		<nav class="flex flex-col gap-3 text-base font-semibold text-[var(--color-royal-blue)] sm:text-lg" aria-label="Liens du pied de page">
 			<a href="/fonctionnalites" class="w-fit transition-colors hover:text-white">Fonctionnalités</a>
@@ -11,12 +13,26 @@
 
 		<hr class="my-8 border-neutral-900/20" />
 
-		<nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-800 sm:text-base" aria-label="Mentions légales">
-			<a href="/conditions-generales" class="transition-colors hover:text-neutral-900/70">Conditions Générales</a>
-			<a href="/mentions-legales" class="transition-colors hover:text-neutral-900/70">Mentions légales</a>
-			<a href="/donnees-personnelles" class="transition-colors hover:text-neutral-900/70">Données personnelles</a>
-			<a href="/cookies" class="transition-colors hover:text-neutral-900/70">Gérer mes cookies</a>
-			<a href="/cookies" class="transition-colors hover:text-neutral-900/70">Politique cookies</a>
+		<nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[var(--color-royal-blue)] sm:text-base" aria-label="Mentions légales">
+			<a href="/conditions-generales" class="transition-colors hover:text-white">Conditions Générales</a>
+			<a href="/mentions-legales" class="transition-colors hover:text-white">Mentions légales</a>
+			<a href="/donnees-personnelles" class="transition-colors hover:text-white">Données personnelles</a>
+			<a href="/cookies" class="transition-colors hover:text-white">Gérer mes cookies</a>
+			<a href="/cookies" class="transition-colors hover:text-white">Politique cookies</a>
 		</nav>
 	</div>
 </footer>
+
+<style>
+	.landing-footer { background: #f3e63e; padding: 2.4vw 3.7vw 1.6vw; color: #718fbb; }
+	.landing-footer > div { max-width: none; }
+	.landing-footer nav:first-child { gap: 2.5vw; font-size: 1.8vw; font-weight: 400; color: #718fbb; }
+	.landing-footer hr { margin: 3.2vw 0 2vw; border-color: #718fbb80; }
+	.landing-footer nav:last-child { justify-content: space-around; gap: 1vw; font-size: 1.05vw; color: #718fbb; }
+	@media (max-width: 640px) {
+		.landing-footer { padding: 30px 24px; }
+		.landing-footer nav:first-child { gap: 18px; font-size: 17px; }
+		.landing-footer hr { margin: 24px 0; }
+		.landing-footer nav:last-child { justify-content: flex-start; gap: 14px 22px; font-size: 12px; }
+	}
+</style>

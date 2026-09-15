@@ -1,7 +1,7 @@
 ---
 ---
 
-<section id="telecharger" class="bg-white px-6 py-16 md:px-10">
+<section id="telecharger" class="hello-section bg-white px-6 py-16 md:px-10">
 	<div class="mx-auto flex max-w-3xl flex-col items-center">
 		<div class="w-full rounded-[2.5rem] bg-[var(--color-coral)] p-6 shadow-xl sm:p-10">
 			<div class="mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl bg-black/10">
@@ -26,6 +26,20 @@
 		</button>
 	</div>
 </section>
+
+<style>
+	.hello-section { padding: 8.4vw 0 3.4vw; }
+	.hello-section > div { max-width: none; }
+	.hello-section > div > div { width: 73.5%; height: 52.2vw; margin-left: 2.4%; padding: 9.8vw 0 6.9vw; border-radius: 4.3vw; background: #f26748; box-shadow: none; }
+	.hello-section > div > div > div { width: 35.6vw; max-width: none; border-radius: 0; transform: translateX(2.2vw); }
+	button { margin-top: 1.3vw; margin-left: 7%; padding: 2.2vw 2.4vw; border-radius: 0; background: #2447d5; color: #f3e63e; font-size: 2.15vw; font-weight: 400; }
+	@media (max-width: 640px) {
+		.hello-section { padding: 40px 20px; }
+		.hello-section > div > div { width: 100%; height: auto; margin: 0; padding: 35px; border-radius: 28px; }
+		.hello-section > div > div > div { width: 100%; transform: none; }
+		button { margin: 18px 0 0; padding: 16px 20px; font-size: 18px; }
+	}
+</style>
 
 <script>
 	const btn = document.getElementById('bonjour-replay');

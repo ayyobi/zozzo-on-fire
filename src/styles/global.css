@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
+:focus-visible { outline: 3px solid #072b7a; outline-offset: 5px; }
+section[id] { scroll-margin-top: 24px; }
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto !important; }
+}
+
 :root {
+	color-scheme: light;
 	--color-background: #121212;
 	--color-blue: #78a0ed;
 	--color-yellow: #ffe800;
