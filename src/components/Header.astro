@@ -27,7 +27,7 @@ const LINK_BASE_DELAY = 100;
 const LINK_DELAY_STEP = 50;
 ---
 
-<header data-menu-open="false" class:list={[`sticky top-0 z-50 ${headerBgClass}`, { 'landing-header': isHome }]}>
+<header data-menu-open="false" class:list={[`sticky top-0 z-50 header-layout ${headerBgClass}`, { 'landing-header': isHome }]}>
 	<div
 		id="topbar"
 		class={`relative z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-colors duration-300 md:px-10 ${headerBgClass}`}
@@ -248,17 +248,22 @@ const LINK_DELAY_STEP = 50;
 </script>
 
 <style>
-	.landing-header { position: sticky; top: 0; background: #fcded6; }
-	.landing-header #topbar { max-width: none; height: 82px; padding: 0 clamp(24px, 3vw, 56px); gap: 24px; background: #fcded6; }
-	.landing-header #topbar > a:first-child { display: flex; align-items: center; }
-	.landing-header .logo-mask { display: block; width: 122px; height: 28px; background: #f26748; }
-	.landing-header nav { margin-left: auto; margin-right: clamp(0px, 3vw, 48px); gap: clamp(20px, 3vw, 44px); }
-	.landing-header nav a { font-size: 16px; font-weight: 400; color: black; white-space: nowrap; }
-	.landing-header nav[aria-label='Navigation principale'] a:last-child { display: none; }
-	.landing-header #topbar > a:last-of-type { flex-shrink: 0; padding: 13px 22px; background: #84a5f2; color: #f3e63e; font-size: 16px; white-space: nowrap; }
+	.header-layout #topbar { max-width: none; height: 82px; padding: 0 clamp(24px, 3vw, 56px); gap: 24px; }
+	.header-layout #topbar > a:first-child { display: flex; align-items: center; }
+	.header-layout .logo-mask { display: block; width: 122px; height: 28px; }
+	.header-layout nav[aria-label='Navigation principale'] { margin-left: auto; margin-right: clamp(0px, 3vw, 48px); gap: clamp(20px, 3vw, 44px); }
+	.header-layout nav[aria-label='Navigation principale'] a { font-size: 16px; font-weight: 400; color: black; white-space: nowrap; }
+	.header-layout nav[aria-label='Navigation principale'] a:last-child { display: none; }
+	.header-layout #topbar > a:last-of-type { flex-shrink: 0; padding: 13px 22px; font-size: 16px; white-space: nowrap; }
 	@media (max-width: 767px) {
-		.landing-header #topbar { height: 72px; padding: 0 24px; }
-		.landing-header .logo-mask { height: 26px; }
+		.header-layout #topbar { height: 72px; padding: 0 24px; }
+		.header-layout .logo-mask { height: 26px; }
+	}
+
+	.landing-header #topbar { background: #fcded6; }
+	.landing-header .logo-mask { background: #f26748; }
+	.landing-header #topbar > a:last-of-type { background: #84a5f2; color: #f3e63e; }
+	@media (max-width: 767px) {
 		.landing-header #mobile-menu nav { margin: 0; gap: 4px; }
 		.landing-header #mobile-menu nav a { font-size: 30px; color: white; }
 	}
@@ -316,7 +321,7 @@ const LINK_DELAY_STEP = 50;
 	}
 
 @media (min-width: 1024px) {
-.landing-header nav a { font-size: 14px; }
-.landing-header #topbar > a:last-of-type { padding: 12px 20px; font-size: 14px; }
+.header-layout nav[aria-label='Navigation principale'] a { font-size: 14px; }
+.header-layout #topbar > a:last-of-type { padding: 12px 20px; font-size: 14px; }
 }
 </style>
