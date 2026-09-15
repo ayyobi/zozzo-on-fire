@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* Compact desktop typography shared by all Tailwind-based pages. */
+@media (min-width: 1024px) {
+	:root {
+		--text-lg: 1rem;
+		--text-xl: 1.125rem;
+		--text-2xl: 1.25rem;
+		--text-3xl: 1.5rem;
+		--text-4xl: 1.75rem;
+		--text-5xl: 2rem;
+		--text-6xl: 2.5rem;
+		--text-7xl: 2.75rem;
+		--text-8xl: 3rem;
+		--desktop-title: clamp(2rem, 2.5vw, 2.75rem);
+		--desktop-body: 1rem;
+		--desktop-button: 1rem;
+	}
+}
+
 :focus-visible { outline: 3px solid #072b7a; outline-offset: 5px; }
 section[id] { scroll-margin-top: 24px; }
 @media (prefers-reduced-motion: reduce) {

@@ -23,4 +23,11 @@ img { position: relative; top: auto; margin: -10px 0 -35px; }
 a { position: relative; inset: auto; width: fit-content; margin: 0 auto; padding: 14px 24px; gap: 25px; border-radius: 18px; font-size: 21px; }
 a span { font-size: 42px; }
 }
+
+@media (min-width: 1024px) {
+.presentation-copy { font-size: 18px; line-height: 1.5; max-width: 900px; }
+img { left: 7.5%; width: 85%; }
+a { top: 99vw; left: 50%; transform: translateX(-50%); width: max-content; padding: 12px 24px; gap: 24px; border-radius: 18px; font-size: var(--desktop-button); }
+a span { font-size: 32px; }
+}
 </style>

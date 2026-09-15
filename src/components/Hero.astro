@@ -23,10 +23,10 @@ img { object-position: left 20%; }
 .landing-hero { height: auto; min-height: 0; aspect-ratio: 2880 / 1870; }
 img { object-fit: cover; object-position: center bottom; }
 .hero-copy { padding-top: 8.9vw; padding-bottom: 3.3vw; margin-left: 34.65%; width: 51%; max-width: 800px; }
-h1 { font-size: clamp(44px, 3.4vw, 60px); }
-.tagline { margin-top: clamp(24px, 2.2vw, 32px); font-size: clamp(22px, 1.6vw, 28px); }
-.description { margin-top: 20px; font-size: clamp(18px, 1.2vw, 20px); }
-a { margin-top: 32px; padding: 18px 28px; font-size: clamp(22px, 1.4vw, 24px); }
+h1 { font-size: var(--desktop-title); }
+.tagline { margin-top: 24px; font-size: 20px; }
+.description { margin-top: 16px; font-size: var(--desktop-body); }
+a { margin-top: 24px; padding: 12px 22px; font-size: var(--desktop-button); }
 }
 @media (max-width: 767px) {
 .landing-hero { height: auto; aspect-ratio: auto; min-height: calc(100svh - 72px); }
