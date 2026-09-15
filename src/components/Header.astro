@@ -1,0 +1,302 @@
+---
+interface Props {
+	variant?: 'home' | 'default';
+}
+
+const { variant = 'home' } = Astro.props;
+const isHome = variant === 'home';
+
+const headerBgClass = isHome ? 'bg-[var(--color-pale-pink)]' : 'bg-[var(--color-coral)]';
+const logoColorClass = isHome ? 'bg-[var(--color-coral)]' : 'bg-[var(--color-pale-pink)]';
+const burgerLineClass = isHome ? 'bg-[var(--color-coral)]' : 'bg-[var(--color-pale-pink)]';
+const navLinkClass = isHome
+	? 'text-neutral-800 hover:text-[var(--color-coral)]'
+	: 'text-neutral-900 hover:text-[var(--color-pale-pink)]';
+const ctaClass = isHome
+	? 'bg-[var(--color-blue)] text-white'
+	: 'bg-[var(--color-yellow)] text-[var(--color-coral)]';
+
+const navLinks = [
+	{ href: '/#accueil', label: 'Accueil' },
+	{ href: '/fonctionnalites', label: 'Fonctionnalités' },
+	{ href: '/a-propos', label: 'À propos' },
+];
+
+const LINK_BASE_DELAY = 100;
+const LINK_DELAY_STEP = 50;
+---
+
+<header data-menu-open="false" class={`sticky top-0 z-50 ${headerBgClass}`}>
+	<div
+		id="topbar"
+		class={`relative z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-colors duration-300 md:px-10 ${headerBgClass}`}
+	>
+		<a href="/#accueil" class="shrink-0">
+			<span class="sr-only">ZOZZO</span>
+			<span
+				id="logo-mask"
+				aria-hidden="true"
+				class={`logo-mask inline-block aspect-[122/31] h-6 w-auto transition-colors duration-300 md:h-7 ${logoColorClass}`}
+			></span>
+		</a>
+
+		<nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+			{
+				navLinks.map((link) => (
+					<a href={link.href} class={`text-base font-medium transition-colors ${navLinkClass}`}>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+
+		<a
+			href="/#telecharger"
+			class={`hidden rounded-full px-5 py-2 text-base font-semibold transition-transform duration-200 hover:scale-[1.02] md:inline-block ${ctaClass}`}
+		>
+			Essayez gratuitement
+		</a>
+
+		<button
+			id="burger-btn"
+			type="button"
+			aria-label="Ouvrir le menu"
+			aria-expanded="false"
+			aria-controls="mobile-menu"
+			data-open="false"
+			class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
+		>
+			<span
+				data-line="top"
+				class={`block h-0.5 w-6 rounded-full transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
+			></span>
+			<span
+				data-line="mid"
+				class={`block h-0.5 w-6 rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
+			></span>
+			<span
+				data-line="bottom"
+				class={`block h-0.5 w-6 rounded-full transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
+			></span>
+		</button>
+	</div>
+
+	<div
+		id="mobile-menu"
+		data-open="false"
+		class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-coral)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
+	>
+		<nav
+			class="flex flex-1 flex-col items-start justify-center gap-1 px-8 pt-20 pb-12"
+			aria-label="Navigation mobile"
+		>
+			{
+				navLinks.map((link, i) => (
+					<div class="overflow-hidden py-2">
+						<a
+							href={link.href}
+							data-mobile-link
+							class="group inline-flex translate-y-full items-center gap-3 text-3xl font-extrabold text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
+							style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
+						>
+							{link.label}
+							<span class="-translate-x-2 text-2xl opacity-0 transition-all duration-[250ms] ease-out group-hover:translate-x-0 group-hover:opacity-100">
+								→
+							</span>
+						</a>
+					</div>
+				))
+			}
+
+			<div class="mt-6 overflow-hidden py-2">
+				<a
+					href="/#telecharger"
+					data-mobile-link
+					class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-bold text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+					style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
+				>
+					Essayer gratuitement
+				</a>
+			</div>
+		</nav>
+	</div>
+</header>
+
+<script>
+	const header = document.querySelector('header');
+	const burgerBtn = document.getElementById('burger-btn');
+	const panel = document.getElementById('mobile-menu');
+	const mobileLinks = panel ? Array.from(panel.querySelectorAll<HTMLAnchorElement>('[data-mobile-link]')) : [];
+
+	let isOpen = false;
+	let savedScrollY = 0;
+	let closeTimers: number[] = [];
+
+	function clearCloseTimers() {
+		closeTimers.forEach((id) => window.clearTimeout(id));
+		closeTimers = [];
+	}
+
+	function lockScroll() {
+		savedScrollY = window.scrollY;
+		const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+		document.body.style.position = 'fixed';
+		document.body.style.top = `-${savedScrollY}px`;
+		document.body.style.left = '0';
+		document.body.style.right = '0';
+		if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+	}
+
+	function unlockScroll() {
+		document.body.style.position = '';
+		document.body.style.top = '';
+		document.body.style.left = '';
+		document.body.style.right = '';
+		document.body.style.paddingRight = '';
+		window.scrollTo(0, savedScrollY);
+	}
+
+	function morphToX() {
+		burgerBtn?.setAttribute('data-open', 'true');
+		header?.setAttribute('data-menu-open', 'true');
+	}
+
+	function morphToBurger() {
+		burgerBtn?.setAttribute('data-open', 'false');
+		header?.setAttribute('data-menu-open', 'false');
+	}
+
+	function showLinks() {
+		mobileLinks.forEach((el) => {
+			el.classList.remove('translate-y-full', 'opacity-0');
+		});
+	}
+
+	function hideLinks() {
+		mobileLinks.forEach((el) => {
+			el.classList.add('translate-y-full', 'opacity-0');
+		});
+	}
+
+	function openMenu() {
+		if (isOpen || !panel) return;
+		clearCloseTimers();
+		isOpen = true;
+		burgerBtn?.setAttribute('aria-expanded', 'true');
+		burgerBtn?.setAttribute('aria-label', 'Fermer le menu');
+
+		morphToX();
+		lockScroll();
+
+		panel.classList.remove('hidden');
+		panel.classList.add('flex');
+		// Force layout so the closed state is committed before animating open.
+		void panel.offsetHeight;
+
+		requestAnimationFrame(() => {
+			panel.setAttribute('data-open', 'true');
+			showLinks();
+		});
+	}
+
+	function closeMenu(onDone?: () => void) {
+		if (!isOpen || !panel) return;
+		isOpen = false;
+		burgerBtn?.setAttribute('aria-expanded', 'false');
+		burgerBtn?.setAttribute('aria-label', 'Ouvrir le menu');
+
+		hideLinks();
+		morphToBurger();
+
+		const closePanel = window.setTimeout(() => {
+			panel.setAttribute('data-open', 'false');
+		}, 120);
+
+		const finish = window.setTimeout(() => {
+			panel.classList.remove('flex');
+			panel.classList.add('hidden');
+			unlockScroll();
+			onDone?.();
+		}, 520);
+
+		closeTimers.push(closePanel, finish);
+	}
+
+	burgerBtn?.addEventListener('click', () => (isOpen ? closeMenu() : openMenu()));
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && isOpen) closeMenu();
+	});
+
+	mobileLinks.forEach((link) => {
+		link.addEventListener('click', (e) => {
+			e.preventDefault();
+			const href = link.getAttribute('href') ?? '';
+			closeMenu(() => {
+				const isSamePageAnchor = href.startsWith('/#') && window.location.pathname === '/';
+				if (isSamePageAnchor) {
+					const hash = href.slice(1);
+					document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					history.pushState(null, '', hash);
+				} else {
+					window.location.href = href;
+				}
+			});
+		});
+	});
+</script>
+
+<style>
+	.logo-mask {
+		-webkit-mask-image: url('/images/zozzo-logo.svg');
+		mask-image: url('/images/zozzo-logo.svg');
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-size: contain;
+		mask-size: contain;
+		-webkit-mask-position: left center;
+		mask-position: left center;
+	}
+
+	/* Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px. */
+	#burger-btn[data-open='true'] [data-line='top'] {
+		transform: translateY(9px) rotate(45deg);
+	}
+	#burger-btn[data-open='true'] [data-line='bottom'] {
+		transform: translateY(-9px) rotate(-45deg);
+	}
+	#burger-btn[data-open='true'] [data-line='mid'] {
+		transform: scaleX(0);
+		opacity: 0;
+	}
+
+	/* When the full-screen panel is open, the topbar blends into it: no seam,
+	   and the logo/burger turn white so they stay visible on the coral panel. */
+	header[data-menu-open='true'] #topbar {
+		background-color: transparent;
+	}
+	header[data-menu-open='true'] .logo-mask {
+		background-color: white;
+	}
+	header[data-menu-open='true'] #burger-btn [data-line] {
+		background-color: white;
+	}
+
+	#mobile-menu {
+		opacity: 0;
+		transform: translateY(-24px) scaleY(0.97);
+	}
+	#mobile-menu[data-open='true'] {
+		opacity: 1;
+		transform: translateY(0) scaleY(1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#mobile-menu,
+		#mobile-menu *,
+		#burger-btn span {
+			transition-duration: 1ms !important;
+			transition-delay: 0ms !important;
+		}
+	}
+</style>

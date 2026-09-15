@@ -1,0 +1,217 @@
+---
+import MinimalLayout from "../layouts/MinimalLayout.astro";
+---
+
+<MinimalLayout
+  title="ZOZZO | Créer un compte"
+  description="Crée ton compte ZOZZO et apprends la langue des signes."
+  bodyClass="m-0 min-h-screen flex items-center justify-center px-4 py-12 bg-zozzo-beige"
+>
+  <div class="w-full max-w-xl">
+    <!-- Titre -->
+    <div class="mb-8 text-center">
+      <h1 class="font-title text-3xl text-zozzo-text">Créer un compte</h1>
+      <p class="mt-1 text-sm text-gray-500">Rejoins l'aventure ZOZZO !</p>
+    </div>
+
+    <!-- Carte formulaire -->
+    <div class="rounded-3xl bg-white p-8 shadow-lg">
+      <!-- Message d'erreur global -->
+      <div
+        id="error-msg"
+        class="mb-5 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600"
+      >
+      </div>
+
+      <form id="register-form" class="flex flex-col gap-5" novalidate>
+        <!-- Pseudo -->
+        <div>
+          <label
+            for="pseudo"
+            class="mb-1.5 block text-sm font-medium text-zozzo-text"
+          >
+            Pseudo
+          </label>
+          <input
+            type="text"
+            id="pseudo"
+            name="pseudo"
+            required
+            autocomplete="username"
+            placeholder="TonPseudo"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-zozzo-text outline-none transition focus:border-zozzo-orange"
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label
+            for="email"
+            class="mb-1.5 block text-sm font-medium text-zozzo-text"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            autocomplete="email"
+            placeholder="ton@email.com"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-zozzo-text outline-none transition focus:border-zozzo-orange"
+          />
+        </div>
+
+        <!-- Âge -->
+        <div>
+          <label
+            for="age"
+            class="mb-1.5 block text-sm font-medium text-zozzo-text"
+          >
+            Âge
+          </label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            required
+            min="4"
+            max="18"
+            placeholder="Ex : 8"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-zozzo-text outline-none transition focus:border-zozzo-orange"
+          />
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="border-t border-gray-100 pt-4">
+          <label
+            for="password"
+            class="mb-1.5 block text-sm font-medium text-zozzo-text"
+          >
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="new-password"
+            placeholder="Au moins 8 caractères"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-zozzo-text outline-none transition focus:border-zozzo-orange"
+          />
+        </div>
+
+        <!-- Confirmer le mot de passe -->
+        <div>
+          <label
+            for="passwordConfirm"
+            class="mb-1.5 block text-sm font-medium text-zozzo-text"
+          >
+            Confirmer le mot de passe
+          </label>
+          <input
+            type="password"
+            id="passwordConfirm"
+            name="passwordConfirm"
+            required
+            autocomplete="new-password"
+            placeholder="••••••••"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-zozzo-text outline-none transition focus:border-zozzo-orange"
+          />
+        </div>
+
+        <!-- Bouton inscription -->
+        <button
+          id="submit-btn"
+          type="submit"
+          class="mt-2 w-full rounded-full bg-zozzo-orange py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95"
+        >
+          Créer mon compte
+        </button>
+      </form>
+    </div>
+
+    <!-- Lien vers login -->
+    <p class="mt-6 text-center text-sm text-gray-500">
+      Déjà un compte ?{" "}
+      <a
+        href="/login"
+        class="font-semibold text-zozzo-bleu-fonce hover:underline"
+      >
+        Se connecter
+      </a>
+    </p>
+  </div>
+
+  <script>
+    // @ts-nocheck
+    import { register, isLoggedIn } from "../lib/backend.js";
+
+    if (isLoggedIn()) {
+      window.location.replace("/app");
+    }
+
+    const form = document.getElementById("register-form") as HTMLFormElement;
+    const errorMsg = document.getElementById("error-msg") as HTMLElement;
+    const submitBtn = document.getElementById(
+      "submit-btn",
+    ) as HTMLButtonElement;
+
+    function val(id: string) {
+      return (document.getElementById(id) as HTMLInputElement).value;
+    }
+
+    // ── Soumission du formulaire ──
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const pseudo = val("pseudo").trim();
+      const email = val("email").trim();
+      const age = val("age");
+      const password = val("password");
+      const passwordConfirm = val("passwordConfirm");
+
+      errorMsg.classList.add("hidden");
+      errorMsg.textContent = "";
+
+      if (password !== passwordConfirm) {
+        errorMsg.textContent = "Les mots de passe ne correspondent pas.";
+        errorMsg.classList.remove("hidden");
+        return;
+      }
+
+      if (!age || parseInt(age) < 4 || parseInt(age) > 18) {
+        errorMsg.textContent = "L'âge doit être compris entre 4 et 18 ans.";
+        errorMsg.classList.remove("hidden");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Création en cours…";
+
+      try {
+        await register({ email, password, passwordConfirm, pseudo, age });
+        window.location.replace("/app");
+      } catch (error) {
+        const err = error as any;
+        const data = err?.data?.data;
+
+        if (data?.email?.message) {
+          errorMsg.textContent = "Cet email est déjà utilisé.";
+        } else if (data?.pseudo?.message) {
+          errorMsg.textContent = "Ce pseudo est déjà pris.";
+        } else if (data?.password?.message) {
+          errorMsg.textContent =
+            "Le mot de passe doit faire au moins 8 caractères.";
+        } else {
+          errorMsg.textContent =
+            "Une erreur s'est produite. Vérifie les informations saisies.";
+        }
+
+        errorMsg.classList.remove("hidden");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Créer mon compte";
+      }
+    });
+  </script>
+</MinimalLayout>

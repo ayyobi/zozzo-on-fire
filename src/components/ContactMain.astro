@@ -1,0 +1,187 @@
+---
+const statusOptions = [
+	'Enseignant(e)',
+	'Parent',
+	'Élève',
+	'Étudiant(e)',
+	'Professionnel(le)',
+	'Association',
+	'Autre',
+];
+---
+
+<section class="relative overflow-hidden bg-white px-6 pt-14 pb-0 md:px-10 lg:pt-16">
+	<div class="relative z-10 mx-auto max-w-7xl">
+		<h1 class="text-5xl font-normal text-neutral-900 sm:text-6xl lg:text-7xl">Contact</h1>
+
+		<form
+			id="contact-form"
+			name="contact"
+			method="POST"
+			data-netlify="true"
+			netlify-honeypot="bot-field"
+			class="mt-14 sm:mt-16"
+		>
+			<input type="hidden" name="form-name" value="contact" />
+			<p class="hidden" aria-hidden="true">
+				<label>
+					Ne remplissez pas ce champ : <input name="bot-field" tabindex="-1" autocomplete="off" />
+				</label>
+			</p>
+
+			<div class="max-w-xl space-y-6">
+				<div>
+					<label for="nom" class="mb-2 block text-base font-medium text-neutral-900">Nom</label>
+					<input
+						id="nom"
+						name="nom"
+						type="text"
+						required
+						maxlength="80"
+						autocomplete="family-name"
+						placeholder="Dubois"
+						class="w-full rounded-md border-0 bg-neutral-200/70 px-4 py-3 text-neutral-900 placeholder:text-neutral-500 focus:outline-2 focus:outline-[var(--color-royal-blue)]"
+					/>
+				</div>
+
+				<div>
+					<label for="prenom" class="mb-2 block text-base font-medium text-neutral-900">Prénom</label>
+					<input
+						id="prenom"
+						name="prenom"
+						type="text"
+						required
+						maxlength="80"
+						autocomplete="given-name"
+						placeholder="Anne"
+						class="w-full rounded-md border-0 bg-neutral-200/70 px-4 py-3 text-neutral-900 placeholder:text-neutral-500 focus:outline-2 focus:outline-[var(--color-royal-blue)]"
+					/>
+				</div>
+
+				<div>
+					<label for="statut" class="mb-2 block text-base font-medium text-neutral-900">Statut</label>
+					<div class="relative">
+						<select
+							id="statut"
+							name="statut"
+							required
+							class="w-full appearance-none rounded-md border-0 bg-neutral-200/70 px-4 py-3 pr-10 text-neutral-900 focus:outline-2 focus:outline-[var(--color-royal-blue)]"
+						>
+							{
+								statusOptions.map((option, i) => (
+									<option value={option} selected={i === 0}>
+										{option}
+									</option>
+								))
+							}
+						</select>
+						<svg
+							class="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-neutral-600"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+					</div>
+				</div>
+
+				<div>
+					<label for="message" class="mb-2 block text-base font-medium text-neutral-900">Message</label>
+					<textarea
+						id="message"
+						name="message"
+						required
+						maxlength="2000"
+						rows="8"
+						placeholder="..."
+						class="w-full resize-none rounded-md border-0 bg-neutral-200/70 px-4 py-3 text-neutral-900 placeholder:text-neutral-500 focus:outline-2 focus:outline-[var(--color-royal-blue)]"
+					></textarea>
+				</div>
+			</div>
+
+			<div class="mt-10 flex justify-center pb-24 sm:pb-32 lg:pb-40">
+				<button
+					id="submit-btn"
+					type="submit"
+					class="rounded-full bg-[var(--color-royal-blue)] px-16 py-4 text-lg font-bold text-white shadow-lg transition-transform duration-200 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
+				>
+					Envoyer
+				</button>
+			</div>
+
+			<p
+				id="form-status"
+				role="status"
+				aria-live="polite"
+				class="mx-auto -mt-4 max-w-xl text-center text-base font-medium empty:hidden"
+			></p>
+		</form>
+	</div>
+
+	<img
+		src="/images/poisson.avif"
+		alt=""
+		aria-hidden="true"
+		class="pointer-events-none absolute inset-x-0 bottom-0 z-0 mx-auto w-full max-w-5xl select-none"
+	/>
+</section>
+
+<script>
+	const form = document.getElementById('contact-form') as HTMLFormElement | null;
+	const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+	const statusEl = document.getElementById('form-status');
+
+	function encode(data: Record<string, string>) {
+		return Object.keys(data)
+			.map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+			.join('&');
+	}
+
+	function announce(message: string, tone: 'info' | 'success' | 'error' = 'info') {
+		if (!statusEl) return;
+		statusEl.textContent = message;
+		statusEl.style.color =
+			tone === 'success' ? 'var(--color-royal-blue)' : tone === 'error' ? 'var(--color-red-coral)' : 'inherit';
+	}
+
+	form?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!form || !submitBtn) return;
+
+		const formData = new FormData(form);
+		// Honeypot: if a bot filled the hidden field, silently drop the submission.
+		if (String(formData.get('bot-field') ?? '').length > 0) return;
+
+		const payload: Record<string, string> = {};
+		formData.forEach((value, key) => {
+			payload[key] = String(value);
+		});
+
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Envoi...';
+		announce('Envoi de votre message en cours.');
+
+		try {
+			const response = await fetch('/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: encode(payload),
+			});
+
+			if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+
+			form.reset();
+			announce('Votre message a bien été envoyé !', 'success');
+		} catch (err) {
+			announce('Une erreur est survenue. Veuillez réessayer.', 'error');
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = 'Envoyer';
+		}
+	});
+</script>
