@@ -72,7 +72,7 @@ const LINK_DELAY_STEP = 50;
   <div
     id="mobile-menu"
     data-open="false"
-    class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-coral)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
+    class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-pale-pink)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
   >
     <nav
       class="flex flex-1 flex-col items-start justify-center gap-1 px-8 pt-20 pb-12"
@@ -84,7 +84,7 @@ const LINK_DELAY_STEP = 50;
             <a
               href={link.href}
               data-mobile-link
-              class="group inline-flex translate-y-full items-center gap-3 text-3xl font-normal text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
+              class="group inline-flex translate-y-full items-center gap-3 text-3xl font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
               style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
             >
               {link.label}
@@ -100,7 +100,7 @@ const LINK_DELAY_STEP = 50;
         <a
           href="/essayer-gratuitement"
           data-mobile-link
-          class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-[var(--color-coral)] opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
         >
           Essayer gratuitement
@@ -303,9 +303,8 @@ const LINK_DELAY_STEP = 50;
       margin: 0;
       gap: 4px;
     }
-    .landing-header #mobile-menu nav a {
+    .landing-header #mobile-menu nav a[data-mobile-link] {
       font-size: 30px;
-      color: white;
     }
   }
   /* Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px. */
@@ -320,13 +319,12 @@ const LINK_DELAY_STEP = 50;
     opacity: 0;
   }
 
-  /* When the full-screen panel is open, the topbar blends into it: no seam,
-	   and the logo/burger turn white so they stay visible on the coral panel. */
+  /* Keep the topbar continuous with the pale-pink full-screen menu. */
   header[data-menu-open="true"] #topbar {
     background-color: transparent;
   }
   header[data-menu-open="true"] #burger-btn [data-line] {
-    background-color: white;
+    background-color: var(--color-coral);
   }
 
   #mobile-menu {
