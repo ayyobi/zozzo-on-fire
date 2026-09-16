@@ -1,19 +1,32 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
 ---
 
 <Layout
   title="ZOZZO | Mentions légales"
   description="Consultez les mentions légales du site ZOZZO."
 >
-  <section class="legal-page">
-    <h1 class="mb-4 text-xl font-medium text-black sm:text-2xl">
+  <Header />
+  <section class="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+    <a
+      href="/"
+      class="mb-8 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-royal-blue)] underline decoration-[var(--color-salmon)] underline-offset-4 hover:decoration-current"
+      ><span aria-hidden="true">&larr;</span> Retour à l’accueil</a
+    >
+    <h1
+      class="mb-10 border-b-4 border-[var(--color-salmon)] pb-5 text-3xl font-bold tracking-tight text-[var(--color-royal-blue)] sm:text-4xl"
+    >
       Mentions légales
     </h1>
 
-    <div class="content space-y-5">
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Objet :</p>
+    <div class="space-y-6 text-base leading-7 text-neutral-700">
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Objet :
+        </h2>
         <p>
           Les présentes Conditions Générales d’Utilisation (CGU) ont pour objet
           de définir les modalités d’utilisation du site ZOZZO.
@@ -24,8 +37,12 @@ import Layout from "../layouts/Layout.astro";
         </p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Accès au site :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Accès au site :
+        </h2>
         <p>
           Le site est accessible gratuitement à tout utilisateur disposant d’un
           accès à internet.
@@ -36,21 +53,31 @@ import Layout from "../layouts/Layout.astro";
         </p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Utilisation du site :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Utilisation du site :
+        </h2>
         <p>
           L’utilisateur s’engage à utiliser le site de manière responsable et à
           ne pas :
         </p>
-        <ul class="ml-5 list-disc space-y-1">
+        <ul
+          class="ml-5 list-disc space-y-2 marker:text-[var(--color-royal-blue)]"
+        >
           <li>perturber le fonctionnement du site</li>
           <li>tenter d’accéder de manière frauduleuse aux données</li>
           <li>utiliser les contenus à des fins illégales</li>
         </ul>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Propriété intellectuelle :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Propriété intellectuelle :
+        </h2>
         <p>
           Tous les contenus présents sur le site sont protégés par les lois
           relatives à la propriété intellectuelle.
@@ -58,8 +85,12 @@ import Layout from "../layouts/Layout.astro";
         <p>Toute reproduction ou utilisation non autorisée est interdite.</p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Modification des CGU :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Modification des CGU :
+        </h2>
         <p>
           L’éditeur se réserve le droit de modifier les présentes conditions à
           tout moment afin de les adapter à l’évolution du site ou de la

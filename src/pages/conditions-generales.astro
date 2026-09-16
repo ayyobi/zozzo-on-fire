@@ -1,39 +1,75 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
 ---
 
 <Layout
   title="ZOZZO | Conditions générales"
   description="Consultez les conditions générales de la plateforme ZOZZO."
 >
-  <section class="legal-page">
-    <h1 class="mb-4 text-xl font-medium text-black sm:text-2xl">
+  <Header />
+  <section class="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+    <a
+      href="/"
+      class="mb-8 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-royal-blue)] underline decoration-[var(--color-salmon)] underline-offset-4 hover:decoration-current"
+      ><span aria-hidden="true">&larr;</span> Retour à l’accueil</a
+    >
+    <h1
+      class="mb-10 border-b-4 border-[var(--color-salmon)] pb-5 text-3xl font-bold tracking-tight text-[var(--color-royal-blue)] sm:text-4xl"
+    >
       Conditions générales
     </h1>
 
-    <div class="content space-y-5">
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Éditeur du site :</p>
+    <div class="space-y-6 text-base leading-7 text-neutral-700">
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Éditeur du site :
+        </h2>
         <p>
           Le site ZOZZO est un projet pédagogique réalisé dans le cadre d’un
           travail scolaire.
         </p>
         <p>Éditeur : Équipe du projet ZOZZO</p>
         <p>Statut : Projet pédagogique – non commercial</p>
-        <p>Contact : <a href="mailto:nargis.ayyobi@edu.univ-fcomte.fr" class="underline hover:opacity-70">nargis.ayyobi@edu.univ-fcomte.fr</a></p>
-        <p><a href="mailto:noemie.caritey@edu.univ-fcomte.fr" class="underline hover:opacity-70">noemie.caritey@edu.univ-fcomte.fr</a></p>
-        <p><a href="mailto:rahma.hamdi@edu.univ-fcomte.fr" class="underline hover:opacity-70">rahma.hamdi@edu.univ-fcomte.fr</a></p>
+        <p>
+          Contact : <a
+            href="mailto:nargis.ayyobi@edu.univ-fcomte.fr"
+            class="break-words text-[var(--color-royal-blue)] underline decoration-[var(--color-salmon)] underline-offset-4 hover:decoration-current"
+            >nargis.ayyobi@edu.univ-fcomte.fr</a>
+        </p>
+        <p>
+          <a
+            href="mailto:noemie.caritey@edu.univ-fcomte.fr"
+            class="break-words text-[var(--color-royal-blue)] underline decoration-[var(--color-salmon)] underline-offset-4 hover:decoration-current"
+            >noemie.caritey@edu.univ-fcomte.fr</a>
+        </p>
+        <p>
+          <a
+            href="mailto:rahma.hamdi@edu.univ-fcomte.fr"
+            class="break-words text-[var(--color-royal-blue)] underline decoration-[var(--color-salmon)] underline-offset-4 hover:decoration-current"
+            >rahma.hamdi@edu.univ-fcomte.fr</a>
+        </p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Hébergement :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Hébergement :
+        </h2>
         <p>Le site est hébergé par :</p>
         <p>Nom de l’hébergeur : Infomaniak</p>
         <p>Site web : https://zozzo-lsf.fr</p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Propriété intellectuelle :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Propriété intellectuelle :
+        </h2>
         <p>
           L’ensemble des contenus présents sur le site (textes, images,
           illustrations, logos, vidéos, éléments graphiques, structure du site)
@@ -45,8 +81,12 @@ import Layout from "../layouts/Layout.astro";
         </p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Responsabilité :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Responsabilité :
+        </h2>
         <p>
           Les informations présentes sur le site sont fournies à titre
           informatif. Malgré le soin apporté à leur rédaction, elles peuvent
@@ -58,8 +98,12 @@ import Layout from "../layouts/Layout.astro";
         </p>
       </div>
 
-      <div>
-        <p class="font-medium" class="text-zozzo-text-muted">Projet pédagogique :</p>
+      <div
+        class="space-y-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6"
+      >
+        <h2 class="text-lg font-semibold text-[var(--color-royal-blue)]">
+          Projet pédagogique :
+        </h2>
         <p>
           Ce site a été créé dans un cadre éducatif. Certaines fonctionnalités
           ou contenus peuvent évoluer dans le cadre du développement du projet.

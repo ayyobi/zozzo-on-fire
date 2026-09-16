@@ -4,30 +4,40 @@
   <p>Dans cette application, l’enfant entre dans la vie de Zozzo et la suit au fil de ses journées, Zozzo à la maison, Zozzo à l’école ou encore Zozzo au zoo.</p>
   <p>Le seul souci c’est que Zozzo communique avec ses mains, son visage et ses émotions. Pour la comprendre, il faut signer avec elle. L’enfant est obligé d’utiliser la langue des signes pour communiquer avec Zozzo.</p>
  </div>
- <img src="/images/tablet-section-2.avif" alt="L’application Zozzo sur une tablette : dictionnaire de signes et profil de l’enfant" width="2880" height="2250" loading="lazy" />
- <a href="/fonctionnalites" id="fonctionnalites">Fonctionnalités <span aria-hidden="true">⟶</span></a>
+ <div class="presentation-art">
+  <div class="tablet-frame">
+   <img src="/images/tablet-section-2.avif" alt="L’application Zozzo sur une tablette : dictionnaire de signes et profil de l’enfant" width="2880" height="2250" loading="lazy" />
+  </div>
+ </div>
+ <div class="presentation-action">
+  <a href="/fonctionnalites" id="fonctionnalites">Fonctionnalités <span aria-hidden="true">⟶</span></a>
+ </div>
 </section>
 <style>
-.presentation-section { position: relative; height: 133.4vw; background: linear-gradient(to bottom, #fcded6 0 54.5%, white 54.5% 100%); }
-.presentation-copy { padding-top: 7.6vw; margin-left: 11.4%; width: 80%; font: 2.64vw / 1.16 Arial, sans-serif; color: #37332f; }
-p + p { margin-top: 3.1vw; }
-img { position: absolute; top: 41.3vw; left: 0; width: 100%; height: auto; }
-a { position: absolute; top: 108.4vw; left: 31.8%; display: flex; align-items: center; gap: 4.5vw; padding: 2.2vw 2vw 2.2vw 6.4vw; border-radius: 2.4vw; background: #f26748; color: #f3e63e; font-size: 3.1vw; }
-a span { font-size: 6.2vw; font-weight: 900; line-height: 1; }
+.presentation-section { background: #fcded6; }
+.presentation-copy { width: 80%; max-width: 900px; margin-inline: auto; padding-top: clamp(40px, 5vw, 72px); font: 20px / 1.5 Arial, sans-serif; color: #37332f; }
+p + p { margin-top: 24px; }
+.presentation-art { margin-top: 32px; background: linear-gradient(to bottom, #fcded6 50%, white 50%); }
+/* Crop only the transparent margins above and below the tablet. */
+.tablet-frame { position: relative; width: 80%; max-width: 960px; aspect-ratio: 2880 / 1430; margin-inline: auto; overflow: hidden; }
+img { position: absolute; top: 0; left: 0; width: 100%; height: auto; transform: translateY(-18%); }
+.presentation-action { display: flex; justify-content: center; padding: 24px 16px 40px; background: white; }
+a { display: flex; align-items: center; gap: 28px; padding: 20px 36px; border-radius: 24px; background: #f26748; color: #f3e63e; font-size: 26px; font-weight: 600; }
+a span { font-size: 44px; font-weight: 900; line-height: 1; }
 a:hover { background: #e95537; }
 @media (max-width: 640px) {
-.presentation-section { height: auto; padding: 45px 0 70px; background: linear-gradient(to bottom, #fcded6 0 73%, white 73% 100%); }
-.presentation-copy { width: auto; margin: 0 24px; padding: 0; font-size: 19px; line-height: 1.4; }
-p + p { margin-top: 24px; }
-img { position: relative; top: auto; margin: -10px 0 -35px; }
-a { position: relative; inset: auto; width: fit-content; margin: 0 auto; padding: 14px 24px; gap: 25px; border-radius: 18px; font-size: 21px; }
+.presentation-section { padding-top: 45px; background: linear-gradient(to bottom, #fcded6 0 73%, white 73% 100%); }
+.presentation-copy { width: auto; margin-inline: 24px; padding-top: 0; font-size: 19px; line-height: 1.4; }
+.presentation-art { margin-top: 0; background: transparent; }
+.tablet-frame { aspect-ratio: auto; overflow: visible; }
+img { position: relative; inset: auto; transform: none; margin: -10px auto -20px; }
+.presentation-action { padding-top: 0; background: transparent; }
+a { padding: 18px 28px; gap: 25px; border-radius: 18px; font-size: 24px; }
 a span { font-size: 42px; }
 }
-
 @media (min-width: 1024px) {
-.presentation-copy { font-size: 18px; line-height: 1.5; max-width: 900px; }
-img { left: 7.5%; width: 85%; }
-a { top: 99vw; left: 50%; transform: translateX(-50%); width: max-content; padding: 12px 24px; gap: 24px; border-radius: 18px; font-size: var(--desktop-button); }
-a span { font-size: 32px; }
+.presentation-copy { font-size: 18px; }
+.tablet-frame { width: 70%; }
+a { padding: 20px 40px; gap: 32px; border-radius: 22px; }
 }
 </style>

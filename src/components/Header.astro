@@ -1,327 +1,359 @@
 ---
-interface Props {
-	variant?: 'home' | 'default';
-}
-
-const { variant = 'home' } = Astro.props;
-const isHome = variant === 'home';
-
-const headerBgClass = isHome ? 'bg-[var(--color-pale-pink)]' : 'bg-[var(--color-coral)]';
-const logoColorClass = isHome ? 'bg-[var(--color-coral)]' : 'bg-[var(--color-pale-pink)]';
-const burgerLineClass = isHome ? 'bg-[var(--color-coral)]' : 'bg-[var(--color-pale-pink)]';
-const navLinkClass = isHome
-	? 'text-neutral-800 hover:text-[var(--color-coral)]'
-	: 'text-neutral-900 hover:text-[var(--color-pale-pink)]';
-const ctaClass = isHome
-	? 'bg-[var(--color-blue)] text-white'
-	: 'bg-[var(--color-yellow)] text-[var(--color-coral)]';
-
 const navLinks = [
-	{ href: '/#accueil', label: 'Accueil' },
-	{ href: '/fonctionnalites', label: 'Fonctionnalités' },
-	{ href: '/a-propos', label: 'À propos' },
-	{ href: '/contact', label: 'Contact' },
+  { href: "/#accueil", label: "Accueil" },
+  { href: "/fonctionnalites", label: "Fonctionnalités" },
+  { href: "/a-propos", label: "À propos" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const LINK_BASE_DELAY = 100;
 const LINK_DELAY_STEP = 50;
 ---
 
-<header data-menu-open="false" class:list={[`sticky top-0 z-50 header-layout ${headerBgClass}`, { 'landing-header': isHome }]}>
-	<div
-		id="topbar"
-		class={`relative z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-colors duration-300 md:px-10 ${headerBgClass}`}
-	>
-		<a href="/#accueil" class="shrink-0">
-			<span class="sr-only">ZOZZO</span>
-			<span
-				id="logo-mask"
-				aria-hidden="true"
-				class={`logo-mask inline-block aspect-[122/31] h-6 w-auto transition-colors duration-300 md:h-7 ${logoColorClass}`}
-			></span>
-		</a>
+<header
+  data-menu-open="false"
+  class="landing-header sticky top-0 z-50 header-layout bg-[var(--color-pale-pink)]"
+>
+  <div
+    id="topbar"
+    class="relative z-50 mx-auto flex max-w-7xl items-center justify-between bg-[var(--color-pale-pink)] px-6 py-4 transition-colors duration-300 md:px-10"
+  >
+    <a href="/#accueil" class="shrink-0">
+      <img src="/images/zozzo-logo.svg" alt="ZOZZO" class="logo-image" />
+    </a>
 
-		<nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
-			{
-				navLinks.map((link) => (
-					<a href={link.href} class={`text-base font-medium transition-colors ${navLinkClass}`}>
-						{link.label}
-					</a>
-				))
-			}
-		</nav>
+    <nav
+      class="hidden items-center gap-8 md:flex"
+      aria-label="Navigation principale"
+    >
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-base font-medium text-neutral-800 transition-colors hover:text-[var(--color-coral)]"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
 
-		<a
-			href="/essayer-gratuitement"
-			class={`hidden rounded-full px-5 py-2 text-base font-semibold transition-transform duration-200 hover:scale-[1.02] md:inline-block ${ctaClass}`}
-		>
-			Essayez gratuitement
-		</a>
+    <a
+      href="/essayer-gratuitement"
+      class="hidden rounded-full bg-[var(--color-blue)] px-5 py-2 text-base font-semibold text-white transition-transform duration-200 hover:scale-[1.02] md:inline-block"
+    >
+      Essayez gratuitement
+    </a>
 
-		<button
-			id="burger-btn"
-			type="button"
-			aria-label="Ouvrir le menu"
-			aria-expanded="false"
-			aria-controls="mobile-menu"
-			data-open="false"
-			class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
-		>
-			<span
-				data-line="top"
-				class={`block h-0.5 w-6 rounded-full transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
-			></span>
-			<span
-				data-line="mid"
-				class={`block h-0.5 w-6 rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
-			></span>
-			<span
-				data-line="bottom"
-				class={`block h-0.5 w-6 rounded-full transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)] ${burgerLineClass}`}
-			></span>
-		</button>
-	</div>
+    <button
+      id="burger-btn"
+      type="button"
+      aria-label="Ouvrir le menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-open="false"
+      class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
+    >
+      <span
+        data-line="top"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+      <span
+        data-line="mid"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[220ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+      <span
+        data-line="bottom"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+    </button>
+  </div>
 
-	<div
-		id="mobile-menu"
-		data-open="false"
-		class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-coral)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
-	>
-		<nav
-			class="flex flex-1 flex-col items-start justify-center gap-1 px-8 pt-20 pb-12"
-			aria-label="Navigation mobile"
-		>
-			{
-				navLinks.map((link, i) => (
-					<div class="overflow-hidden py-2">
-						<a
-							href={link.href}
-							data-mobile-link
-							class="group inline-flex translate-y-full items-center gap-3 text-3xl font-normal text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
-							style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
-						>
-							{link.label}
-							<span class="-translate-x-2 text-2xl opacity-0 transition-all duration-[250ms] ease-out group-hover:translate-x-0 group-hover:opacity-100">
-								→
-							</span>
-						</a>
-					</div>
-				))
-			}
+  <div
+    id="mobile-menu"
+    data-open="false"
+    class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-coral)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
+  >
+    <nav
+      class="flex flex-1 flex-col items-start justify-center gap-1 px-8 pt-20 pb-12"
+      aria-label="Navigation mobile"
+    >
+      {
+        navLinks.map((link, i) => (
+          <div class="overflow-hidden py-2">
+            <a
+              href={link.href}
+              data-mobile-link
+              class="group inline-flex translate-y-full items-center gap-3 text-3xl font-normal text-white opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-4xl"
+              style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
+            >
+              {link.label}
+              <span class="-translate-x-2 text-2xl opacity-0 transition-all duration-[250ms] ease-out group-hover:translate-x-0 group-hover:opacity-100">
+                →
+              </span>
+            </a>
+          </div>
+        ))
+      }
 
-			<div class="mt-6 overflow-hidden py-2">
-				<a
-					href="/essayer-gratuitement"
-					data-mobile-link
-					class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-					style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
-				>
-					Essayer gratuitement
-				</a>
-			</div>
-		</nav>
-	</div>
+      <div class="mt-6 overflow-hidden py-2">
+        <a
+          href="/essayer-gratuitement"
+          data-mobile-link
+          class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
+        >
+          Essayer gratuitement
+        </a>
+      </div>
+    </nav>
+  </div>
 </header>
 
 <script>
-	const header = document.querySelector('header');
-	const burgerBtn = document.getElementById('burger-btn');
-	const panel = document.getElementById('mobile-menu');
-	const mobileLinks = panel ? Array.from(panel.querySelectorAll<HTMLAnchorElement>('[data-mobile-link]')) : [];
+  const header = document.querySelector("header");
+  const burgerBtn = document.getElementById("burger-btn");
+  const panel = document.getElementById("mobile-menu");
+  const mobileLinks = panel
+    ? Array.from(
+        panel.querySelectorAll<HTMLAnchorElement>("[data-mobile-link]"),
+      )
+    : [];
 
-	let isOpen = false;
-	let savedScrollY = 0;
-	let closeTimers: number[] = [];
+  let isOpen = false;
+  let savedScrollY = 0;
+  let closeTimers: number[] = [];
 
-	function clearCloseTimers() {
-		closeTimers.forEach((id) => window.clearTimeout(id));
-		closeTimers = [];
-	}
+  function clearCloseTimers() {
+    closeTimers.forEach((id) => window.clearTimeout(id));
+    closeTimers = [];
+  }
 
-	function lockScroll() {
-		savedScrollY = window.scrollY;
-		const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-		document.body.style.position = 'fixed';
-		document.body.style.top = `-${savedScrollY}px`;
-		document.body.style.left = '0';
-		document.body.style.right = '0';
-		if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
-	}
+  function lockScroll() {
+    savedScrollY = window.scrollY;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    if (scrollbarWidth > 0)
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
 
-	function unlockScroll() {
-		document.body.style.position = '';
-		document.body.style.top = '';
-		document.body.style.left = '';
-		document.body.style.right = '';
-		document.body.style.paddingRight = '';
-		window.scrollTo(0, savedScrollY);
-	}
+  function unlockScroll() {
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.paddingRight = "";
+    window.scrollTo(0, savedScrollY);
+  }
 
-	function morphToX() {
-		burgerBtn?.setAttribute('data-open', 'true');
-		header?.setAttribute('data-menu-open', 'true');
-	}
+  function morphToX() {
+    burgerBtn?.setAttribute("data-open", "true");
+    header?.setAttribute("data-menu-open", "true");
+  }
 
-	function morphToBurger() {
-		burgerBtn?.setAttribute('data-open', 'false');
-		header?.setAttribute('data-menu-open', 'false');
-	}
+  function morphToBurger() {
+    burgerBtn?.setAttribute("data-open", "false");
+    header?.setAttribute("data-menu-open", "false");
+  }
 
-	function showLinks() {
-		mobileLinks.forEach((el) => {
-			el.classList.remove('translate-y-full', 'opacity-0');
-		});
-	}
+  function showLinks() {
+    mobileLinks.forEach((el) => {
+      el.classList.remove("translate-y-full", "opacity-0");
+    });
+  }
 
-	function hideLinks() {
-		mobileLinks.forEach((el) => {
-			el.classList.add('translate-y-full', 'opacity-0');
-		});
-	}
+  function hideLinks() {
+    mobileLinks.forEach((el) => {
+      el.classList.add("translate-y-full", "opacity-0");
+    });
+  }
 
-	function openMenu() {
-		if (isOpen || !panel) return;
-		clearCloseTimers();
-		isOpen = true;
-		burgerBtn?.setAttribute('aria-expanded', 'true');
-		burgerBtn?.setAttribute('aria-label', 'Fermer le menu');
+  function openMenu() {
+    if (isOpen || !panel) return;
+    clearCloseTimers();
+    isOpen = true;
+    burgerBtn?.setAttribute("aria-expanded", "true");
+    burgerBtn?.setAttribute("aria-label", "Fermer le menu");
 
-		morphToX();
-		lockScroll();
+    morphToX();
+    lockScroll();
 
-		panel.classList.remove('hidden');
-		panel.classList.add('flex');
-		// Force layout so the closed state is committed before animating open.
-		void panel.offsetHeight;
+    panel.classList.remove("hidden");
+    panel.classList.add("flex");
+    // Force layout so the closed state is committed before animating open.
+    void panel.offsetHeight;
 
-		requestAnimationFrame(() => {
-			panel.setAttribute('data-open', 'true');
-			showLinks();
-		});
-	}
+    requestAnimationFrame(() => {
+      panel.setAttribute("data-open", "true");
+      showLinks();
+    });
+  }
 
-	function closeMenu(onDone?: () => void) {
-		if (!isOpen || !panel) return;
-		isOpen = false;
-		burgerBtn?.setAttribute('aria-expanded', 'false');
-		burgerBtn?.setAttribute('aria-label', 'Ouvrir le menu');
+  function closeMenu(onDone?: () => void) {
+    if (!isOpen || !panel) return;
+    isOpen = false;
+    burgerBtn?.setAttribute("aria-expanded", "false");
+    burgerBtn?.setAttribute("aria-label", "Ouvrir le menu");
 
-		hideLinks();
-		morphToBurger();
+    hideLinks();
+    morphToBurger();
 
-		const closePanel = window.setTimeout(() => {
-			panel.setAttribute('data-open', 'false');
-		}, 120);
+    const closePanel = window.setTimeout(() => {
+      panel.setAttribute("data-open", "false");
+    }, 120);
 
-		const finish = window.setTimeout(() => {
-			panel.classList.remove('flex');
-			panel.classList.add('hidden');
-			unlockScroll();
-			onDone?.();
-		}, 520);
+    const finish = window.setTimeout(() => {
+      panel.classList.remove("flex");
+      panel.classList.add("hidden");
+      unlockScroll();
+      onDone?.();
+    }, 520);
 
-		closeTimers.push(closePanel, finish);
-	}
+    closeTimers.push(closePanel, finish);
+  }
 
-	burgerBtn?.addEventListener('click', () => (isOpen ? closeMenu() : openMenu()));
+  burgerBtn?.addEventListener("click", () =>
+    isOpen ? closeMenu() : openMenu(),
+  );
 
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape' && isOpen) closeMenu();
-	});
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen) closeMenu();
+  });
 
-	mobileLinks.forEach((link) => {
-		link.addEventListener('click', (e) => {
-			e.preventDefault();
-			const href = link.getAttribute('href') ?? '';
-			closeMenu(() => {
-				const isSamePageAnchor = href.startsWith('/#') && window.location.pathname === '/';
-				if (isSamePageAnchor) {
-					const hash = href.slice(1);
-					document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-					history.pushState(null, '', hash);
-				} else {
-					window.location.href = href;
-				}
-			});
-		});
-	});
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = link.getAttribute("href") ?? "";
+      closeMenu(() => {
+        const isSamePageAnchor =
+          href.startsWith("/#") && window.location.pathname === "/";
+        if (isSamePageAnchor) {
+          const hash = href.slice(1);
+          document
+            .querySelector(hash)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.pushState(null, "", hash);
+        } else {
+          window.location.href = href;
+        }
+      });
+    });
+  });
 </script>
 
 <style>
-	.header-layout #topbar { max-width: none; height: 82px; padding: 0 clamp(24px, 3vw, 56px); gap: 24px; }
-	.header-layout #topbar > a:first-child { display: flex; align-items: center; }
-	.header-layout .logo-mask { display: block; width: 122px; height: 28px; }
-	.header-layout nav[aria-label='Navigation principale'] { margin-left: auto; margin-right: clamp(0px, 3vw, 48px); gap: clamp(20px, 3vw, 44px); }
-	.header-layout nav[aria-label='Navigation principale'] a { font-size: 16px; font-weight: 400; color: black; white-space: nowrap; }
-	.header-layout nav[aria-label='Navigation principale'] a:last-child { display: none; }
-	.header-layout #topbar > a:last-of-type { flex-shrink: 0; padding: 13px 22px; font-size: 16px; white-space: nowrap; }
-	@media (max-width: 767px) {
-		.header-layout #topbar { height: 72px; padding: 0 24px; }
-		.header-layout .logo-mask { height: 26px; }
-	}
+  .header-layout #topbar {
+    max-width: none;
+    height: 82px;
+    padding: 0 clamp(24px, 3vw, 56px);
+    gap: 24px;
+  }
+  .header-layout #topbar > a:first-child {
+    display: flex;
+    align-items: center;
+  }
+  .header-layout .logo-image {
+    display: block;
+    width: 122px;
+    height: auto;
+  }
+  .header-layout nav[aria-label="Navigation principale"] {
+    margin-left: auto;
+    margin-right: clamp(0px, 3vw, 48px);
+    gap: clamp(20px, 3vw, 44px);
+  }
+  .header-layout nav[aria-label="Navigation principale"] a {
+    font-size: 16px;
+    font-weight: 400;
+    color: black;
+    white-space: nowrap;
+  }
+  .header-layout nav[aria-label="Navigation principale"] a:last-child {
+    display: none;
+  }
+  .header-layout #topbar > a:last-of-type {
+    flex-shrink: 0;
+    padding: 13px 22px;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+  @media (max-width: 767px) {
+    .header-layout #topbar {
+      height: 72px;
+      padding: 0 24px;
+    }
+    .header-layout .logo-image {
+      width: 112px;
+    }
+  }
 
-	.landing-header #topbar { background: #fcded6; }
-	.landing-header .logo-mask { background: #f26748; }
-	.landing-header #topbar > a:last-of-type { background: #84a5f2; color: #f3e63e; }
-	@media (max-width: 767px) {
-		.landing-header #mobile-menu nav { margin: 0; gap: 4px; }
-		.landing-header #mobile-menu nav a { font-size: 30px; color: white; }
-	}
-	.logo-mask {
-		-webkit-mask-image: url('/images/zozzo-logo.svg');
-		mask-image: url('/images/zozzo-logo.svg');
-		-webkit-mask-repeat: no-repeat;
-		mask-repeat: no-repeat;
-		-webkit-mask-size: contain;
-		mask-size: contain;
-		-webkit-mask-position: left center;
-		mask-position: left center;
-	}
+  .landing-header #topbar {
+    background: #fcded6;
+  }
+  .landing-header #topbar > a:last-of-type {
+    background: #84a5f2;
+    color: #f3e63e;
+  }
+  @media (max-width: 767px) {
+    .landing-header #mobile-menu nav {
+      margin: 0;
+      gap: 4px;
+    }
+    .landing-header #mobile-menu nav a {
+      font-size: 30px;
+      color: white;
+    }
+  }
+  /* Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px. */
+  #burger-btn[data-open="true"] [data-line="top"] {
+    transform: translateY(9px) rotate(45deg);
+  }
+  #burger-btn[data-open="true"] [data-line="bottom"] {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+  #burger-btn[data-open="true"] [data-line="mid"] {
+    transform: scaleX(0);
+    opacity: 0;
+  }
 
-	/* Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px. */
-	#burger-btn[data-open='true'] [data-line='top'] {
-		transform: translateY(9px) rotate(45deg);
-	}
-	#burger-btn[data-open='true'] [data-line='bottom'] {
-		transform: translateY(-9px) rotate(-45deg);
-	}
-	#burger-btn[data-open='true'] [data-line='mid'] {
-		transform: scaleX(0);
-		opacity: 0;
-	}
-
-	/* When the full-screen panel is open, the topbar blends into it: no seam,
+  /* When the full-screen panel is open, the topbar blends into it: no seam,
 	   and the logo/burger turn white so they stay visible on the coral panel. */
-	header[data-menu-open='true'] #topbar {
-		background-color: transparent;
-	}
-	header[data-menu-open='true'] .logo-mask {
-		background-color: white;
-	}
-	header[data-menu-open='true'] #burger-btn [data-line] {
-		background-color: white;
-	}
+  header[data-menu-open="true"] #topbar {
+    background-color: transparent;
+  }
+  header[data-menu-open="true"] #burger-btn [data-line] {
+    background-color: white;
+  }
 
-	#mobile-menu {
-		opacity: 0;
-		transform: translateY(-24px) scaleY(0.97);
-	}
-	#mobile-menu[data-open='true'] {
-		opacity: 1;
-		transform: translateY(0) scaleY(1);
-	}
+  #mobile-menu {
+    opacity: 0;
+    transform: translateY(-24px) scaleY(0.97);
+  }
+  #mobile-menu[data-open="true"] {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 
-	@media (prefers-reduced-motion: reduce) {
-		#mobile-menu,
-		#mobile-menu *,
-		#burger-btn span {
-			transition-duration: 1ms !important;
-			transition-delay: 0ms !important;
-		}
-	}
+  @media (prefers-reduced-motion: reduce) {
+    #mobile-menu,
+    #mobile-menu *,
+    #burger-btn span {
+      transition-duration: 1ms !important;
+      transition-delay: 0ms !important;
+    }
+  }
 
-@media (min-width: 1024px) {
-.header-layout nav[aria-label='Navigation principale'] a { font-size: 14px; }
-.header-layout #topbar > a:last-of-type { padding: 12px 20px; font-size: 14px; }
-}
+  @media (min-width: 1024px) {
+    .header-layout nav[aria-label="Navigation principale"] a {
+      font-size: 14px;
+    }
+    .header-layout #topbar > a:last-of-type {
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+  }
 </style>

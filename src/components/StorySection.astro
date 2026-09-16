@@ -1,33 +1,170 @@
 <section class="story-section" aria-label="L’histoire de Zozzo">
- <div class="story-stage">
- <div class="story-copy">
-  <p>Dans un monde où les enfants parlent, discutent, chuchotent, rigolent, il y a Zozzo.</p>
-  <p>Zozzo est une petite fille comme les autres mais elle a quelque chose en plus, elle ne parle pas, mais pourtant, elle a beaucoup de choses à raconter&nbsp;!</p>
-  <p>Alors, elle utilise ses mains et la langue des signes pour parler et communiquer avec ses amis</p>
- </div>
- <div class="story-top-art"><img src="/images/bg-section2.avif" alt="Zozzo plonge avec un masque, puis joue avec ses amis au milieu des étoiles" width="2880" height="2458" loading="lazy" /></div>
- <div class="story-bottom-art"><img class="mobile-friends" src="/images/bg-section2.avif" alt="" aria-hidden="true" width="2880" height="2458" loading="lazy" /></div>
- </div>
+  <div class="story-stage">
+    <div class="story-copy">
+      <p>
+        Dans un monde où les enfants parlent, discutent, chuchotent, rigolent,
+        il y a Zozzo.
+      </p>
+      <p>
+        Zozzo est une petite fille comme les autres mais elle a quelque chose en
+        plus, elle ne parle pas, mais pourtant, elle a beaucoup de choses à
+        raconter&nbsp;!
+      </p>
+      <p>
+        Alors, elle utilise ses mains et la langue des signes pour parler et
+        communiquer avec ses amis
+      </p>
+    </div>
+    <div class="story-top-art">
+      <img
+        src="/images/bg-section2.avif"
+        alt="Zozzo plonge avec un masque, puis joue avec ses amis au milieu des étoiles"
+        width="2880"
+        height="2458"
+        loading="lazy"
+      />
+    </div>
+    <div class="story-bottom-art">
+      <img
+        class="mobile-friends"
+        src="/images/bg-section2.avif"
+        alt=""
+        aria-hidden="true"
+        width="2880"
+        height="2458"
+        loading="lazy"
+      />
+    </div>
+  </div>
 </section>
 <style>
-.story-section { background: #84a5f2; }
-.story-stage { position: relative; max-width: 1200px; margin-inline: auto; aspect-ratio: 2880 / 2458; }
-.story-copy { position: absolute; top: 14.2%; left: 19.7%; width: 62.1%; min-height: 53.6%; padding: 4.2% 3.5% 5% 4.8%; border-radius: 48px; background: #f3e63e; color: #303020; font-family: Arial, sans-serif; font-size: clamp(20px, 2.35vw, 28px); line-height: 1.35; }
-p + p { margin-top: 1.5em; }
-.story-top-art { position: absolute; inset: 0; pointer-events: none; }
-img { display: block; width: 100%; height: auto; }
-.story-bottom-art { display: none; }
-@media (max-width: 767px) {
-.story-stage { display: flex; flex-direction: column; aspect-ratio: auto; padding: 12px 0 16px; max-width: 540px; }
-.story-copy { position: relative; inset: auto; width: auto; min-height: 0; margin: 0 20px; padding: 28px 24px; font-size: 18px; line-height: 1.5; border-radius: 28px; }
-p + p { margin-top: 22px; }
-.story-top-art { position: relative; inset: auto; order: -1; width: 100%; aspect-ratio: 1 / .36; overflow: hidden; }
-.story-top-art img { position: absolute; top: 0; left: 0; }
-.story-bottom-art { display: block; position: relative; width: 100%; aspect-ratio: 1 / .38; overflow: hidden; }
-.story-bottom-art img { position: absolute; bottom: 0; left: 0; }
-}
+  .story-section {
+    background: #84a5f2;
+  }
+  .story-stage {
+    position: relative;
+    max-width: 1200px;
+    margin-inline: auto;
+    aspect-ratio: 2880 / 2458;
+  }
+  .story-copy {
+    position: absolute;
+    top: 14.2%;
+    left: 19.7%;
+    width: 62.1%;
+    min-height: 53.6%;
+    padding: 4.2% 3.5% 5% 4.8%;
+    border-radius: 48px;
+    background: #f3e63e;
+    color: #303020;
+    font-family: Arial, sans-serif;
+    font-size: clamp(20px, 2.35vw, 28px);
+    line-height: 1.35;
+  }
+  p + p {
+    margin-top: 1.5em;
+  }
+  .story-top-art {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .story-bottom-art {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .story-stage {
+      display: flex;
+      flex-direction: column;
+      aspect-ratio: auto;
+      padding: 12px 0 16px;
+      max-width: 540px;
+    }
+    .story-copy {
+      position: relative;
+      inset: auto;
+      width: auto;
+      min-height: 0;
+      margin: 0 20px;
+      padding: 28px 24px;
+      font-size: 18px;
+      line-height: 1.5;
+      border-radius: 28px;
+    }
+    p + p {
+      margin-top: 22px;
+    }
+    .story-top-art {
+      position: relative;
+      inset: auto;
+      order: -1;
+      width: 100%;
+      aspect-ratio: 1 / 0.36;
+      overflow: hidden;
+    }
+    .story-top-art img {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .story-bottom-art {
+      display: block;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 0.38;
+      overflow: hidden;
+    }
+    .story-bottom-art img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
 
-@media (min-width: 1024px) {
-.story-copy { font-size: 18px; line-height: 1.5; }
-}
+  @media (min-width: 768px) {
+    .story-stage {
+      aspect-ratio: auto;
+      padding-top: min(12.1vw, 145px);
+    }
+    .story-copy {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 52%;
+      margin-inline: auto;
+      min-height: 0;
+      padding-block: 32px;
+    }
+    .story-top-art {
+      bottom: auto;
+      height: min(36vw, 432px);
+      overflow: hidden;
+    }
+    .story-bottom-art {
+      display: block;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 0.36;
+      margin-top: -24px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .story-bottom-art img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .story-copy {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+  }
 </style>
