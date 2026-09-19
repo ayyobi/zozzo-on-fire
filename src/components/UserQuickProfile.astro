@@ -1,0 +1,26 @@
+---
+---
+
+<div class="quick-profile">
+	<p id="user-pseudo">&nbsp;</p>
+
+	<a
+		href="/profil"
+		class="profile-link transition-transform duration-200 hover:scale-[1.03] active:scale-95"
+	>
+		Profil
+		<svg aria-hidden="true" width="64" height="22" viewBox="0 0 64 22" fill="none"><path d="M2 11H59" stroke="currentColor" stroke-width="3" stroke-linecap="round" /><path d="M51 3L62 11L51 19Z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" /></svg>
+	</a>
+</div>
+
+<style>
+.quick-profile { display: flex; flex-direction: column; gap: 18px; }
+#user-pseudo { font-size: 24px; font-weight: 500; overflow-wrap: anywhere; line-height: 1.4; color: #080808; }
+.profile-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 8px 12px 8px 22px; border-radius: 999px; background: #83a5f0; color: #fff34d; font-size: 22px; font-weight: 500; }
+.profile-link svg { flex-shrink: 0; }
+/* Desktop/tablet: this sits in the right-hand grid column, so left-aligned
+   content reads fine. Mobile: the column is now full-width (see app.astro),
+   so center pseudo + button instead of stretching the pill edge-to-edge. */
+@media (max-width: 767px) { .quick-profile { align-items: center; text-align: center; } }
+@media (max-width: 420px) { #user-pseudo { font-size: 20px; } .profile-link { padding-left: 16px; font-size: 20px; } .profile-link svg { width: 42px; } }
+</style>

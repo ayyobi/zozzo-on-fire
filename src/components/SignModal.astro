@@ -1,0 +1,28 @@
+---
+// Static shell for the sign detail overlay. Content is filled in by
+// src/lib/signModal.ts, which every page including this component must
+// call once via initSignModal().
+---
+
+<div
+	id="sign-modal"
+	class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4 opacity-0 transition-opacity duration-200"
+	role="dialog"
+	aria-modal="true"
+	aria-labelledby="sign-modal-title"
+>
+	<div class="relative w-full max-w-lg scale-95 rounded-3xl bg-white p-6 shadow-xl transition-transform duration-200 sm:p-8" id="sign-modal-panel">
+		<button
+			id="sign-modal-close"
+			type="button"
+			aria-label="Fermer"
+			class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-lg text-neutral-600 transition hover:bg-neutral-200 active:scale-95 sm:h-9 sm:w-9"
+		>
+			✕
+		</button>
+
+		<h2 id="sign-modal-title" class="pr-10 text-center text-2xl font-medium text-[var(--color-royal-blue)]"></h2>
+
+		<div id="sign-modal-body" class="mt-5 min-h-[160px]"></div>
+	</div>
+</div>

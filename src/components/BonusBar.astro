@@ -1,0 +1,35 @@
+---
+// Visual shell only — no bonus/inventory collection exists in PocketBase
+// yet, so nothing here is wired to real data. Each button already carries
+// a `data-bonus-id` so a future inventory feature can hook in without
+// reworking the markup.
+const bonuses = [
+	{ id: 'bol', icon: '/images/icon/bol.svg', label: 'Bonus' },
+	{ id: 'potion', icon: '/images/icon/potion.svg', label: 'Potion' },
+	{ id: 'bonbon', icon: '/images/icon/bonbon.svg', label: 'Bonbon' },
+	{ id: 'fleur', icon: '/images/icon/fleur.svg', label: 'Fleur' },
+];
+---
+
+<div class="bonus-bar">
+	{
+		bonuses.map((bonus) => (
+			<button
+				type="button"
+				data-bonus-id={bonus.id}
+				aria-label={bonus.label}
+				class="bonus-item flex items-center justify-center rounded-full transition-transform duration-150 hover:-translate-y-1 hover:scale-105 active:scale-95"
+			>
+				<img src={bonus.icon} alt="" />
+			</button>
+		))
+	}
+</div>
+
+<style>
+.bonus-bar { display: flex; width: 100%; height: 83px; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 26px 6px 14px; border-radius: 25px; background: #f96346; }
+.bonus-item { width: 70px; height: 71px; }
+.bonus-item img { width: auto; height: 70px; max-width: 80px; object-fit: contain; }
+.bonus-item:first-child img { height: 56px; }
+@media (max-width: 420px) { .bonus-bar { padding-inline: 12px; gap: 8px; } .bonus-item { width: 56px; } .bonus-item img { max-width: 60px; height: 60px; } }
+</style>

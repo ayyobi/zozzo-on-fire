@@ -1,0 +1,93 @@
+---
+import MinimalLayout from '../layouts/MinimalLayout.astro';
+---
+
+<MinimalLayout
+	title="ZOZZO | Mot de passe oublié"
+	description="Réinitialise le mot de passe de ton compte ZOZZO."
+	bodyClass="m-0 min-h-dvh flex items-center justify-center px-4 py-12 bg-[var(--color-pale-pink)]"
+>
+	<div class="w-full max-w-md">
+		<div class="mb-8 text-center">
+			<a href="/" class="inline-block">
+				<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="mx-auto h-10 w-auto" />
+			</a>
+			<h1 class="mt-6 text-3xl font-medium text-neutral-900">Mot de passe oublié</h1>
+			<p class="mt-1 text-sm text-neutral-500">On t'envoie un lien pour le réinitialiser.</p>
+		</div>
+
+		<div class="rounded-3xl bg-white p-8 shadow-lg">
+			<p id="success-msg" class="mb-5 hidden rounded-2xl bg-green-50 px-4 py-3 text-sm text-green-700" role="status">
+				Si un compte existe avec cette adresse email, un lien de réinitialisation vient d'être envoyé.
+			</p>
+			<p id="error-msg" class="mb-5 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600" role="alert"></p>
+
+			<form id="reset-form" class="flex flex-col gap-5" novalidate>
+				<div>
+					<label for="email" class="mb-1.5 block text-sm font-medium text-neutral-800">Email</label>
+					<input
+						type="email"
+						id="email"
+						name="email"
+						required
+						autocomplete="email"
+						placeholder="ton@email.com"
+						class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
+					/>
+				</div>
+
+				<button
+					id="submit-btn"
+					type="submit"
+					class="mt-2 w-full rounded-full bg-[var(--color-coral)] py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					Envoyer le lien
+				</button>
+			</form>
+		</div>
+
+		<p class="mt-6 text-center text-sm text-neutral-500">
+			<a href="/login" class="font-semibold text-[var(--color-royal-blue)] hover:underline">Retour à la connexion</a>
+		</p>
+	</div>
+
+	<script>
+		import { requestPasswordReset } from '../lib/pocketbase';
+		import { ClientResponseError } from 'pocketbase';
+
+		const form = document.getElementById('reset-form') as HTMLFormElement;
+		const successMsg = document.getElementById('success-msg') as HTMLElement;
+		const errorMsg = document.getElementById('error-msg') as HTMLElement;
+		const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+
+			successMsg.classList.add('hidden');
+			errorMsg.classList.add('hidden');
+
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'Envoi...';
+
+			try {
+				await requestPasswordReset(email);
+				successMsg.classList.remove('hidden');
+				form.reset();
+			} catch (error) {
+				// PocketBase normally returns success even for unknown emails
+				// (to avoid leaking which addresses have an account) — an error
+				// here is almost always a network/server problem.
+				errorMsg.textContent =
+					error instanceof ClientResponseError && error.status === 0
+						? 'Impossible de contacter le serveur. Réessayez dans quelques instants.'
+						: 'Une erreur est survenue. Merci de réessayer.';
+				errorMsg.classList.remove('hidden');
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.textContent = 'Envoyer le lien';
+			}
+		});
+	</script>
+</MinimalLayout>

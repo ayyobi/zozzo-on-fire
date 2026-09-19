@@ -42,3 +42,39 @@ section[id] { scroll-margin-top: 24px; }
 	--color-tab: #e9dca5;
 	--color-card-shadow: #566565;
 }
+
+/*
+ * Shared burger → X and fullscreen-panel reveal animation, used by both
+ * the promo site's Header.astro and the app's AppHeader.astro (via
+ * src/lib/mobileMenu.ts). Kept global instead of duplicated in each
+ * component's scoped <style>, so both menus stay visually identical.
+ * Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px.
+ */
+[data-mobile-burger][data-open='true'] [data-line='top'] {
+	transform: translateY(9px) rotate(45deg);
+}
+[data-mobile-burger][data-open='true'] [data-line='bottom'] {
+	transform: translateY(-9px) rotate(-45deg);
+}
+[data-mobile-burger][data-open='true'] [data-line='mid'] {
+	transform: scaleX(0);
+	opacity: 0;
+}
+
+[data-mobile-panel] {
+	opacity: 0;
+	transform: translateY(-24px) scaleY(0.97);
+}
+[data-mobile-panel][data-open='true'] {
+	opacity: 1;
+	transform: translateY(0) scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-mobile-panel],
+	[data-mobile-panel] *,
+	[data-mobile-burger] span {
+		transition-duration: 1ms !important;
+		transition-delay: 0ms !important;
+	}
+}

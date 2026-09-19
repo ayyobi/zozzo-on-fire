@@ -1,0 +1,23 @@
+---
+// Displays the connected user's real avatar (from PocketBase's `avatars`
+// collection via the `avatar` relation on `users`), big and centered —
+// the main visual focus of the app home. Filled in by app.astro's script
+// once the session is confirmed. Clicking it reopens the avatar picker.
+---
+
+<div class="flex flex-col items-center justify-center">
+	<button
+		id="user-avatar-circle"
+		type="button"
+		aria-label="Choisir mon avatar"
+		class="user-character flex items-center justify-center bg-transparent transition hover:scale-[1.02]"
+	>
+		<img id="user-avatar-img" src="" alt="" class="h-full w-full object-contain" />
+	</button>
+</div>
+
+<style>
+.user-character { width: 100%; height: clamp(332px, 38vw, 440px); cursor: pointer; }
+@media (max-width: 767px) { .user-character { height: 280px; } }
+@media (max-width: 420px) { .user-character { height: 230px; } }
+</style>

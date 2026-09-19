@@ -1,0 +1,147 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppHeader from '../components/AppHeader.astro';
+import UserCharacter from '../components/UserCharacter.astro';
+import UserQuickProfile from '../components/UserQuickProfile.astro';
+import DictionaryPanel from '../components/DictionaryPanel.astro';
+import BonusBar from '../components/BonusBar.astro';
+import SignModal from '../components/SignModal.astro';
+import AvatarPickerModal from '../components/AvatarPickerModal.astro';
+---
+
+<Layout title="ZOZZO | Accueil" description="Ton espace ZOZZO.">
+	<div class="min-h-dvh bg-[var(--color-pale-pink)]">
+		<AppHeader compact />
+
+		<p id="network-warning" class="mx-auto mt-4 hidden max-w-md rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700">
+			Impossible de contacter le serveur. Réessayez dans quelques instants.
+		</p>
+
+		<div id="loading" class="py-24 text-center text-neutral-500">Chargement de ton espace ZOZZO...</div>
+
+		<main id="app-content" class="app-home hidden">
+			<div class="app-dictionary">
+					<DictionaryPanel />
+				</div>
+
+				<div class="app-character">
+					<UserCharacter />
+				</div>
+
+				<div class="app-profile">
+					<UserQuickProfile />
+				</div>
+
+			<div class="app-bonus">
+				<BonusBar />
+			</div>
+		</main>
+	</div>
+
+	<SignModal />
+	<AvatarPickerModal />
+
+	<script>
+		import { refreshAuth, getCurrentUser, onAuthChange, pb, type ZozzoUser } from '../lib/pocketbase';
+		import { getAvatarImageUrl, resolveDisplayAvatar, type AvatarRecord } from '../lib/avatars';
+		import { initAvatarPicker } from '../lib/avatarPickerModal';
+
+		const loading = document.getElementById('loading') as HTMLElement;
+		const networkWarning = document.getElementById('network-warning') as HTMLElement;
+		const content = document.getElementById('app-content') as HTMLElement;
+		const avatarCircle = document.getElementById('user-avatar-circle') as HTMLButtonElement;
+		const avatarImg = document.getElementById('user-avatar-img') as HTMLImageElement;
+		const pseudoEl = document.getElementById('user-pseudo') as HTMLElement;
+
+		async function applyAvatar(avatar: AvatarRecord | undefined, pseudo: string) {
+			const resolved = await resolveDisplayAvatar(avatar);
+			const url = getAvatarImageUrl(resolved);
+			if (url) {
+				avatarImg.src = url;
+				avatarImg.alt = `Avatar de ${pseudo}`;
+			}
+		}
+
+		function renderUser(user: ZozzoUser) {
+			pseudoEl.textContent = user.pseudo || '—';
+			void applyAvatar(user.expand?.avatar as AvatarRecord | undefined, user.pseudo);
+		}
+
+		const avatarPicker = initAvatarPicker((avatar) => {
+			const user = getCurrentUser();
+			applyAvatar(avatar, user?.pseudo ?? '');
+		});
+
+		avatarCircle.addEventListener('click', () => avatarPicker.open());
+
+		async function init() {
+			if (!pb.authStore.isValid) {
+				window.location.replace('/login');
+				return;
+			}
+
+			const result = await refreshAuth();
+
+			if (result === 'invalid') {
+				window.location.replace('/login?raison=expired');
+				return;
+			}
+			if (result === 'network-error') {
+				networkWarning.classList.remove('hidden');
+			}
+			const user = getCurrentUser();
+			if (!user) {
+				window.location.replace('/login');
+				return;
+			}
+
+			renderUser(user);
+			loading.classList.add('hidden');
+			content.classList.remove('hidden');
+			
+
+			// Only players landing here right after creating an account get
+			// the "choose your avatar" popup — not everyone who simply
+			// hasn't picked one yet. inscription.astro redirects to
+			// /app?bienvenue=1 for that one-time case.
+			const params = new URLSearchParams(window.location.search);
+			if (params.get('bienvenue') === '1') {
+				history.replaceState(null, '', '/app');
+				avatarPicker.open();
+			}
+		}
+
+		init();
+
+		onAuthChange((user) => {
+			if (!user) {
+				window.location.replace('/login');
+				return;
+			}
+			if (!content.classList.contains('hidden')) {
+				renderUser(user);
+			}
+		});
+	</script>
+</Layout>
+
+<style>
+.app-shell { min-height: 100svh; background: #fcdfd7; }
+.app-home { max-width: 1292px; min-height: calc(100svh - 54px); margin-inline: auto; padding: 42px 4.3% 20px; grid-template-columns: 31.4% minmax(0, 1fr) 25.7%; grid-template-rows: minmax(414px, 1fr) 83px; gap: 32px 4%; align-items: start; }
+.app-home:not(.hidden) { display: grid; }
+.app-character { align-self: center; justify-self: center; width: 100%; }
+.app-profile { padding-top: 30px; min-width: 0; }
+.app-bonus { grid-column: 1 / -1; width: min(100%, 544px); justify-self: center; transform: translateX(17px); }
+@media (min-width: 1292px) { .app-home { padding-inline: 56px; } }
+/* Mobile is a real re-composition, not the desktop grid shrunk down:
+   pseudo + Profil button above the character (both full width, centered),
+   then the character, then the Dico panel, then the Bonus bar — matching
+   the stacked mobile reference layout, not a 2-column crop of desktop. */
+@media (max-width: 767px) {
+.app-home { padding: 28px 20px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 20px; justify-items: center; }
+.app-profile { grid-column: 1; grid-row: 1; padding-top: 0; width: 100%; }
+.app-character { grid-column: 1; grid-row: 2; }
+.app-dictionary { grid-column: 1; grid-row: 3; width: min(100%, 420px); }
+.app-bonus { grid-column: 1; grid-row: 4; width: min(100%, 420px); transform: none; }
+}
+</style>

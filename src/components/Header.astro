@@ -39,7 +39,7 @@ const LINK_DELAY_STEP = 50;
     </nav>
 
     <a
-      href="/essayer-gratuitement"
+      href="/login"
       class="hidden rounded-full bg-[var(--color-blue)] px-5 py-2 text-base font-semibold text-white transition-transform duration-200 hover:scale-[1.02] md:inline-block"
     >
       Essayez gratuitement
@@ -52,6 +52,7 @@ const LINK_DELAY_STEP = 50;
       aria-expanded="false"
       aria-controls="mobile-menu"
       data-open="false"
+      data-mobile-burger
       class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
     >
       <span
@@ -72,6 +73,7 @@ const LINK_DELAY_STEP = 50;
   <div
     id="mobile-menu"
     data-open="false"
+    data-mobile-panel
     class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-pale-pink)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
   >
     <nav
@@ -98,7 +100,7 @@ const LINK_DELAY_STEP = 50;
 
       <div class="mt-6 overflow-hidden py-2">
         <a
-          href="/essayer-gratuitement"
+          href="/login"
           data-mobile-link
           class="inline-block translate-y-full rounded-full bg-[var(--color-yellow)] px-8 py-3.5 text-lg font-normal text-[var(--color-coral)] opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           style={`transition-delay: ${LINK_BASE_DELAY + navLinks.length * LINK_DELAY_STEP}ms`}
@@ -111,124 +113,19 @@ const LINK_DELAY_STEP = 50;
 </header>
 
 <script>
-  const header = document.querySelector("header");
-  const burgerBtn = document.getElementById("burger-btn");
-  const panel = document.getElementById("mobile-menu");
-  const mobileLinks = panel
-    ? Array.from(
-        panel.querySelectorAll<HTMLAnchorElement>("[data-mobile-link]"),
-      )
-    : [];
+  import { initMobileMenu } from "../lib/mobileMenu";
 
-  let isOpen = false;
-  let savedScrollY = 0;
-  let closeTimers: number[] = [];
+  const header = document.querySelector("header") as HTMLElement;
+  const burgerBtn = document.getElementById("burger-btn") as HTMLButtonElement;
+  const panel = document.getElementById("mobile-menu") as HTMLElement;
 
-  function clearCloseTimers() {
-    closeTimers.forEach((id) => window.clearTimeout(id));
-    closeTimers = [];
-  }
+  const menu = initMobileMenu({ header, burgerBtn, panel });
 
-  function lockScroll() {
-    savedScrollY = window.scrollY;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${savedScrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    if (scrollbarWidth > 0)
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-  }
-
-  function unlockScroll() {
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.left = "";
-    document.body.style.right = "";
-    document.body.style.paddingRight = "";
-    window.scrollTo(0, savedScrollY);
-  }
-
-  function morphToX() {
-    burgerBtn?.setAttribute("data-open", "true");
-    header?.setAttribute("data-menu-open", "true");
-  }
-
-  function morphToBurger() {
-    burgerBtn?.setAttribute("data-open", "false");
-    header?.setAttribute("data-menu-open", "false");
-  }
-
-  function showLinks() {
-    mobileLinks.forEach((el) => {
-      el.classList.remove("translate-y-full", "opacity-0");
-    });
-  }
-
-  function hideLinks() {
-    mobileLinks.forEach((el) => {
-      el.classList.add("translate-y-full", "opacity-0");
-    });
-  }
-
-  function openMenu() {
-    if (isOpen || !panel) return;
-    clearCloseTimers();
-    isOpen = true;
-    burgerBtn?.setAttribute("aria-expanded", "true");
-    burgerBtn?.setAttribute("aria-label", "Fermer le menu");
-
-    morphToX();
-    lockScroll();
-
-    panel.classList.remove("hidden");
-    panel.classList.add("flex");
-    // Force layout so the closed state is committed before animating open.
-    void panel.offsetHeight;
-
-    requestAnimationFrame(() => {
-      panel.setAttribute("data-open", "true");
-      showLinks();
-    });
-  }
-
-  function closeMenu(onDone?: () => void) {
-    if (!isOpen || !panel) return;
-    isOpen = false;
-    burgerBtn?.setAttribute("aria-expanded", "false");
-    burgerBtn?.setAttribute("aria-label", "Ouvrir le menu");
-
-    hideLinks();
-    morphToBurger();
-
-    const closePanel = window.setTimeout(() => {
-      panel.setAttribute("data-open", "false");
-    }, 120);
-
-    const finish = window.setTimeout(() => {
-      panel.classList.remove("flex");
-      panel.classList.add("hidden");
-      unlockScroll();
-      onDone?.();
-    }, 520);
-
-    closeTimers.push(closePanel, finish);
-  }
-
-  burgerBtn?.addEventListener("click", () =>
-    isOpen ? closeMenu() : openMenu(),
-  );
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isOpen) closeMenu();
-  });
-
-  mobileLinks.forEach((link) => {
+  menu.mobileLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const href = link.getAttribute("href") ?? "";
-      closeMenu(() => {
+      menu.close(() => {
         const isSamePageAnchor =
           href.startsWith("/#") && window.location.pathname === "/";
         if (isSamePageAnchor) {
@@ -307,17 +204,8 @@ const LINK_DELAY_STEP = 50;
       font-size: 30px;
     }
   }
-  /* Lines are h-0.5 (2px) tall with a 7px gap, so center-to-center distance is 9px. */
-  #burger-btn[data-open="true"] [data-line="top"] {
-    transform: translateY(9px) rotate(45deg);
-  }
-  #burger-btn[data-open="true"] [data-line="bottom"] {
-    transform: translateY(-9px) rotate(-45deg);
-  }
-  #burger-btn[data-open="true"] [data-line="mid"] {
-    transform: scaleX(0);
-    opacity: 0;
-  }
+  /* Burger↔X transform and panel reveal are shared global rules — see
+     [data-mobile-burger] / [data-mobile-panel] in src/styles/global.css. */
 
   /* Keep the topbar continuous with the pale-pink full-screen menu. */
   header[data-menu-open="true"] #topbar {
@@ -325,24 +213,6 @@ const LINK_DELAY_STEP = 50;
   }
   header[data-menu-open="true"] #burger-btn [data-line] {
     background-color: var(--color-coral);
-  }
-
-  #mobile-menu {
-    opacity: 0;
-    transform: translateY(-24px) scaleY(0.97);
-  }
-  #mobile-menu[data-open="true"] {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #mobile-menu,
-    #mobile-menu *,
-    #burger-btn span {
-      transition-duration: 1ms !important;
-      transition-delay: 0ms !important;
-    }
   }
 
   @media (min-width: 1024px) {

@@ -1,0 +1,32 @@
+---
+// Static shell for the avatar picker overlay. Content is filled in by
+// src/lib/avatarPickerModal.ts — a page includes this once, calls
+// initAvatarPicker(), and gets back { open, close }.
+---
+
+<div
+	id="avatar-modal"
+	class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4 opacity-0 transition-opacity duration-200"
+	role="dialog"
+	aria-modal="true"
+	aria-labelledby="avatar-modal-title"
+>
+	<div class="relative w-full max-w-md scale-95 rounded-3xl bg-white p-6 shadow-xl transition-transform duration-200 sm:p-8" id="avatar-modal-panel">
+		<button
+			id="avatar-modal-close"
+			type="button"
+			aria-label="Fermer"
+			class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-lg text-neutral-600 transition hover:bg-neutral-200 active:scale-95 sm:h-9 sm:w-9"
+		>
+			✕
+		</button>
+
+		<h2 id="avatar-modal-title" class="pr-10 text-center text-xl font-medium text-[var(--color-royal-blue)]">
+			Choisis ton avatar
+		</h2>
+
+		<p id="avatar-modal-status" class="mt-4 hidden text-center text-sm text-neutral-500"></p>
+
+		<div id="avatar-modal-grid" class="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4"></div>
+	</div>
+</div>
