@@ -1,0 +1,80 @@
+---
+import '../styles/stories.css';
+---
+<section id="histoires" class="stories-section" aria-labelledby="stories-heading">
+ <h2 id="stories-heading">Histoires</h2>
+ <p id="stories-status" class="stories-status" role="status">Chargement des histoires...</p>
+ <div id="stories-viewport" class="stories-viewport" hidden>
+  <div id="stories-flow" class="stories-flow"></div>
+ </div>
+</section>
+
+<script>
+ import { getCurrentUser, onAuthChange, type ZozzoUser } from '../lib/pocketbase';
+ import { listStories, getStoryLockReason, type StoryRecord } from '../lib/stories';
+ import { renderStoryCardHTML } from '../lib/storyCardUi';
+ import { getStorySceneWidth, getStoryVariant } from '../lib/storyLayout';
+ import { createStoryScroll } from '../lib/storyScroll';
+ import { showAppToast } from '../lib/toast';
+
+ const section = document.getElementById('histoires') as HTMLElement;
+ const status = document.getElementById('stories-status') as HTMLElement;
+ const viewport = document.getElementById('stories-viewport') as HTMLElement;
+ const flow = document.getElementById('stories-flow') as HTMLElement;
+ const scrolling = createStoryScroll(section, viewport);
+ let cachedStories: StoryRecord[] | null = null;
+ let generation = 0;
+ let disposed = false;
+
+ flow.addEventListener('click', (event) => {
+  if ((event.target as Element).closest('[data-locked-progression]')) {
+   showAppToast("Termine l'histoire précédente pour débloquer celle-ci.");
+  }
+ });
+
+ function render(stories: StoryRecord[], user: ZozzoUser | null) {
+  const currentGeneration = ++generation;
+  scrolling.reset();
+  if (!stories.length) {
+   viewport.hidden = true;
+   status.hidden = false;
+   status.textContent = 'Les prochaines aventures de Zozzo arrivent bientôt !';
+   return;
+  }
+  const reasons = stories.map((story, i) => getStoryLockReason(story, i, stories, user));
+  const firstLocked = reasons.findIndex(reason => reason !== null);
+  const cutoff = firstLocked < 0 ? getStorySceneWidth(stories.length) : getStoryVariant(firstLocked).x;
+  flow.innerHTML = '<div class="story-path" aria-hidden="true"></div>' + stories
+   .map((story, i) => renderStoryCardHTML(story, i, reasons[i])).join('');
+  flow.style.setProperty('--path-unlocked', String(cutoff));
+  status.hidden = true;
+  viewport.hidden = false;
+  scrolling.layout(getStorySceneWidth(stories.length));
+  // Explicit artwork dimensions reserve the layout while images decode.
+  const images = Array.from(flow.querySelectorAll('img'));
+  void Promise.allSettled([document.fonts.ready, ...images.map(image => image.decode())]).then(() => {
+   if (!disposed && currentGeneration === generation) scrolling.refresh();
+  });
+ }
+
+ const unsubscribe = onAuthChange((user) => {
+  if (cachedStories) render(cachedStories, user);
+ });
+ void listStories().then(stories => {
+  if (disposed) return;
+  cachedStories = stories;
+  render(stories, getCurrentUser());
+ }).catch(() => {
+  if (disposed) return;
+  scrolling.reset();
+  viewport.hidden = true;
+  status.hidden = false;
+  status.textContent = 'Impossible de charger les histoires pour le moment.';
+ });
+ document.addEventListener('astro:before-swap', () => {
+  disposed = true;
+  generation++;
+  unsubscribe();
+  scrolling.destroy();
+ }, { once: true });
+</script>

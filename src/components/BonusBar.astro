@@ -1,8 +1,4 @@
 ---
-// Visual shell only — no bonus/inventory collection exists in PocketBase
-// yet, so nothing here is wired to real data. Each button already carries
-// a `data-bonus-id` so a future inventory feature can hook in without
-// reworking the markup.
 const bonuses = [
 	{ id: 'bol', icon: '/images/icon/bol.svg', label: 'Bonus' },
 	{ id: 'potion', icon: '/images/icon/potion.svg', label: 'Potion' },
@@ -11,24 +7,74 @@ const bonuses = [
 ];
 ---
 
-<div class="bonus-bar">
+<div class="bonus-bar" role="group" aria-label="Objets à débloquer après chaque histoire">
 	{
-		bonuses.map((bonus) => (
+		bonuses.map((bonus, index) => (
 			<button
 				type="button"
 				data-bonus-id={bonus.id}
-				aria-label={bonus.label}
-				class="bonus-item flex items-center justify-center rounded-full transition-transform duration-150 hover:-translate-y-1 hover:scale-105 active:scale-95"
+				data-bonus-label={bonus.label}
+				aria-label={`${bonus.label} verrouillé — termine ${index + 1} histoire${index ? 's' : ''} pour le débloquer`}
+				title={`Termine ${index + 1} histoire${index ? 's' : ''} pour débloquer cet objet`}
+				disabled
+				class="bonus-item"
 			>
 				<img src={bonus.icon} alt="" />
+				<svg class="bonus-lock" width="22" height="35" viewBox="0 0 40 64" fill="none" aria-hidden="true">
+					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#fff000" stroke-width="3" />
+					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#2453f5" stroke-width="1" />
+					<path d="M2 29H38V62H2Z" fill="#fff000" stroke="#e3ca00" />
+					<path d="M24 43a4 4 0 1 0-7 2l-2 9h10l-2-9a4 4 0 0 0 1-2Z" fill="#2453f5" />
+				</svg>
 			</button>
 		))
 	}
 </div>
+<p class="bonus-status" role="status" aria-live="polite">Termine une histoire pour débloquer un objet !</p>
+
+<script>
+	import { onAuthChange } from '../lib/pocketbase';
+	import { countCompletedStories } from '../lib/bonusProgress';
+
+	const items = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-bonus-id]'));
+	const status = document.querySelector<HTMLElement>('.bonus-status');
+
+	onAuthChange((user) => {
+		const completed = countCompletedStories(user?.histoires_terminees);
+		items.forEach((item, index) => {
+			const unlocked = completed > index;
+			const label = item.dataset.bonusLabel;
+			const hint = unlocked
+				? `${label} débloqué !`
+				: `${label} verrouillé — termine ${index + 1} histoire${index ? 's' : ''} pour le débloquer`;
+			item.disabled = !unlocked;
+			item.setAttribute('aria-label', hint);
+			item.title = hint;
+		});
+		if (status) status.textContent = completed === 0
+			? 'Termine une histoire pour débloquer un objet !'
+			: completed >= items.length
+				? 'Bravo, tu as débloqué tous les objets !'
+				: `${completed} objet${completed > 1 ? 's' : ''} débloqué${completed > 1 ? 's' : ''} ! Termine une nouvelle histoire pour gagner le suivant.`;
+	});
+
+	items.forEach((item) => item.addEventListener('click', () => {
+		if (!item.disabled && status) status.textContent = `${item.dataset.bonusLabel} fait partie de ta collection !`;
+	}));
+</script>
 
 <style>
 .bonus-bar { display: flex; width: 100%; height: 83px; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 26px 6px 14px; border-radius: 25px; background: #f96346; }
-.bonus-item { width: 70px; height: 71px; }
+.bonus-item { display: grid; place-items: center; width: 70px; height: 71px; flex-shrink: 0; border-radius: 50%; transition: transform 150ms; }
+.bonus-item > img, .bonus-item > svg { grid-area: 1 / 1; }
+.bonus-item:disabled { cursor: not-allowed; }
+.bonus-item:enabled:hover { transform: translateY(-4px) scale(1.05); }
+.bonus-item:enabled:active { transform: scale(.95); }
+.bonus-item:focus-visible { outline: 3px solid #2453f5; outline-offset: 3px; }
+.bonus-item > .bonus-lock { display: block; z-index: 1; width: 22px; height: 35px; min-width: 22px; max-width: none; overflow: visible; pointer-events: none; }
+.bonus-item:enabled .bonus-lock { display: none; }
+.bonus-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce) { .bonus-item { transition: none; } .bonus-item:enabled:hover, .bonus-item:enabled:active { transform: none; } }
 .bonus-item img { width: auto; height: 70px; max-width: 80px; object-fit: contain; }
 .bonus-item:first-child img { height: 56px; }
 @media (max-width: 420px) { .bonus-bar { padding-inline: 12px; gap: 8px; } .bonus-item { width: 56px; } .bonus-item img { max-width: 60px; height: 60px; } }

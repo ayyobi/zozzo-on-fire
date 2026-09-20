@@ -5,7 +5,7 @@
 // via src/lib/mobileMenu.ts + the shared [data-mobile-burger] /
 // [data-mobile-panel] rules in global.css — only the content differs.
 const menuItems = [
-	{ id: 'histoire', icon: '/images/icon/histoire.svg', label: 'Histoires', href: null },
+	{ id: 'histoire', icon: '/images/icon/histoire.svg', label: 'Histoires', href: '/app#histoires' },
 	{ id: 'lecon', icon: '/images/icon/lecon.svg', label: 'Leçons', href: null },
 	{ id: 'cahier', icon: '/images/icon/cahier.svg', label: 'Dictionnaire', href: '/dictionnaire' },
 	{ id: 'jeux', icon: '/images/icon/jeux.svg', label: 'Mini-jeux', href: null },
@@ -146,6 +146,12 @@ const allMobileItems = [...mobileOnlyItems, ...menuItems, ...mobileTrailingItems
 		btn.addEventListener('click', () => {
 			showToast(`${btn.dataset.soon} arrive bientôt !`);
 		});
+	});
+
+	// Lets other pages (e.g. locked-story feedback) reuse this same toast —
+	// see src/lib/toast.ts.
+	window.addEventListener('zozzo:toast', (e) => {
+		showToast((e as CustomEvent<string>).detail);
 	});
 
 	const header = document.querySelector('header') as HTMLElement;

@@ -1,12 +1,8 @@
-// Data layer for the LSF dictionary (`signes` / `categories_signes`).
+// Data layer for the LSF dictionary (`signes` / `categories`).
 //
-// ⚠️ FIELD NAMES BELOW ARE UNCONFIRMED. Nargis has not shared the exact
-// PocketBase schema for these two collections yet. The names used here
-// (mot, image, video, categorie, premium, nom) are the exact words she
-// used herself as examples when describing the schema — they are a
-// best-effort guess, not a verified fact. Everything that depends on the
-// real field names is isolated in the two config objects below: if the
-// real names differ, this is the ONLY file that needs to change.
+// Field names below are CONFIRMED against the live PocketBase API (both
+// collections are publicly readable, so their real shape was checked
+// directly rather than guessed) — see the report for the raw response.
 import { pb, type ZozzoUser } from './pocketbase';
 import type { RecordModel } from 'pocketbase';
 
@@ -18,9 +14,11 @@ export const SIGN_FIELDS = {
 	premium: 'premium',
 } as const;
 
+// `categories` (not `categories_signes`) — shared between the dictionary
+// (`signes.categorie`) and Leçons (`lecons.categorie`). It has no
+// `premium` field of its own; premium gating lives on `signes.premium`.
 export const CATEGORY_FIELDS = {
-	name: 'nom',
-	premium: 'premium',
+	name: 'titre',
 } as const;
 
 export interface SignRecord extends RecordModel {
@@ -63,7 +61,10 @@ export async function listCategories(): Promise<RecordModel[]> {
 	// Kept separate from searchSigns() and allowed to fail silently at the
 	// call site: a wrong field/collection guess here should only disable
 	// the category filter, not break the whole dictionary.
-	return pb.collection('categories_signes').getFullList({ sort: CATEGORY_FIELDS.name });
+	const categories = await pb.collection('categories').getFullList({ sort: CATEGORY_FIELDS.name });
+	// A blank/draft category (no titre) shouldn't show up as an empty
+	// option in the filter.
+	return categories.filter((c) => typeof c[CATEGORY_FIELDS.name] === 'string' && c[CATEGORY_FIELDS.name]);
 }
 
 function resolveFileUrl(record: SignRecord, field: string): string | null {
@@ -91,7 +92,7 @@ export function getSignWord(sign: SignRecord): string {
 // UI-only gate: hides the "locked" state and nudges towards /abonnement.
 // This is NOT the real protection — a user editing the frontend must
 // still be refused the premium video by PocketBase itself (API Rules on
-// `signes`/`categories_signes`), which has to be configured server-side.
+// `signes`), which has to be configured server-side.
 export function isSignLocked(sign: SignRecord, user: ZozzoUser | null): boolean {
 	const premium = !!sign[SIGN_FIELDS.premium];
 	return premium && user?.abonnement_actif !== true;

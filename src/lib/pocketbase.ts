@@ -19,6 +19,9 @@ export const pb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
 // rejected/reset server-side by the PocketBase hook (see
 // pocketbase/pb_hooks/protect_users_fields.pb.js).
 export interface ZozzoUser extends RecordModel {
+	// Optional integration contract; the story module/schema is not built yet.
+	// Only trusted story completion logic should populate these unique IDs.
+	histoires_terminees?: string[];
 	email: string;
 	pseudo: string;
 	age: number;

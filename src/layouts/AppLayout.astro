@@ -1,0 +1,33 @@
+---
+// Shared shell for every authenticated /app/* page: same header, same
+// "checking your session" loading state, same network-error banner. Only
+// the <slot /> content (and its own reveal-on-ready logic via
+// src/lib/appPage.ts) differs per page.
+import Layout from './Layout.astro';
+import AppHeader from '../components/AppHeader.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+	loadingText?: string;
+}
+
+const { title = 'ZOZZO', description = 'Ton espace ZOZZO.', loadingText = 'Chargement...' } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+	<div class="min-h-dvh bg-[var(--color-pale-pink)]">
+		<AppHeader compact />
+
+		<p
+			id="network-warning"
+			class="mx-auto mt-4 hidden max-w-md rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700"
+		>
+			Impossible de contacter le serveur. Réessayez dans quelques instants.
+		</p>
+
+		<div id="loading" class="py-24 text-center text-neutral-500">{loadingText}</div>
+
+		<slot />
+	</div>
+</Layout>

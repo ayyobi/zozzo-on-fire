@@ -1,48 +1,41 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AppHeader from '../components/AppHeader.astro';
+import AppLayout from '../layouts/AppLayout.astro';
 import UserCharacter from '../components/UserCharacter.astro';
 import UserQuickProfile from '../components/UserQuickProfile.astro';
 import DictionaryPanel from '../components/DictionaryPanel.astro';
 import BonusBar from '../components/BonusBar.astro';
+import StoriesSection from '../components/StoriesSection.astro';
 import SignModal from '../components/SignModal.astro';
 import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 ---
 
-<Layout title="ZOZZO | Accueil" description="Ton espace ZOZZO.">
-	<div class="min-h-dvh bg-[var(--color-pale-pink)]">
-		<AppHeader compact />
+<AppLayout title="ZOZZO | Accueil" description="Ton espace ZOZZO." loadingText="Chargement de ton espace ZOZZO...">
+	<main id="app-content" class="app-home hidden">
+		<div class="app-dictionary">
+			<DictionaryPanel />
+		</div>
 
-		<p id="network-warning" class="mx-auto mt-4 hidden max-w-md rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700">
-			Impossible de contacter le serveur. Réessayez dans quelques instants.
-		</p>
+		<div class="app-character">
+			<UserCharacter />
+		</div>
 
-		<div id="loading" class="py-24 text-center text-neutral-500">Chargement de ton espace ZOZZO...</div>
+		<div class="app-profile">
+			<UserQuickProfile />
+		</div>
 
-		<main id="app-content" class="app-home hidden">
-			<div class="app-dictionary">
-					<DictionaryPanel />
-				</div>
+		<div class="app-bonus">
+			<BonusBar />
+		</div>
+	</main>
 
-				<div class="app-character">
-					<UserCharacter />
-				</div>
-
-				<div class="app-profile">
-					<UserQuickProfile />
-				</div>
-
-			<div class="app-bonus">
-				<BonusBar />
-			</div>
-		</main>
-	</div>
+	<StoriesSection />
 
 	<SignModal />
 	<AvatarPickerModal />
 
 	<script>
-		import { refreshAuth, getCurrentUser, onAuthChange, pb, type ZozzoUser } from '../lib/pocketbase';
+		import { checkAppSession, watchAppSession } from '../lib/appPage';
+		import { getCurrentUser, type ZozzoUser } from '../lib/pocketbase';
 		import { getAvatarImageUrl, resolveDisplayAvatar, type AvatarRecord } from '../lib/avatars';
 		import { initAvatarPicker } from '../lib/avatarPickerModal';
 
@@ -75,30 +68,12 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 		avatarCircle.addEventListener('click', () => avatarPicker.open());
 
 		async function init() {
-			if (!pb.authStore.isValid) {
-				window.location.replace('/login');
-				return;
-			}
-
-			const result = await refreshAuth();
-
-			if (result === 'invalid') {
-				window.location.replace('/login?raison=expired');
-				return;
-			}
-			if (result === 'network-error') {
-				networkWarning.classList.remove('hidden');
-			}
-			const user = getCurrentUser();
-			if (!user) {
-				window.location.replace('/login');
-				return;
-			}
+			const user = await checkAppSession(networkWarning);
+			if (!user) return;
 
 			renderUser(user);
 			loading.classList.add('hidden');
 			content.classList.remove('hidden');
-			
 
 			// Only players landing here right after creating an account get
 			// the "choose your avatar" popup — not everyone who simply
@@ -113,20 +88,15 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 
 		init();
 
-		onAuthChange((user) => {
-			if (!user) {
-				window.location.replace('/login');
-				return;
-			}
+		watchAppSession((user) => {
 			if (!content.classList.contains('hidden')) {
 				renderUser(user);
 			}
 		});
 	</script>
-</Layout>
+</AppLayout>
 
 <style>
-.app-shell { min-height: 100svh; background: #fcdfd7; }
 .app-home { max-width: 1292px; min-height: calc(100svh - 54px); margin-inline: auto; padding: 42px 4.3% 20px; grid-template-columns: 31.4% minmax(0, 1fr) 25.7%; grid-template-rows: minmax(414px, 1fr) 83px; gap: 32px 4%; align-items: start; }
 .app-home:not(.hidden) { display: grid; }
 .app-character { align-self: center; justify-self: center; width: 100%; }

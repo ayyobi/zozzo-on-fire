@@ -1,52 +1,46 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AppHeader from '../components/AppHeader.astro';
+import AppLayout from '../layouts/AppLayout.astro';
 import SignModal from '../components/SignModal.astro';
 ---
 
-<Layout title="ZOZZO | Dictionnaire" description="Le dictionnaire de la langue des signes ZOZZO.">
-	<div class="min-h-dvh bg-[var(--color-pale-pink)]">
-		<AppHeader />
+<AppLayout
+	title="ZOZZO | Dictionnaire"
+	description="Le dictionnaire de la langue des signes ZOZZO."
+	loadingText="Chargement du dictionnaire..."
+>
+	<main id="dict-content" class="mx-auto hidden max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
+		<h1 class="text-center text-2xl font-semibold text-[var(--color-royal-blue)] sm:text-3xl">Dictionnaire</h1>
 
-		<p id="network-warning" class="mx-auto mt-4 hidden max-w-md rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700">
-			Impossible de contacter le serveur. Réessayez dans quelques instants.
-		</p>
+		<div class="mx-auto flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center">
+			<label class="flex h-12 flex-1 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 focus-within:border-[var(--color-blue)]">
+				<span class="sr-only">Rechercher un signe</span>
+				<input
+					id="dict-search"
+					type="search"
+					placeholder="Rechercher un signe (ex : bonjour)"
+					class="w-full bg-transparent text-base text-neutral-800 outline-none placeholder:text-neutral-400 sm:text-sm"
+				/>
+				<span aria-hidden="true" class="text-neutral-400">🔍</span>
+			</label>
 
-		<div id="loading" class="py-24 text-center text-neutral-500">Chargement du dictionnaire...</div>
+			<select
+				id="dict-category"
+				class="hidden h-12 rounded-full border border-neutral-200 bg-white px-4 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
+			>
+				<option value="">Toutes les catégories</option>
+			</select>
+		</div>
 
-		<main id="dict-content" class="mx-auto hidden max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
-			<h1 class="text-center text-2xl font-semibold text-[var(--color-royal-blue)] sm:text-3xl">Dictionnaire</h1>
+		<p id="dict-status" class="hidden text-center text-sm text-neutral-400"></p>
 
-			<div class="mx-auto flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center">
-				<label class="flex h-12 flex-1 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 focus-within:border-[var(--color-blue)]">
-					<span class="sr-only">Rechercher un signe</span>
-					<input
-						id="dict-search"
-						type="search"
-						placeholder="Rechercher un signe (ex : bonjour)"
-						class="w-full bg-transparent text-base text-neutral-800 outline-none placeholder:text-neutral-400 sm:text-sm"
-					/>
-					<span aria-hidden="true" class="text-neutral-400">🔍</span>
-				</label>
-
-				<select
-					id="dict-category"
-					class="hidden h-12 rounded-full border border-neutral-200 bg-white px-4 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
-				>
-					<option value="">Toutes les catégories</option>
-				</select>
-			</div>
-
-			<p id="dict-status" class="hidden text-center text-sm text-neutral-400"></p>
-
-			<div id="dict-results" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"></div>
-		</main>
-	</div>
+		<div id="dict-results" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"></div>
+	</main>
 
 	<SignModal />
 
 	<script>
-		import { refreshAuth, getCurrentUser, onAuthChange, pb } from '../lib/pocketbase';
+		import { checkAppSession, watchAppSession } from '../lib/appPage';
+		import { getCurrentUser } from '../lib/pocketbase';
 		import { listCategories, CATEGORY_FIELDS } from '../lib/dictionary';
 		import { attachDictionaryController } from '../lib/dictionaryController';
 		import { initSignModal } from '../lib/signModal';
@@ -75,23 +69,8 @@ import SignModal from '../components/SignModal.astro';
 		}
 
 		async function init() {
-			if (!pb.authStore.isValid) {
-				window.location.replace('/login');
-				return;
-			}
-
-			const result = await refreshAuth();
-			if (result === 'invalid') {
-				window.location.replace('/login?raison=expired');
-				return;
-			}
-			if (result === 'network-error') {
-				networkWarning.classList.remove('hidden');
-			}
-			if (!getCurrentUser()) {
-				window.location.replace('/login');
-				return;
-			}
+			const user = await checkAppSession(networkWarning);
+			if (!user) return;
 
 			await loadCategories();
 
@@ -113,8 +92,6 @@ import SignModal from '../components/SignModal.astro';
 
 		init();
 
-		onAuthChange((user) => {
-			if (!user) window.location.replace('/login');
-		});
+		watchAppSession(() => {});
 	</script>
-</Layout>
+</AppLayout>

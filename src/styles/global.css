@@ -41,6 +41,12 @@ section[id] { scroll-margin-top: 24px; }
 	--color-lime: #b4c173;
 	--color-tab: #e9dca5;
 	--color-card-shadow: #566565;
+	/* Added for the Histoires story-card backgrounds — no existing token
+	   covered turquoise/sky-blue/navy, everything else below reuses the
+	   palette above (pale-pink, green, blue). */
+	--color-turquoise: #6fc6b4;
+	--color-sky-light: #bfe9e4;
+	--color-navy: #16295c;
 }
 
 /*
