@@ -67,7 +67,7 @@ export function renderLessonCardHTML(lesson: LessonRecord, open: boolean): strin
 			<${tag} ${attrs} data-lesson-card
 				class="lesson-card max-md:min-h-[440px] max-md:rounded-[32px] max-md:p-7 flex min-h-[420px] w-full cursor-pointer flex-col rounded-[28px] bg-[#2450cf] px-6 pt-6 pb-7 text-center text-[#fcdfd7] no-underline hover:outline-3 hover:-outline-offset-3 hover:outline-[#fcdfd7] ${open ? '' : ' lesson-card--locked [&_.lesson-card-image]:grayscale [&_.lesson-card-image]:opacity-70'}"
 			>
-				<span class="lesson-cover relative grid h-[260px] max-md:h-[300px] w-full place-items-center">
+				<span class="lesson-cover relative grid h-[260px] max-md:h-[300px] w-full place-items-center p-3 max-md:p-4">
 					${img}
 					${lockOverlay}
 				</span>

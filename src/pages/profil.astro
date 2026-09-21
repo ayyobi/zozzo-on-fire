@@ -1,325 +1,425 @@
 ---
-import MinimalLayout from '../layouts/MinimalLayout.astro';
-import AvatarPickerModal from '../components/AvatarPickerModal.astro';
+import MinimalLayout from "../layouts/MinimalLayout.astro";
+import AvatarPickerModal from "../components/AvatarPickerModal.astro";
 ---
 
 <MinimalLayout
-	title="ZOZZO | Mon profil"
-	description="Ton profil ZOZZO."
-	bodyClass="m-0 min-h-dvh px-4 py-10 bg-[var(--color-pale-pink)]"
+  title="ZOZZO | Mon profil"
+  description="Ton profil ZOZZO."
+  bodyClass="m-0 min-h-dvh px-4 py-10 bg-[var(--color-pale-pink)]"
+  navigation="app"
 >
-	<div class="mx-auto w-full max-w-2xl">
-		<a href="/app" class="mb-2 block text-center text-sm text-neutral-500 hover:underline">&larr; Retour à l'accueil</a>
-		<a href="/app" class="mb-8 flex justify-center">
-			<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-10 w-auto" />
-		</a>
+  <div class="mx-auto w-full max-w-2xl">
+    <a
+      href="/app"
+      class="mb-2 block text-center text-sm text-neutral-500 hover:underline"
+      >&larr; Retour à l'accueil</a
+    >
+    <a href="/app" class="mb-8 flex justify-center">
+      <img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-10 w-auto" />
+    </a>
 
-		<!-- Loading state, shown until the PocketBase session is confirmed -->
-		<div id="loading" class="py-24 text-center text-neutral-500">Chargement de ton profil...</div>
+    <!-- Loading state, shown until the PocketBase session is confirmed -->
+    <div id="loading" class="py-24 text-center text-neutral-500">
+      Chargement de ton profil...
+    </div>
 
-		<!-- Non-blocking banner for transient network issues while re-checking the session -->
-		<p id="network-warning" class="mb-4 hidden rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700">
-			Impossible de contacter le serveur. Réessayez dans quelques instants.
-		</p>
+    <!-- Non-blocking banner for transient network issues while re-checking the session -->
+    <p
+      id="network-warning"
+      class="mb-4 hidden rounded-2xl bg-yellow-50 px-4 py-3 text-center text-sm text-yellow-700"
+    >
+      Impossible de contacter le serveur. Réessayez dans quelques instants.
+    </p>
 
-		<div id="profile-content" class="hidden">
-			<!-- Avatar + pseudo -->
-			<div class="mb-8 flex flex-col items-center text-center">
-				<button
-					id="avatar-display"
-					type="button"
-					aria-label="Choisir mon avatar"
-					class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-white p-2 shadow-md transition hover:scale-105"
-				>
-					<img id="avatar-display-img" src="" alt="" class="h-full w-full object-contain" />
-				</button>
-				<h1 id="pseudo-display" class="mt-4 text-2xl font-medium text-neutral-900"></h1>
-				<button
-					id="open-avatar-picker"
-					type="button"
-					class="mt-3 rounded-full bg-white px-5 py-2 text-sm font-semibold text-[var(--color-royal-blue)] shadow transition hover:opacity-90"
-				>
-					Choisissez votre avatar
-				</button>
-			</div>
+    <div id="profile-content" class="hidden">
+      <!-- Avatar + pseudo -->
+      <div class="mb-8 flex flex-col items-center text-center">
+        <button
+          id="avatar-display"
+          type="button"
+          aria-label="Choisir mon avatar"
+          class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-white p-2 shadow-md transition hover:scale-105"
+        >
+          <img
+            id="avatar-display-img"
+            src=""
+            alt=""
+            class="h-full w-full object-contain"
+          />
+        </button>
+        <h1
+          id="pseudo-display"
+          class="mt-4 text-2xl font-medium text-neutral-900"
+        >
+        </h1>
+        <button
+          id="open-avatar-picker"
+          type="button"
+          class="mt-3 rounded-full bg-white px-5 py-2 text-sm font-semibold text-[var(--color-royal-blue)] shadow transition hover:opacity-90"
+        >
+          Choisissez votre avatar
+        </button>
+      </div>
 
-			<!-- Read-only information card -->
-			<div id="info-view" class="rounded-3xl border border-neutral-100 bg-white shadow-sm">
-				<p class="border-b border-neutral-100 px-6 py-4 text-sm font-semibold tracking-wide text-neutral-500 uppercase">
-					Informations
-				</p>
-				<dl>
-					<div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
-						<dt class="text-sm text-neutral-500">Pseudo</dt>
-						<dd id="info-pseudo" class="text-sm font-medium text-neutral-900"></dd>
-					</div>
-					<div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
-						<dt class="text-sm text-neutral-500">Email</dt>
-						<dd id="info-email" class="text-sm font-medium text-neutral-900"></dd>
-					</div>
-					<div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
-						<dt class="text-sm text-neutral-500">Âge</dt>
-						<dd id="info-age" class="text-sm font-medium text-neutral-900"></dd>
-					</div>
-					<div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
-						<dt class="text-sm text-neutral-500">Niveau</dt>
-						<dd id="info-niveau" class="text-sm font-medium text-neutral-900"></dd>
-					</div>
-					<div class="flex items-center justify-between px-6 py-4">
-						<dt class="text-sm text-neutral-500">Abonnement</dt>
-						<dd id="info-abonnement" class="text-sm font-medium text-neutral-900"></dd>
-					</div>
-				</dl>
-			</div>
+      <!-- Read-only information card -->
+      <div
+        id="info-view"
+        class="rounded-3xl border border-neutral-100 bg-white shadow-sm"
+      >
+        <p
+          class="border-b border-neutral-100 px-6 py-4 text-sm font-semibold tracking-wide text-neutral-500 uppercase"
+        >
+          Informations
+        </p>
+        <dl>
+          <div
+            class="flex items-center justify-between border-b border-neutral-100 px-6 py-4"
+          >
+            <dt class="text-sm text-neutral-500">Pseudo</dt>
+            <dd id="info-pseudo" class="text-sm font-medium text-neutral-900">
+            </dd>
+          </div>
+          <div
+            class="flex items-center justify-between border-b border-neutral-100 px-6 py-4"
+          >
+            <dt class="text-sm text-neutral-500">Email</dt>
+            <dd id="info-email" class="text-sm font-medium text-neutral-900">
+            </dd>
+          </div>
+          <div
+            class="flex items-center justify-between border-b border-neutral-100 px-6 py-4"
+          >
+            <dt class="text-sm text-neutral-500">Âge</dt>
+            <dd id="info-age" class="text-sm font-medium text-neutral-900"></dd>
+          </div>
+          <div
+            class="flex items-center justify-between border-b border-neutral-100 px-6 py-4"
+          >
+            <dt class="text-sm text-neutral-500">Niveau</dt>
+            <dd id="info-niveau" class="text-sm font-medium text-neutral-900">
+            </dd>
+          </div>
+          <div class="flex items-center justify-between px-6 py-4">
+            <dt class="text-sm text-neutral-500">Abonnement</dt>
+            <dd
+              id="info-abonnement"
+              class="text-sm font-medium text-neutral-900"
+            >
+            </dd>
+          </div>
+        </dl>
+      </div>
 
-			<button
-				id="open-edit"
-				type="button"
-				class="mt-6 w-full rounded-full bg-[var(--color-blue)] py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95"
-			>
-				Modifier mes informations
-			</button>
+      <button
+        id="open-edit"
+        type="button"
+        class="mt-6 w-full rounded-full bg-[var(--color-blue)] py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95"
+      >
+        Modifier mes informations
+      </button>
 
-			<a
-				id="subscription-cta"
-				href="/abonnement"
-				class="mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95"
-			></a>
+      <a
+        id="subscription-cta"
+        href="/abonnement"
+        class="mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95"
+      ></a>
 
-			<!-- Edit form, hidden until "Modifier mes informations" is clicked -->
-			<form id="edit-form" class="mt-6 hidden rounded-3xl bg-white p-6 shadow-lg">
-				<p id="edit-error" class="mb-4 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600" role="alert"></p>
+      <a
+        href="/app/jeux/top_chrono?classement=1"
+        class="mt-3 block w-full rounded-full bg-[var(--color-royal-blue)] py-3.5 text-center text-base font-semibold text-white transition hover:opacity-90 active:scale-95"
+      >
+        Accéder au classement
+      </a>
 
-				<div class="mb-4">
-					<label for="edit-pseudo" class="mb-1.5 block text-sm font-medium text-neutral-800">Pseudo</label>
-					<input
-						id="edit-pseudo"
-						type="text"
-						required
-						minlength="2"
-						maxlength="24"
-						class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
-					/>
-				</div>
+      <!-- Edit form, hidden until "Modifier mes informations" is clicked -->
+      <form
+        id="edit-form"
+        class="mt-6 hidden rounded-3xl bg-white p-6 shadow-lg"
+      >
+        <p
+          id="edit-error"
+          class="mb-4 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600"
+          role="alert"
+        >
+        </p>
 
-				<div class="mb-5">
-					<label for="edit-age" class="mb-1.5 block text-sm font-medium text-neutral-800">Âge</label>
-					<input
-						id="edit-age"
-						type="number"
-						required
-						min="4"
-						max="18"
-						class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
-					/>
-				</div>
+        <div class="mb-4">
+          <label
+            for="edit-pseudo"
+            class="mb-1.5 block text-sm font-medium text-neutral-800"
+            >Pseudo</label
+          >
+          <input
+            id="edit-pseudo"
+            type="text"
+            required
+            minlength="2"
+            maxlength="24"
+            class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
+          />
+        </div>
 
-				<p class="mb-4 text-xs text-neutral-400">
-					L'email, le niveau et l'abonnement ne se modifient pas depuis ce formulaire.
-				</p>
+        <div class="mb-5">
+          <label
+            for="edit-age"
+            class="mb-1.5 block text-sm font-medium text-neutral-800">Âge</label
+          >
+          <input
+            id="edit-age"
+            type="number"
+            required
+            min="4"
+            max="18"
+            class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
+          />
+        </div>
 
-				<div class="flex gap-3">
-					<button
-						id="edit-save"
-						type="submit"
-						class="rounded-full bg-[var(--color-coral)] px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-					>
-						Enregistrer
-					</button>
-					<button
-						id="edit-cancel"
-						type="button"
-						class="rounded-full bg-neutral-100 px-5 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-200"
-					>
-						Annuler
-					</button>
-				</div>
-			</form>
+        <p class="mb-4 text-xs text-neutral-400">
+          L'email, le niveau et l'abonnement ne se modifient pas depuis ce
+          formulaire.
+        </p>
 
-			<button
-				id="logout-btn"
-				type="button"
-				class="mx-auto mt-8 block text-sm font-medium text-neutral-500 hover:underline"
-			>
-				Se déconnecter
-			</button>
-		</div>
-	</div>
+        <div class="flex gap-3">
+          <button
+            id="edit-save"
+            type="submit"
+            class="rounded-full bg-[var(--color-coral)] px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Enregistrer
+          </button>
+          <button
+            id="edit-cancel"
+            type="button"
+            class="rounded-full bg-neutral-100 px-5 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-200"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
 
-	<AvatarPickerModal />
+      <button
+        id="logout-btn"
+        type="button"
+        class="mx-auto mt-8 block text-sm font-medium text-neutral-500 hover:underline"
+      >
+        Se déconnecter
+      </button>
+    </div>
+  </div>
 
-	<script>
-		import {
-			refreshAuth,
-			getCurrentUser,
-			updateProfile,
-			logout,
-			onAuthChange,
-			pb,
-			friendlyErrorMessage,
-			type ZozzoUser,
-		} from '../lib/pocketbase';
-		import { getAvatarImageUrl, resolveDisplayAvatar, type AvatarRecord } from '../lib/avatars';
-		import { initAvatarPicker } from '../lib/avatarPickerModal';
+  <AvatarPickerModal />
 
-		const loading = document.getElementById('loading') as HTMLElement;
-		const networkWarning = document.getElementById('network-warning') as HTMLElement;
-		const content = document.getElementById('profile-content') as HTMLElement;
+  <script>
+    import {
+      refreshAuth,
+      getCurrentUser,
+      updateProfile,
+      logout,
+      onAuthChange,
+      pb,
+      friendlyErrorMessage,
+      type ZozzoUser,
+    } from "../lib/pocketbase";
+    import {
+      getAvatarImageUrl,
+      resolveDisplayAvatar,
+      type AvatarRecord,
+    } from "../lib/avatars";
+    import { initAvatarPicker } from "../lib/avatarPickerModal";
 
-		const avatarDisplay = document.getElementById('avatar-display') as HTMLButtonElement;
-		const avatarDisplayImg = document.getElementById('avatar-display-img') as HTMLImageElement;
-		const pseudoDisplay = document.getElementById('pseudo-display') as HTMLElement;
-		const infoPseudo = document.getElementById('info-pseudo') as HTMLElement;
-		const infoEmail = document.getElementById('info-email') as HTMLElement;
-		const infoAge = document.getElementById('info-age') as HTMLElement;
-		const infoNiveau = document.getElementById('info-niveau') as HTMLElement;
-		const infoAbonnement = document.getElementById('info-abonnement') as HTMLElement;
-		const subscriptionCta = document.getElementById('subscription-cta') as HTMLAnchorElement;
+    const loading = document.getElementById("loading") as HTMLElement;
+    const networkWarning = document.getElementById(
+      "network-warning",
+    ) as HTMLElement;
+    const content = document.getElementById("profile-content") as HTMLElement;
 
-		const openAvatarPickerBtn = document.getElementById('open-avatar-picker') as HTMLButtonElement;
+    const avatarDisplay = document.getElementById(
+      "avatar-display",
+    ) as HTMLButtonElement;
+    const avatarDisplayImg = document.getElementById(
+      "avatar-display-img",
+    ) as HTMLImageElement;
+    const pseudoDisplay = document.getElementById(
+      "pseudo-display",
+    ) as HTMLElement;
+    const infoPseudo = document.getElementById("info-pseudo") as HTMLElement;
+    const infoEmail = document.getElementById("info-email") as HTMLElement;
+    const infoAge = document.getElementById("info-age") as HTMLElement;
+    const infoNiveau = document.getElementById("info-niveau") as HTMLElement;
+    const infoAbonnement = document.getElementById(
+      "info-abonnement",
+    ) as HTMLElement;
+    const subscriptionCta = document.getElementById(
+      "subscription-cta",
+    ) as HTMLAnchorElement;
 
-		const openEditBtn = document.getElementById('open-edit') as HTMLButtonElement;
-		const editForm = document.getElementById('edit-form') as HTMLFormElement;
-		const editPseudo = document.getElementById('edit-pseudo') as HTMLInputElement;
-		const editAge = document.getElementById('edit-age') as HTMLInputElement;
-		const editCancelBtn = document.getElementById('edit-cancel') as HTMLButtonElement;
-		const editSaveBtn = document.getElementById('edit-save') as HTMLButtonElement;
-		const editError = document.getElementById('edit-error') as HTMLElement;
+    const openAvatarPickerBtn = document.getElementById(
+      "open-avatar-picker",
+    ) as HTMLButtonElement;
 
-		const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement;
+    const openEditBtn = document.getElementById(
+      "open-edit",
+    ) as HTMLButtonElement;
+    const editForm = document.getElementById("edit-form") as HTMLFormElement;
+    const editPseudo = document.getElementById(
+      "edit-pseudo",
+    ) as HTMLInputElement;
+    const editAge = document.getElementById("edit-age") as HTMLInputElement;
+    const editCancelBtn = document.getElementById(
+      "edit-cancel",
+    ) as HTMLButtonElement;
+    const editSaveBtn = document.getElementById(
+      "edit-save",
+    ) as HTMLButtonElement;
+    const editError = document.getElementById("edit-error") as HTMLElement;
 
-		async function applyAvatar(avatar: AvatarRecord | undefined, pseudo: string) {
-			const resolved = await resolveDisplayAvatar(avatar);
-			const url = getAvatarImageUrl(resolved);
-			if (url) {
-				avatarDisplayImg.src = url;
-				avatarDisplayImg.alt = `Avatar de ${pseudo}`;
-			}
-		}
+    const logoutBtn = document.getElementById(
+      "logout-btn",
+    ) as HTMLButtonElement;
+    async function applyAvatar(
+      avatar: AvatarRecord | undefined,
+      pseudo: string,
+    ) {
+      const resolved = await resolveDisplayAvatar(avatar);
+      const url = getAvatarImageUrl(resolved);
+      if (url) {
+        avatarDisplayImg.src = url;
+        avatarDisplayImg.alt = `Avatar de ${pseudo}`;
+      }
+    }
 
-		function renderUser(user: ZozzoUser) {
-			void applyAvatar(user.expand?.avatar as AvatarRecord | undefined, user.pseudo);
-			pseudoDisplay.textContent = user.pseudo || '—';
+    function renderUser(user: ZozzoUser) {
+      void applyAvatar(
+        user.expand?.avatar as AvatarRecord | undefined,
+        user.pseudo,
+      );
+      pseudoDisplay.textContent = user.pseudo || "—";
 
-			infoPseudo.textContent = user.pseudo || '—';
-			infoEmail.textContent = user.email || '—';
-			infoAge.textContent = user.age ? `${user.age} ans` : '—';
-			infoNiveau.textContent = user.niveau ? `Niveau ${user.niveau}` : '—';
+      infoPseudo.textContent = user.pseudo || "—";
+      infoEmail.textContent = user.email || "—";
+      infoAge.textContent = user.age ? `${user.age} ans` : "—";
+      infoNiveau.textContent = user.niveau ? `Niveau ${user.niveau}` : "—";
 
-			const isPremium = user.abonnement_actif === true;
-			infoAbonnement.textContent = isPremium ? 'Premium' : 'Gratuit';
+      const isPremium = user.abonnement_actif === true;
+      infoAbonnement.textContent = isPremium ? "Premium" : "Gratuit";
 
-			subscriptionCta.textContent = isPremium ? 'Gérer mon abonnement' : 'Passer à Premium';
-			subscriptionCta.className = isPremium
-				? 'mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95 bg-neutral-100 text-neutral-700'
-				: 'mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95 bg-[var(--color-yellow)] text-neutral-900';
+      subscriptionCta.textContent = isPremium
+        ? "Gérer mon abonnement"
+        : "Passer à Premium";
+      subscriptionCta.className = isPremium
+        ? "mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95 bg-neutral-100 text-neutral-700"
+        : "mt-3 block w-full rounded-full py-3.5 text-center text-base font-semibold transition hover:opacity-90 active:scale-95 bg-[var(--color-yellow)] text-neutral-900";
 
-			editPseudo.value = user.pseudo ?? '';
-			editAge.value = String(user.age ?? '');
-		}
+      editPseudo.value = user.pseudo ?? "";
+      editAge.value = String(user.age ?? "");
+    }
 
-		const avatarPicker = initAvatarPicker((avatar) => {
-			const user = getCurrentUser();
-			applyAvatar(avatar, user?.pseudo ?? '');
-		});
+    const avatarPicker = initAvatarPicker((avatar) => {
+      const user = getCurrentUser();
+      applyAvatar(avatar, user?.pseudo ?? "");
+    });
 
-		avatarDisplay.addEventListener('click', () => avatarPicker.open());
-		openAvatarPickerBtn.addEventListener('click', () => avatarPicker.open());
+    avatarDisplay.addEventListener("click", () => avatarPicker.open());
+    openAvatarPickerBtn.addEventListener("click", () => avatarPicker.open());
 
-		async function init() {
-			if (!pb.authStore.isValid) {
-				window.location.replace('/login');
-				return;
-			}
+    async function init() {
+      if (!pb.authStore.isValid) {
+        window.location.replace("/login");
+        return;
+      }
 
-			const result = await refreshAuth();
+      const result = await refreshAuth();
 
-			if (result === 'invalid') {
-				window.location.replace('/login?raison=expired');
-				return;
-			}
+      if (result === "invalid") {
+        window.location.replace("/login?raison=expired");
+        return;
+      }
 
-			if (result === 'network-error') {
-				networkWarning.classList.remove('hidden');
-			}
+      if (result === "network-error") {
+        networkWarning.classList.remove("hidden");
+      }
 
-			const user = getCurrentUser();
-			if (!user) {
-				window.location.replace('/login');
-				return;
-			}
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.replace("/login");
+        return;
+      }
 
-			renderUser(user);
-			loading.classList.add('hidden');
-			content.classList.remove('hidden');
-		}
+      renderUser(user);
+      loading.classList.add("hidden");
+      content.classList.remove("hidden");
+    }
 
-		init();
+    init();
 
-		// Keeps this tab in sync if the session changes in another tab
-		// (e.g. logout elsewhere), and reflects fresh data after saves.
-		onAuthChange((user) => {
-			if (!user) {
-				window.location.replace('/login');
-				return;
-			}
-			if (!content.classList.contains('hidden')) {
-				renderUser(user);
-			}
-		});
+    // Keeps this tab in sync if the session changes in another tab
+    // (e.g. logout elsewhere), and reflects fresh data after saves.
+    onAuthChange((user) => {
+      if (!user) {
+        window.location.replace("/login");
+        return;
+      }
+      if (!content.classList.contains("hidden")) {
+        renderUser(user);
+      }
+    });
 
-		// ---- Edit profile ----
-		openEditBtn.addEventListener('click', () => {
-			editForm.classList.toggle('hidden');
-		});
+    // ---- Edit profile ----
+    openEditBtn.addEventListener("click", () => {
+      editForm.classList.toggle("hidden");
+    });
 
-		editCancelBtn.addEventListener('click', () => {
-			if (pb.authStore.record) renderUser(pb.authStore.record as ZozzoUser);
-			editForm.classList.add('hidden');
-			editError.classList.add('hidden');
-		});
+    editCancelBtn.addEventListener("click", () => {
+      if (pb.authStore.record) renderUser(pb.authStore.record as ZozzoUser);
+      editForm.classList.add("hidden");
+      editError.classList.add("hidden");
+    });
 
-		editForm.addEventListener('submit', async (e) => {
-			e.preventDefault();
-			if (!pb.authStore.record) return;
+    editForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!pb.authStore.record) return;
 
-			const pseudo = editPseudo.value.trim();
-			const ageNum = parseInt(editAge.value, 10);
+      const pseudo = editPseudo.value.trim();
+      const ageNum = parseInt(editAge.value, 10);
 
-			editError.classList.add('hidden');
+      editError.classList.add("hidden");
 
-			if (pseudo.length < 2) {
-				editError.textContent = 'Le pseudo est trop court.';
-				editError.classList.remove('hidden');
-				return;
-			}
-			if (!editAge.value || Number.isNaN(ageNum) || ageNum < 4 || ageNum > 18) {
-				editError.textContent = "L'âge doit être compris entre 4 et 18 ans.";
-				editError.classList.remove('hidden');
-				return;
-			}
+      if (pseudo.length < 2) {
+        editError.textContent = "Le pseudo est trop court.";
+        editError.classList.remove("hidden");
+        return;
+      }
+      if (!editAge.value || Number.isNaN(ageNum) || ageNum < 4 || ageNum > 18) {
+        editError.textContent = "L'âge doit être compris entre 4 et 18 ans.";
+        editError.classList.remove("hidden");
+        return;
+      }
 
-			editSaveBtn.disabled = true;
-			editSaveBtn.textContent = 'Enregistrement...';
+      editSaveBtn.disabled = true;
+      editSaveBtn.textContent = "Enregistrement...";
 
-			try {
-				const current = pb.authStore.record as ZozzoUser;
-				const updated = await updateProfile(current.id, { pseudo, age: ageNum });
-				renderUser(updated);
-				editForm.classList.add('hidden');
-			} catch (error) {
-				editError.textContent = friendlyErrorMessage(error);
-				editError.classList.remove('hidden');
-			} finally {
-				editSaveBtn.disabled = false;
-				editSaveBtn.textContent = 'Enregistrer';
-			}
-		});
+      try {
+        const current = pb.authStore.record as ZozzoUser;
+        const updated = await updateProfile(current.id, {
+          pseudo,
+          age: ageNum,
+        });
+        renderUser(updated);
+        editForm.classList.add("hidden");
+      } catch (error) {
+        editError.textContent = friendlyErrorMessage(error);
+        editError.classList.remove("hidden");
+      } finally {
+        editSaveBtn.disabled = false;
+        editSaveBtn.textContent = "Enregistrer";
+      }
+    });
 
-		// ---- Logout ----
-		logoutBtn.addEventListener('click', () => {
-			logout();
-			window.location.replace('/login');
-		});
-	</script>
+    // ---- Logout ----
+    logoutBtn.addEventListener("click", () => {
+      logout();
+      window.location.replace("/login");
+    });
+  </script>
 </MinimalLayout>

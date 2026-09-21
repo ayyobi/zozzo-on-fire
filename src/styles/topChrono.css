@@ -6,11 +6,12 @@ html:has(.jeu-page), body:has(.jeu-page) {
 }
 .jeu-page { position: fixed; inset: 0; width: 100%; height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; overflow: clip; }
 .jeu-page .jeu-header { height: 98px; flex-shrink: 0; padding: 16px 40px; justify-content: space-between; }
+.jeu-page .jeu-app-header { flex-shrink: 0; }
 .jeu-header > a img { width: 226px; height: auto; }
 .chrono-nav { display: flex; align-items: center; gap: 42px; }
 .chrono-nav img { width: 90px; height: 64px; object-fit: contain; }
 .jeu-page .jeu-scene { flex: 1; min-height: 0; overflow: hidden; container-type: size; background: white; }
-.jeu-scene[data-state="intro"], .jeu-scene[data-state="playing"] { background-color: #80a5ef; background-image: var(--chrono-background); background-position: center; background-size: contain; background-repeat: no-repeat; }
+.jeu-scene[data-state="intro"], .jeu-scene[data-state="playing"] { background-color: #80a5ef; background-image: var(--chrono-background); background-position: center; background-size: cover; background-repeat: no-repeat; }
 .chrono-setup { height: 100%; min-height: 0; overflow: clip; display: flex; flex-direction: column; padding: 4cqh 6% 2cqh; text-align: center; }
 .chrono-setup h2 { color: #161616; font-size: clamp(24px, 3vw, 46px); font-weight: 400; }
 .chrono-levels { flex: 1; min-height: 0; width: 100%; display: grid; align-items: center; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 8%; max-width: 1280px; margin: 3cqh auto; }
@@ -19,7 +20,7 @@ html:has(.jeu-page), body:has(.jeu-page) {
 .chrono-book { position: relative; display: block; flex: 1; min-height: 0; width: 100%; margin: 2cqh auto 0; max-width: 330px; }
 .chrono-book img { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .chrono-setup > .chrono-note { flex-shrink: 0; margin: 1cqh auto; }
-.chrono-book strong { position: absolute; top: 22%; left: 0; width: 100%; font-size: clamp(18px, 2.2vw, 32px); font-weight: 500; }
+.chrono-book strong { position: absolute; bottom: -2%; left: 0; width: 100%; font-size: clamp(18px, 2.2vw, 32px); font-weight: 500; }
 .chrono-note { margin: 18px auto; text-align: center; font-size: 14px; max-width: 640px; padding: 0 16px; }
 .chrono-intro { position: relative; height: 100%; }
 .chrono-start { position: absolute; left: 38.3%; top: 45.8%; width: 23.4%; height: 8.4%; border-radius: 100px; background: #244bd4; color: white; font-size: clamp(20px, 2.5vw, 38px); cursor: pointer; }
@@ -48,9 +49,11 @@ html:has(.jeu-page), body:has(.jeu-page) {
 .chrono-result-actions { display: flex; justify-content: space-between; align-items: center; }
 #result-retry { padding: 12px 24px; border-radius: 24px; background: #fcdfd7; cursor: pointer; }
 .chrono-next { color: #fa6848; font-size: 76px; line-height: 1; cursor: pointer; }
-.chrono-ranking { height: 100%; padding: 2cqh 16px; text-align: center; background: url('/images/minijeux/bg-classement.avif') center / cover; }
-.chrono-ranking h1 { display: inline-block; background: #fcdfd7; padding: 6px 16px; border-radius: 14px; }
-#ranking-status { margin: 50px auto 25px; max-width: 540px; background: white; border-radius: 18px; padding: 20px; }
+.chrono-ranking { position: absolute; inset: 0; height: auto; min-height: 100%; overflow-y: auto; padding: clamp(18px, 4cqh, 48px) 16px 72px; text-align: center; background: #fff; }
+.chrono-ranking::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: url('/images/minijeux/bg-classement.avif') center / cover no-repeat; opacity: .85; }
+.chrono-ranking > * { position: relative; z-index: 1; }
+.chrono-ranking h1 { display: inline-block; margin: 0 auto clamp(16px, 3cqh, 32px); background: #fcdfd7; padding: 6px 16px; border-radius: 14px; font-size: clamp(30px, 3.5vw, 50px); outline: none; }
+#ranking-status { margin: 20px auto 25px; max-width: min(540px, 90vw); background: rgba(255,255,255,.94); border-radius: 18px; padding: 20px; }
 #ranking-status:empty { display: none; }
 #ranking-list { max-width: 400px; margin: 2cqh auto; display: grid; gap: 1.5cqh; }
 #ranking-list li { background: #84a2ef; border-radius: 14px; padding: 1cqh; font-size: clamp(16px, 3cqh, 24px); }
@@ -74,6 +77,46 @@ html:has(.jeu-page), body:has(.jeu-page) {
  .chrono-stats { gap: 18px; }
  .chrono-next { font-size: 56px; }
 }
+/* Classement global — inside the existing .chrono-ranking section
+   (background, title pill, back arrow untouched above). */
+.zozzo-rank-cup { display: block; width: clamp(64px, 14vw, 108px); height: auto; margin: 4px auto 0; }
+.zozzo-rank-loading { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 40px auto; color: #2450ef; font-size: 14px; }
+.zozzo-rank-spinner { width: 42px; height: 42px; border-radius: 50%; border: 6px solid #fcdfd7; border-top-color: #244bd4; animation: zozzo-rank-spin 0.8s linear infinite; }
+@keyframes zozzo-rank-spin { to { transform: rotate(360deg); } }
+
+.zozzo-rank-me-position { display: block; width: fit-content; margin: 0 auto 10px; background: #fa6848; color: white; font-weight: 700; font-size: 14px; padding: 6px 16px; border-radius: 20px; }
+
+.zozzo-podium { display: flex; flex-direction: column; gap: 16px; max-width: 420px; margin: 20px auto 16px; }
+.zozzo-podium-card { display: flex; flex-direction: row; align-items: center; gap: 14px; background: #84a2ef; border-radius: 22px; padding: 10px 16px; text-align: left; color: white; }
+.zozzo-podium-card--1 { background: #f5ed46; color: #2450ef; padding: 14px 16px; }
+.zozzo-podium-card.is-me { outline: 3px solid #fa6848; outline-offset: 2px; }
+.zozzo-podium-medal { font-size: 28px; flex-shrink: 0; }
+.zozzo-podium-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; object-position: top; flex-shrink: 0; border: 3px solid white; background: white; display: block; }
+.zozzo-podium-card--1 .zozzo-podium-avatar { width: 62px; height: 62px; }
+.zozzo-podium-name { display: block; font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zozzo-podium-score { display: block; font-size: 13px; margin-top: 2px; font-weight: 600; }
+.zozzo-podium-stats { display: flex; justify-content: flex-start; gap: 8px; font-size: 12px; margin-top: 4px; }
+
+.zozzo-rank-list { list-style: none; max-width: 480px; margin: 18px auto 8px; display: grid; gap: 14px; padding: 0; }
+.zozzo-rank-row { display: grid; grid-template-columns: 26px 38px 1fr auto; align-items: center; gap: 10px; background: white; border-radius: 18px; padding: 8px 14px; text-align: left; }
+.zozzo-rank-row.is-me { background: #fff1ec; outline: 2px solid #fa6848; }
+.zozzo-rank-pos { font-weight: 700; color: #2450ef; text-align: center; font-size: 14px; }
+.zozzo-rank-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; object-position: top; background: #fcdfd7; display: block; }
+.zozzo-rank-info { min-width: 0; }
+.zozzo-rank-name { display: block; font-weight: 600; color: #2450ef; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zozzo-rank-me-tag { color: #fa6848; font-weight: 500; font-size: 12px; margin-left: 6px; }
+.zozzo-rank-bar { display: block; height: 8px; border-radius: 6px; background: #fcdfd7; margin-top: 4px; overflow: hidden; }
+.zozzo-rank-bar > span { display: block; height: 100%; border-radius: 6px; background: #2450ef; }
+.zozzo-rank-score { text-align: right; font-weight: 700; color: #2450ef; font-size: 13px; white-space: nowrap; }
+.zozzo-rank-score small { display: block; font-weight: 500; color: #7d93d6; font-size: 11px; }
+
+@media (max-width: 700px) {
+ .zozzo-podium { max-width: 340px; gap: 6px; }
+ .zozzo-podium-avatar { width: 42px; height: 42px; }
+ .zozzo-podium-card--1 .zozzo-podium-avatar { width: 54px; height: 54px; }
+ .zozzo-rank-row { grid-template-columns: 20px 32px 1fr auto; padding: 6px 10px; }
+}
+
 @media (max-height: 500px) {
  .jeu-page .jeu-header { height: 48px; padding: 6px 16px; }
  .jeu-header > a img { width: 100px; }

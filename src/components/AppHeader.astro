@@ -5,202 +5,316 @@
 // via src/lib/mobileMenu.ts + the shared [data-mobile-burger] /
 // [data-mobile-panel] rules in global.css — only the content differs.
 const menuItems = [
-	{ id: 'histoire', icon: '/images/icon/histoire.svg', label: 'Histoires', href: '/app#histoires' },
-	{ id: 'lecon', icon: '/images/icon/lecon.svg', label: 'Leçons', href: '/app#lecons' },
-	{ id: 'cahier', icon: '/images/icon/cahier.svg', label: 'Cahier', href: '/app#cahier' },
-	{ id: 'jeux', icon: '/images/icon/jeux.svg', label: 'Mini-jeux', href: '/app#jeux' },
+  {
+    id: "histoire",
+    icon: "/images/icon/histoire.svg",
+    label: "Histoires",
+    href: "/app#histoires",
+  },
+  {
+    id: "lecon",
+    icon: "/images/icon/lecon.svg",
+    label: "Leçons",
+    href: "/app#lecons",
+  },
+  {
+    id: "cahier",
+    icon: "/images/icon/cahier.svg",
+    label: "Cahier",
+    href: "/app#cahier",
+  },
+  {
+    id: "jeux",
+    icon: "/images/icon/jeux.svg",
+    label: "Mini-jeux",
+    href: "/app#jeux",
+  },
 ];
 
-// Content-only rows shown in the mobile panel (no dedicated SVG yet for
-// "Accueil" or "Profil" in public/images/icon — see report).
-const mobileOnlyItems = [{ id: 'accueil', label: 'Accueil', href: '/app' }];
-const mobileTrailingItems = [{ id: 'profil', label: 'Profil', href: '/profil' }];
+// Content-only rows shown in the mobile panel. "Accueil" uses a simple
+// house pictogram (public/images/icon/accueil.svg) — deliberately plainer
+// than Histoires/Leçons/Cahier/Mini-jeux, which are detailed illustrations
+// with no house equivalent to match.
+const mobileOnlyItems = [
+  {
+    id: "accueil",
+    icon: "/images/icon/accueil.svg",
+    label: "Accueil",
+    href: "/app",
+  },
+];
+const mobileTrailingItems = [
+  {
+    id: "profil",
+    icon: "/images/zozzo-head.avif",
+    label: "Profil",
+    href: "/profil",
+  },
+];
 
 // Astro's static output serves these as trailing-slash directory URLs
 // (Astro.url.pathname is e.g. "/app/"), so normalize before comparing
 // against the plain hrefs below.
-const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
-interface Props { compact?: boolean; home?: boolean; }
-const { compact = false, home = false } = Astro.props;
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+interface Props {
+  compact?: boolean;
+  home?: boolean;
+  class?: string;
+}
+const { compact = false, home = false, class: className = "" } = Astro.props;
 const LINK_BASE_DELAY = 100;
 const LINK_DELAY_STEP = 50;
-const allMobileItems = [...mobileOnlyItems, ...menuItems, ...mobileTrailingItems];
+const allMobileItems = [
+  ...mobileOnlyItems,
+  ...menuItems,
+  ...mobileTrailingItems,
+];
 ---
 
-<header data-menu-open="false" class:list={[
- 'sticky top-0 z-40 bg-white shadow-sm',
- { 'app-header-compact': compact },
- home && "overflow-x-auto [&>div:first-child]:h-[98px]! [&>div:first-child]:w-[1440px]! [&>div:first-child]:max-w-none! [&>div:first-child]:px-10! [&>div:first-child]:py-3! [&>div:first-child>a_img]:h-[68px]! [&>div:first-child>a_img]:w-[226px]! [&_nav:first-of-type]:flex! [&_nav:first-of-type]:gap-[42px]! [&_.app-menu-btn]:h-[74px]! [&_.app-menu-btn]:w-[92px]! [&_.app-menu-btn_img]:h-16! [&_.app-menu-btn_img]:max-w-[106px]! [&_#app-burger-btn]:hidden! [&_#app-mobile-menu]:hidden! max-md:[&>div:first-child]:h-16! max-md:[&>div:first-child]:w-full! max-md:[&>div:first-child]:px-4! max-md:[&>div:first-child>a_img]:h-10! max-md:[&>div:first-child>a_img]:w-[110px]! max-md:[&_nav:first-of-type]:gap-1.5! max-md:[&_.app-menu-btn]:h-10! max-md:[&_.app-menu-btn]:w-9! max-md:[&_.app-menu-btn_img]:h-7! max-md:[&_.app-menu-btn_img]:max-w-9!",
-]}>
-	<div class="relative z-50 mx-auto flex max-w-[1292px] items-center justify-between bg-white px-4 py-4 sm:px-0">
-		<a href="/app" class="shrink-0">
-			<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-9 w-auto sm:h-10" />
-		</a>
+<header
+  data-menu-open="false"
+  class:list={[
+    className,
+    "sticky top-0 z-40 bg-white shadow-sm",
+    { "app-header-compact": compact },
+    home &&
+      "overflow-x-auto [&>div:first-child]:h-[98px]! [&>div:first-child]:w-[1440px]! [&>div:first-child]:max-w-none! [&>div:first-child]:px-10! [&>div:first-child]:py-3! [&>div:first-child>a_img]:h-[68px]! [&>div:first-child>a_img]:w-[226px]! md:[&_nav:first-of-type]:flex! [&_nav:first-of-type]:gap-[42px]! [&_.app-menu-btn]:h-[74px]! [&_.app-menu-btn]:w-[92px]! [&_.app-menu-btn_img]:h-16! [&_.app-menu-btn_img]:max-w-[106px]! md:[&_#app-burger-btn]:hidden! md:[&_#app-mobile-menu]:hidden! max-xl:[&>div:first-child]:h-16! max-xl:[&>div:first-child]:w-full! max-xl:[&>div:first-child]:px-4! max-xl:[&>div:first-child>a_img]:h-10! max-xl:[&>div:first-child>a_img]:w-[110px]! max-xl:[&_nav:first-of-type]:gap-1.5! max-xl:[&_.app-menu-btn]:h-10! max-xl:[&_.app-menu-btn]:w-9! max-xl:[&_.app-menu-btn_img]:h-7! max-xl:[&_.app-menu-btn_img]:max-w-9!",
+  ]}
+>
+  <div
+    class="relative z-50 mx-auto flex max-w-[1292px] items-center justify-between bg-white px-4 py-4 sm:px-0"
+  >
+    <a href="/app" class="shrink-0">
+      <img
+        src="/images/zozzo-logo.svg"
+        alt="ZOZZO"
+        class="h-9 w-auto sm:h-10"
+      />
+    </a>
 
-		<nav class="hidden items-center gap-2 sm:gap-3 md:flex" aria-label="Navigation de l'application">
-			{
-				menuItems.map((item) =>
-					item.href ? (
-						<a
-							href={item.href}
-							aria-label={item.label}
-							aria-current={item.href === pathname ? 'page' : undefined}
-							class={`app-menu-btn relative flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-coral)] active:scale-95 sm:h-12 sm:w-12 ${item.href === pathname ? 'app-menu-btn--active' : ''}`}
-						>
-							<img src={item.icon} alt="" class="h-7 w-auto max-w-9 sm:h-8 sm:max-w-10" />
-						</a>
-					) : (
-						<button
-							type="button"
-							data-soon={item.label}
-							aria-label={`${item.label} (bientôt disponible)`}
-							class="app-menu-btn flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-coral)] active:scale-95 sm:h-12 sm:w-12"
-						>
-							<img src={item.icon} alt="" class="h-7 w-auto max-w-9 sm:h-8 sm:max-w-10" />
-						</button>
-					),
-				)
-			}
-		</nav>
+    <nav
+      class="hidden items-center gap-2 sm:gap-3 md:flex"
+      aria-label="Navigation de l'application"
+    >
+      {
+        menuItems.map((item) =>
+          item.href ? (
+            <a
+              href={item.href}
+              aria-label={item.label}
+              aria-current={item.href === pathname ? "page" : undefined}
+              class={`app-menu-btn relative flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-coral)] active:scale-95 sm:h-12 sm:w-12 ${item.href === pathname ? "app-menu-btn--active" : ""}`}
+            >
+              <img
+                src={item.icon}
+                alt=""
+                class="h-7 w-auto max-w-9 sm:h-8 sm:max-w-10"
+              />
+            </a>
+          ) : (
+            <button
+              type="button"
+              data-soon={item.label}
+              aria-label={`${item.label} (bientôt disponible)`}
+              class="app-menu-btn flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-coral)] active:scale-95 sm:h-12 sm:w-12"
+            >
+              <img
+                src={item.icon}
+                alt=""
+                class="h-7 w-auto max-w-9 sm:h-8 sm:max-w-10"
+              />
+            </button>
+          ),
+        )
+      }
+    </nav>
 
-		<button
-			id="app-burger-btn"
-			type="button"
-			aria-label="Ouvrir le menu"
-			aria-expanded="false"
-			aria-controls="app-mobile-menu"
-			data-open="false"
-			data-mobile-burger
-			class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
-		>
-			<span data-line="top" class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
-			></span>
-			<span data-line="mid" class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[220ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
-			></span>
-			<span data-line="bottom" class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
-			></span>
-		</button>
-	</div>
+    <button
+      id="app-burger-btn"
+      type="button"
+      aria-label="Ouvrir le menu"
+      aria-expanded="false"
+      aria-controls="app-mobile-menu"
+      data-open="false"
+      data-mobile-burger
+      class="relative z-50 flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[7px] md:hidden"
+    >
+      <span
+        data-line="top"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+      <span
+        data-line="mid"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[220ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+      <span
+        data-line="bottom"
+        class="block h-0.5 w-6 rounded-full bg-[var(--color-coral)] transition-all duration-[380ms] ease-[cubic-bezier(0.65,0,0.35,1)]"
+      ></span>
+    </button>
+  </div>
 
-	<div
-		id="app-mobile-menu"
-		data-open="false"
-		data-mobile-panel
-		class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-pale-pink)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
-	>
-		<nav class="flex flex-1 flex-col items-start justify-center gap-1 px-6 pt-20 pb-12 sm:px-8" aria-label="Navigation mobile de l'application">
-			{
-				allMobileItems.map((item, i) => (
-					<div class="w-full overflow-hidden py-2">
-						{'href' in item && item.href ? (
-							<a
-								href={item.href}
-								data-mobile-link
-								aria-current={item.href === pathname ? 'page' : undefined}
-								class="group inline-flex w-full translate-y-full items-center gap-3 text-2xl font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-3xl"
-								style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
-							>
-								{'icon' in item && item.icon && <img src={item.icon} alt="" class="h-7 w-auto max-w-8 shrink-0" />}
-								<span class="truncate">{item.label}</span>
-								{item.href === pathname && <span class="shrink-0 text-base text-[var(--color-coral)]">●</span>}
-							</a>
-						) : (
-							<button
-								type="button"
-								data-soon={item.label}
-								data-mobile-link
-								class="inline-flex w-full translate-y-full items-center gap-3 text-2xl font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-3xl"
-								style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
-							>
-								{'icon' in item && item.icon && <img src={item.icon} alt="" class="h-7 w-auto max-w-8 shrink-0" />}
-								<span class="truncate">{item.label}</span>
-							</button>
-						)}
-					</div>
-				))
-			}
-		</nav>
-	</div>
+  <div
+    id="app-mobile-menu"
+    data-open="false"
+    data-mobile-panel
+    class="fixed inset-0 z-40 hidden origin-top flex-col bg-[var(--color-pale-pink)] transition-all duration-[420ms] ease-[cubic-bezier(0.65,0,0.35,1)] md:hidden"
+  >
+    <nav
+      class="flex flex-1 flex-col items-center justify-center gap-1 px-6 pt-20 pb-12 sm:px-8"
+      aria-label="Navigation mobile de l'application"
+    >
+      {
+        allMobileItems.map((item, i) => (
+          <div class="w-full overflow-hidden py-2">
+            {"href" in item && item.href ? (
+              <a
+                href={item.href}
+                data-mobile-link
+                aria-current={item.href === pathname ? "page" : undefined}
+                class="group inline-flex w-full translate-y-full items-center justify-center gap-3 text-2xl font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-3xl"
+                style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
+              >
+                {"icon" in item && item.icon && (
+                  <img
+                    src={item.icon}
+                    alt=""
+                    class="h-7 w-auto max-w-8 shrink-0"
+                  />
+                )}
+                <span class="truncate">{item.label}</span>
+                {item.href === pathname && (
+                  <span class="shrink-0 text-base text-[var(--color-coral)]">
+                    ●
+                  </span>
+                )}
+              </a>
+            ) : (
+              <button
+                type="button"
+                data-soon={item.label}
+                data-mobile-link
+                class="inline-flex w-full translate-y-full items-center justify-center gap-3 text-2xl font-normal text-neutral-900 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:text-3xl"
+                style={`transition-delay: ${LINK_BASE_DELAY + i * LINK_DELAY_STEP}ms`}
+              >
+                {"icon" in item && item.icon && (
+                  <img
+                    src={item.icon}
+                    alt=""
+                    class="h-7 w-auto max-w-8 shrink-0"
+                  />
+                )}
+                <span class="truncate">{item.label}</span>
+              </button>
+            )}
+          </div>
+        ))
+      }
+    </nav>
+  </div>
 
-	<p
-		id="app-toast"
-		class="pointer-events-none fixed left-1/2 top-4 z-50 -translate-x-1/2 translate-y-[-150%] rounded-full bg-neutral-900 px-4 py-2 text-sm text-white opacity-0 transition-all duration-300"
-		role="status"
-	></p>
+  <p
+    id="app-toast"
+    class="pointer-events-none fixed left-1/2 top-4 z-50 -translate-x-1/2 translate-y-[-150%] rounded-full bg-neutral-900 px-4 py-2 text-sm text-white opacity-0 transition-all duration-300"
+    role="status"
+  >
+  </p>
 </header>
 
 <script>
-	import { initMobileMenu } from '../lib/mobileMenu';
+  import { initMobileMenu } from "../lib/mobileMenu";
 
-	const toast = document.getElementById('app-toast') as HTMLElement;
-	let hideTimer: number | undefined;
+  const toast = document.getElementById("app-toast") as HTMLElement;
+  let hideTimer: number | undefined;
 
-	function showToast(text: string) {
-		toast.textContent = text;
-		toast.classList.remove('opacity-0', 'translate-y-[-150%]');
-		toast.classList.add('translate-y-0');
-		window.clearTimeout(hideTimer);
-		hideTimer = window.setTimeout(() => {
-			toast.classList.add('opacity-0', 'translate-y-[-150%]');
-			toast.classList.remove('translate-y-0');
-		}, 2200);
-	}
+  function showToast(text: string) {
+    toast.textContent = text;
+    toast.classList.remove("opacity-0", "translate-y-[-150%]");
+    toast.classList.add("translate-y-0");
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => {
+      toast.classList.add("opacity-0", "translate-y-[-150%]");
+      toast.classList.remove("translate-y-0");
+    }, 2200);
+  }
 
-	document.querySelectorAll<HTMLButtonElement>('[data-soon]').forEach((btn) => {
-		btn.addEventListener('click', () => {
-			showToast(`${btn.dataset.soon} arrive bientôt !`);
-		});
-	});
+  document.querySelectorAll<HTMLButtonElement>("[data-soon]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showToast(`${btn.dataset.soon} arrive bientôt !`);
+    });
+  });
 
-	// Lets other pages (e.g. locked-story feedback) reuse this same toast —
-	// see src/lib/toast.ts.
-	window.addEventListener('zozzo:toast', (e) => {
-		showToast((e as CustomEvent<string>).detail);
-	});
+  // Lets other pages (e.g. locked-story feedback) reuse this same toast —
+  // see src/lib/toast.ts.
+  window.addEventListener("zozzo:toast", (e) => {
+    showToast((e as CustomEvent<string>).detail);
+  });
 
-	const header = document.querySelector('header') as HTMLElement;
-	const burgerBtn = document.getElementById('app-burger-btn') as HTMLButtonElement;
-	const panel = document.getElementById('app-mobile-menu') as HTMLElement;
-	const menu = initMobileMenu({ header, burgerBtn, panel });
+  const header = document.querySelector("header") as HTMLElement;
+  const burgerBtn = document.getElementById(
+    "app-burger-btn",
+  ) as HTMLButtonElement;
+  const panel = document.getElementById("app-mobile-menu") as HTMLElement;
+  const menu = initMobileMenu({ header, burgerBtn, panel });
 
-	menu.mobileLinks.forEach((link) => {
-		if (link.hasAttribute('data-soon')) {
-			// "Coming soon" rows just close the menu and show the toast
-			// (already wired above) — no navigation.
-			link.addEventListener('click', () => menu.close());
-			return;
-		}
-		link.addEventListener('click', (e) => {
-			e.preventDefault();
-			const href = link.getAttribute('href') ?? '';
-			menu.close(() => {
-				window.location.href = href;
-			});
-		});
-	});
+  menu.mobileLinks.forEach((link) => {
+    if (link.hasAttribute("data-soon")) {
+      // "Coming soon" rows just close the menu and show the toast
+      // (already wired above) — no navigation.
+      link.addEventListener("click", () => menu.close());
+      return;
+    }
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = link.getAttribute("href") ?? "";
+      menu.close(() => {
+        window.location.href = href;
+      });
+    });
+  });
 </script>
 
 <style>
-.app-header-compact { box-shadow: none; }
-.app-header-compact > div:first-child { height: 54px; padding: 4px 22px; }
-.app-header-compact > div:first-child > a img { height: 40px; width: 138px; }
-.app-header-compact nav[aria-label="Navigation de l'application"] { gap: 24px; }
-.app-header-compact .app-menu-btn { width: 54px; height: 46px; }
-.app-header-compact .app-menu-btn img { height: 40px; max-width: 64px; }
-@media (max-width: 767px) { .app-header-compact > div:first-child { padding-inline: 20px; } }
+  .app-header-compact {
+    box-shadow: none;
+  }
+  .app-header-compact > div:first-child {
+    height: 54px;
+    padding: 4px 22px;
+  }
+  .app-header-compact > div:first-child > a img {
+    height: 40px;
+    width: 138px;
+  }
+  .app-header-compact nav[aria-label="Navigation de l'application"] {
+    gap: 24px;
+  }
+  .app-header-compact .app-menu-btn {
+    width: 54px;
+    height: 46px;
+  }
+  .app-header-compact .app-menu-btn img {
+    height: 40px;
+    max-width: 64px;
+  }
+  @media (max-width: 767px) {
+    .app-header-compact > div:first-child {
+      padding-inline: 20px;
+    }
+  }
 
-	.app-menu-btn--active {
-		background: var(--color-pale-pink);
-	}
-	.app-menu-btn--active::after {
-		content: '';
-		position: absolute;
-		bottom: -6px;
-		left: 50%;
-		width: 6px;
-		height: 6px;
-		border-radius: 9999px;
-		background: var(--color-coral);
-		transform: translateX(-50%);
-	}
+  .app-menu-btn--active {
+    background: var(--color-pale-pink);
+  }
+  .app-menu-btn--active::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-coral);
+    transform: translateX(-50%);
+  }
 </style>

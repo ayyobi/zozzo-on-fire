@@ -12,6 +12,12 @@ const { storyId = '' } = Astro.props;
 		<h1 id="story-title" class="sr-only"></h1>
 		<button id="story-fullscreen" type="button" class="min-h-11 rounded-full bg-white/85 px-3 hover:bg-blue-50" aria-label="Afficher l’histoire en plein écran">⛶ Plein écran</button>
 	</div>
+	<div id="story-rotate-prompt" class="hidden fixed inset-0 z-40 flex-col items-center justify-center gap-4 bg-[#2439a7]/95 px-6 text-center text-white [&:not(.hidden)]:flex">
+		<svg width="56" height="56" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="animate-[story-rotate_1.8s_ease-in-out_infinite]"><rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="1.6" /><path d="M12 18h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+		<p class="max-w-xs text-lg font-medium">Tourne ton téléphone pour mieux voir l’histoire !</p>
+		<button id="story-rotate-fullscreen" type="button" class="min-h-11 rounded-full bg-white px-5 text-[#2439a7]">Passer en plein écran</button>
+		<button id="story-rotate-dismiss" type="button" class="min-h-11 rounded-full px-5 text-white/80 underline">Continuer sans tourner</button>
+	</div>
 	<div id="story-message" class="hidden px-4 py-20 text-center" role="status">
 		<p id="story-message-text"></p>
 		<a id="story-message-link" href="/app#histoires" class="mt-5 inline-block rounded-full bg-[#fff000] px-6 py-3 text-[#2439a7]">Retour aux histoires</a>
@@ -27,3 +33,9 @@ const { storyId = '' } = Astro.props;
 	import { initStoryReader } from '../../lib/storyReader';
 	void initStoryReader();
 </script>
+<style>
+	@keyframes story-rotate {
+		0%, 100% { transform: rotate(0deg); }
+		50% { transform: rotate(-90deg); }
+	}
+</style>

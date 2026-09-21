@@ -46,6 +46,32 @@ export async function initStoryReader() {
 		fullscreen.textContent = document.fullscreenElement ? '⛶ Quitter' : '⛶ Plein écran';
 		resize();
 	});
+
+	// Prompts a phone-sized portrait viewport to rotate as soon as a story
+	// opens. Real auto-rotate (fullscreen + orientation.lock) only works on
+	// Android Chrome — iOS Safari has no orientation-lock API at all, so
+	// there it's always a physical-rotate ask. Either way the overlay
+	// dismisses itself once the viewport is actually landscape.
+	const rotatePrompt = el('story-rotate-prompt');
+	const rotateFullscreenBtn = el<HTMLButtonElement>('story-rotate-fullscreen');
+	const rotateDismissBtn = el<HTMLButtonElement>('story-rotate-dismiss');
+	const portraitPhone = matchMedia('(max-width: 900px) and (orientation: portrait)');
+	let rotateDismissed = false;
+	const supportsOrientationLock = typeof screen !== 'undefined' && !!screen.orientation && 'lock' in screen.orientation;
+	rotateFullscreenBtn.hidden = !document.fullscreenEnabled;
+	function updateRotatePrompt() {
+		rotatePrompt.classList.toggle('hidden', rotateDismissed || !portraitPhone.matches);
+	}
+	portraitPhone.addEventListener('change', updateRotatePrompt);
+	rotateDismissBtn.addEventListener('click', () => { rotateDismissed = true; updateRotatePrompt(); });
+	rotateFullscreenBtn.addEventListener('click', async () => {
+		try {
+			await root.requestFullscreen();
+			if (supportsOrientationLock) await (screen.orientation as ScreenOrientation & { lock(orientation: string): Promise<void> }).lock('landscape');
+		} catch {
+			// Best-effort — the overlay just stays up as a physical-rotate ask.
+		}
+	});
 	image.addEventListener('load', () => {
 		resize(); signs.classList.remove('hidden'); el('story-image-error').classList.add('hidden');
 	});
@@ -182,6 +208,7 @@ export async function initStoryReader() {
 		rewardPage = scenes.find(isRewardScene);
 		if (!pages.length) { showMessage('Cette histoire se prépare. Reviens bientôt !'); return; }
 		el('story-reader').classList.remove('hidden');
+		updateRotatePrompt();
 		render();
 	} catch {
 		showMessage('Impossible de charger cette histoire pour le moment.', true);

@@ -45,3 +45,9 @@ export function getResultTier(correctCount: number, total: number): ResultTier {
 	if (pct >= 50) return 'consolider';
 	return 'revoir';
 }
+
+// Star count shown/saved for a result tier — used both on screen and as
+// the `etoiles` value saved to `progression`.
+export function getResultStars(tier: ResultTier): number {
+	return { excellent: 3, consolider: 2, revoir: 1 }[tier];
+}

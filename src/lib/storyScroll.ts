@@ -30,7 +30,7 @@ export function createStoryScroll(section: HTMLElement, viewport: HTMLElement) {
   reset();
   const headerHeight = header?.getBoundingClientRect().height ?? 54;
   const headingHeight = section.querySelector('h2')!.getBoundingClientRect().height;
-  const scale = desktop.matches ? 1.66 : Math.min(.78, Math.max(.55, (window.innerWidth - 48) / 434));
+  const scale = desktop.matches ? 1.15 : Math.min(.78, Math.max(.55, (window.innerWidth - 48) / 434));
   section.style.setProperty('--story-unit', scale + 'px');
   section.style.setProperty('--story-header', headerHeight + 'px');
   section.style.setProperty('--story-scene-width', String(sceneWidth));

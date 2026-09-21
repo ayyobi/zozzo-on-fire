@@ -1,119 +1,144 @@
 ---
-import MinimalLayout from '../layouts/MinimalLayout.astro';
+import MinimalLayout from "../layouts/MinimalLayout.astro";
 ---
 
 <MinimalLayout
-	title="ZOZZO | Connexion"
-	description="Connecte-toi à ZOZZO pour apprendre la langue des signes."
-	bodyClass="m-0 min-h-dvh flex items-center justify-center px-4 py-12 bg-[var(--color-pale-pink)]"
+  title="ZOZZO | Connexion"
+  description="Connecte-toi à ZOZZO pour apprendre la langue des signes."
+  bodyClass="m-0 min-h-dvh flex items-center justify-center px-4 py-12 bg-[var(--color-pale-pink)]"
+  navigation="public"
 >
-	<div class="w-full max-w-md">
-		<div class="mb-8 text-center">
-			<a href="/" class="inline-block">
-				<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="mx-auto h-10 w-auto" />
-			</a>
-			<h1 class="mt-6 text-3xl font-medium text-neutral-900">Connexion</h1>
-			<p class="mt-1 text-sm text-neutral-500">Content de te revoir !</p>
-		</div>
+  <div class="w-full max-w-md">
+    <div class="mb-8 text-center">
+      <a href="/" class="inline-block">
+        <img
+          src="/images/zozzo-logo.svg"
+          alt="ZOZZO"
+          class="mx-auto h-10 w-auto"
+        />
+      </a>
+      <h1 class="mt-6 text-3xl font-medium text-neutral-900">Connexion</h1>
+      <p class="mt-1 text-sm text-neutral-500">Content de te revoir !</p>
+    </div>
 
-		<div class="rounded-3xl bg-white p-8 shadow-lg">
-			<p
-				id="session-msg"
-				class="mb-5 hidden rounded-2xl bg-[var(--color-blue)]/10 px-4 py-3 text-sm text-[var(--color-royal-blue)]"
-			>
-				Votre session a expiré. Veuillez vous reconnecter.
-			</p>
+    <div class="rounded-3xl bg-white p-8 shadow-lg">
+      <p
+        id="session-msg"
+        class="mb-5 hidden rounded-2xl bg-[var(--color-blue)]/10 px-4 py-3 text-sm text-[var(--color-royal-blue)]"
+      >
+        Votre session a expiré. Veuillez vous reconnecter.
+      </p>
 
-			<p
-				id="error-msg"
-				class="mb-5 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600"
-				role="alert"
-			></p>
+      <p
+        id="error-msg"
+        class="mb-5 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600"
+        role="alert"
+      >
+      </p>
 
-			<form id="login-form" class="flex flex-col gap-5" novalidate>
-				<div>
-					<label for="email" class="mb-1.5 block text-sm font-medium text-neutral-800">Email</label>
-					<input
-						type="email"
-						id="email"
-						name="email"
-						required
-						autocomplete="email"
-						placeholder="ton@email.com"
-						class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
-					/>
-				</div>
+      <form id="login-form" class="flex flex-col gap-5" novalidate>
+        <div>
+          <label
+            for="email"
+            class="mb-1.5 block text-sm font-medium text-neutral-800"
+            >Email</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            autocomplete="email"
+            placeholder="ton@email.com"
+            class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
+          />
+        </div>
 
-				<div>
-					<label for="password" class="mb-1.5 block text-sm font-medium text-neutral-800">Mot de passe</label>
-					<input
-						type="password"
-						id="password"
-						name="password"
-						required
-						autocomplete="current-password"
-						placeholder="••••••••"
-						class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
-					/>
-				</div>
+        <div>
+          <label
+            for="password"
+            class="mb-1.5 block text-sm font-medium text-neutral-800"
+            >Mot de passe</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="current-password"
+            placeholder="••••••••"
+            class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
+          />
+        </div>
 
-				<button
-					id="submit-btn"
-					type="submit"
-					class="mt-2 w-full rounded-full bg-[var(--color-coral)] py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
-				>
-					Se connecter
-				</button>
-			</form>
+        <button
+          id="submit-btn"
+          type="submit"
+          class="mt-2 w-full rounded-full bg-[var(--color-coral)] py-3.5 text-base font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Se connecter
+        </button>
+      </form>
 
-			<p class="mt-5 text-center text-sm">
-				<a href="/mot-de-passe-oublie" class="text-neutral-500 hover:underline">Mot de passe oublié ?</a>
-			</p>
-		</div>
+      <p class="mt-5 text-center text-sm">
+        <a href="/mot-de-passe-oublie" class="text-neutral-500 hover:underline"
+          >Mot de passe oublié ?</a
+        >
+      </p>
+    </div>
 
-		<p class="mt-6 text-center text-sm text-neutral-500">
-			Pas encore de compte ?
-			<a href="/inscription" class="font-semibold text-[var(--color-royal-blue)] hover:underline">Créer un compte</a>
-		</p>
-	</div>
+    <p class="mt-6 text-center text-sm text-neutral-500">
+      Pas encore de compte ?
+      <a
+        href="/inscription"
+        class="font-semibold text-[var(--color-royal-blue)] hover:underline"
+        >Créer un compte</a
+      >
+    </p>
+  </div>
 
-	<script>
-		import { login, isLoggedIn, friendlyErrorMessage } from '../lib/pocketbase';
+  <script>
+    import { login, isLoggedIn, friendlyErrorMessage } from "../lib/pocketbase";
 
-		if (isLoggedIn()) {
-			window.location.replace('/app');
-		}
+    if (isLoggedIn()) {
+      window.location.replace("/app");
+    }
 
-		const params = new URLSearchParams(window.location.search);
-		if (params.get('raison') === 'expired') {
-			document.getElementById('session-msg')?.classList.remove('hidden');
-		}
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("raison") === "expired") {
+      document.getElementById("session-msg")?.classList.remove("hidden");
+    }
 
-		const form = document.getElementById('login-form') as HTMLFormElement;
-		const errorMsg = document.getElementById('error-msg') as HTMLElement;
-		const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const form = document.getElementById("login-form") as HTMLFormElement;
+    const errorMsg = document.getElementById("error-msg") as HTMLElement;
+    const submitBtn = document.getElementById(
+      "submit-btn",
+    ) as HTMLButtonElement;
 
-		form.addEventListener('submit', async (e) => {
-			e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-			const email = (document.getElementById('email') as HTMLInputElement).value.trim();
-			const password = (document.getElementById('password') as HTMLInputElement).value;
+      const email = (
+        document.getElementById("email") as HTMLInputElement
+      ).value.trim();
+      const password = (document.getElementById("password") as HTMLInputElement)
+        .value;
 
-			errorMsg.classList.add('hidden');
-			errorMsg.textContent = '';
+      errorMsg.classList.add("hidden");
+      errorMsg.textContent = "";
 
-			submitBtn.disabled = true;
-			submitBtn.textContent = 'Connexion...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Connexion...";
 
-			try {
-				await login(email, password);
-				window.location.replace('/app');
-			} catch (error) {
-				errorMsg.textContent = friendlyErrorMessage(error);
-				errorMsg.classList.remove('hidden');
-				submitBtn.disabled = false;
-				submitBtn.textContent = 'Se connecter';
-			}
-		});
-	</script>
+      try {
+        await login(email, password);
+        window.location.replace("/app");
+      } catch (error) {
+        errorMsg.textContent = friendlyErrorMessage(error);
+        errorMsg.classList.remove("hidden");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Se connecter";
+      }
+    });
+  </script>
 </MinimalLayout>

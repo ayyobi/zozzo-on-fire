@@ -7,7 +7,7 @@ const bonuses = [
 ];
 ---
 
-<div class="bonus-bar flex h-[136px] w-full items-center justify-between gap-5 rounded-[42px] bg-[#f96346] py-2.5 pr-[42px] pl-6 max-md:h-20 max-md:gap-2 max-md:rounded-3xl max-md:px-3" role="group" aria-label="Objets à débloquer après chaque histoire">
+<div class="bonus-bar flex h-[136px] w-full items-center justify-between gap-5 rounded-[42px] bg-[#f96346] py-2.5 pr-[42px] pl-6 max-xl:h-20 max-xl:gap-2 max-xl:rounded-3xl max-xl:px-3" role="group" aria-label="Objets à débloquer après chaque histoire">
 	{
 		bonuses.map((bonus, index) => (
 			<button
@@ -17,10 +17,10 @@ const bonuses = [
 				aria-label={`${bonus.label} verrouillé — termine ${index + 1} histoire${index ? 's' : ''} pour le débloquer`}
 				title={`Termine ${index + 1} histoire${index ? 's' : ''} pour débloquer cet objet`}
 				disabled
-				class="bonus-item max-md:size-[58px] max-md:[&>img]:h-[58px] max-md:[&>img]:max-w-[64px] max-md:first:[&>img]:h-12 grid size-[116px] shrink-0 place-items-center rounded-full transition-transform duration-150 disabled:cursor-not-allowed enabled:hover:-translate-y-1 enabled:hover:scale-105 enabled:active:scale-95 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#2453f5] [&>img]:col-start-1 [&>img]:row-start-1 [&>img]:h-[116px] [&>img]:w-auto [&>img]:max-w-[132px] [&>img]:object-contain first:[&>img]:h-[94px] enabled:[&>.bonus-lock]:hidden motion-reduce:transition-none motion-reduce:enabled:hover:transform-none motion-reduce:enabled:active:transform-none"
+				class="bonus-item max-xl:size-[58px] max-xl:[&>img]:h-[58px] max-xl:[&>img]:max-w-[64px] max-xl:first:[&>img]:h-12 grid size-[116px] shrink-0 place-items-center rounded-full transition-transform duration-150 disabled:cursor-not-allowed enabled:hover:-translate-y-1 enabled:hover:scale-105 enabled:active:scale-95 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#2453f5] [&>img]:col-start-1 [&>img]:row-start-1 [&>img]:h-[116px] [&>img]:w-auto [&>img]:max-w-[132px] [&>img]:object-contain first:[&>img]:h-[94px] enabled:[&>.bonus-lock]:hidden motion-reduce:transition-none motion-reduce:enabled:hover:transform-none motion-reduce:enabled:active:transform-none"
 			>
 				<img src={bonus.icon} alt="" />
-				<svg class="bonus-lock pointer-events-none z-1 col-start-1 row-start-1 block h-[58px] w-9 max-md:h-8 max-md:w-5 min-w-[22px] max-w-none overflow-visible" width="22" height="35" viewBox="0 0 40 64" fill="none" aria-hidden="true">
+				<svg class="bonus-lock pointer-events-none z-1 col-start-1 row-start-1 block h-[58px] w-9 max-xl:h-8 max-xl:w-5 min-w-[22px] max-w-none overflow-visible" width="22" height="35" viewBox="0 0 40 64" fill="none" aria-hidden="true">
 					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#fff000" stroke-width="3" />
 					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#2453f5" stroke-width="1" />
 					<path d="M2 29H38V62H2Z" fill="#fff000" stroke="#e3ca00" />

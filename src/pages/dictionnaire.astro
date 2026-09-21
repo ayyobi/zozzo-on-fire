@@ -1,97 +1,116 @@
 ---
-import AppLayout from '../layouts/AppLayout.astro';
-import SignModal from '../components/SignModal.astro';
+import AppLayout from "../layouts/AppLayout.astro";
+import SignModal from "../components/SignModal.astro";
 ---
 
 <AppLayout
-	title="ZOZZO | Dictionnaire"
-	description="Le dictionnaire de la langue des signes ZOZZO."
-	loadingText="Chargement du dictionnaire..."
+  title="ZOZZO | Dictionnaire"
+  description="Le dictionnaire de la langue des signes ZOZZO."
+  loadingText="Chargement du dictionnaire..."
 >
-	<main id="dict-content" class="mx-auto hidden max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
-		<h1 class="text-center text-2xl font-semibold text-[var(--color-royal-blue)] sm:text-3xl">Dictionnaire</h1>
+  <main
+    id="dict-content"
+    class="mx-auto hidden max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12"
+  >
+    <h1
+      class="text-center text-2xl font-semibold text-[var(--color-royal-blue)] sm:text-3xl"
+    >
+      Dictionnaire
+    </h1>
 
-		<div class="mx-auto flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center">
-			<label class="flex h-12 flex-1 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 focus-within:border-[var(--color-blue)]">
-				<span class="sr-only">Rechercher un signe</span>
-				<input
-					id="dict-search"
-					type="search"
-					placeholder="Rechercher un signe (ex : bonjour)"
-					class="w-full bg-transparent text-base text-neutral-800 outline-none placeholder:text-neutral-400 sm:text-sm"
-				/>
-				<span aria-hidden="true" class="text-neutral-400">🔍</span>
-			</label>
+    <div
+      class="mx-auto flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
+    >
+      <label
+        class="flex h-12 flex-1 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 focus-within:border-[var(--color-blue)]"
+      >
+        <span class="sr-only">Rechercher un signe</span>
+        <input
+          id="dict-search"
+          type="search"
+          placeholder="Rechercher un signe (ex : bonjour)"
+          class="w-full bg-transparent text-base text-neutral-800 outline-none placeholder:text-neutral-400 sm:text-sm"
+        />
+        <span aria-hidden="true" class="text-neutral-400">🔍</span>
+      </label>
 
-			<select
-				id="dict-category"
-				class="h-12 w-full rounded-full border border-neutral-200 bg-white px-4 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
-			>
-				<option value="">Toutes les catégories</option>
-			</select>
-		</div>
+      <select
+        id="dict-category"
+        class="h-12 w-full rounded-full border border-neutral-200 bg-white px-4 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
+      >
+        <option value="">Toutes les catégories</option>
+      </select>
+    </div>
 
-		<p id="dict-status" class="hidden text-center text-sm text-neutral-400"></p>
+    <p id="dict-status" class="hidden text-center text-sm text-neutral-400"></p>
 
-		<div id="dict-results" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"></div>
-	</main>
+    <div
+      id="dict-results"
+      class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+    >
+    </div>
+  </main>
 
-	<SignModal />
+  <SignModal />
 
-	<script>
-		import { checkAppSession, watchAppSession } from '../lib/appPage';
-		import { getCurrentUser } from '../lib/pocketbase';
-		import { listCategories, CATEGORY_FIELDS } from '../lib/dictionary';
-		import { attachDictionaryController } from '../lib/dictionaryController';
-		import { initSignModal } from '../lib/signModal';
+  <script>
+    import { checkAppSession, watchAppSession } from "../lib/appPage";
+    import { getCurrentUser } from "../lib/pocketbase";
+    import { listCategories, CATEGORY_FIELDS } from "../lib/dictionary";
+    import { attachDictionaryController } from "../lib/dictionaryController";
+    import { initSignModal } from "../lib/signModal";
 
-		const loading = document.getElementById('loading') as HTMLElement;
-		const networkWarning = document.getElementById('network-warning') as HTMLElement;
-		const content = document.getElementById('dict-content') as HTMLElement;
-		const categorySelect = document.getElementById('dict-category') as HTMLSelectElement;
+    const loading = document.getElementById("loading") as HTMLElement;
+    const networkWarning = document.getElementById(
+      "network-warning",
+    ) as HTMLElement;
+    const content = document.getElementById("dict-content") as HTMLElement;
+    const categorySelect = document.getElementById(
+      "dict-category",
+    ) as HTMLSelectElement;
 
-		async function loadCategories() {
-			try {
-				const categories = await listCategories();
-				if (categories.length === 0) return;
-				for (const cat of categories) {
-					const opt = document.createElement('option');
-					opt.value = cat.id;
-					opt.textContent = String(cat[CATEGORY_FIELDS.name] ?? cat.id);
-					categorySelect.appendChild(opt);
-				}
-				categorySelect.classList.remove('hidden');
-			} catch {
-				// Category filter is a nice-to-have: a schema/collection
-				// mismatch here must not break the rest of the dictionary.
-				categorySelect.classList.add('hidden');
-			}
-		}
+    async function loadCategories() {
+      try {
+        const categories = await listCategories();
+        if (categories.length === 0) return;
+        for (const cat of categories) {
+          const opt = document.createElement("option");
+          opt.value = cat.id;
+          opt.textContent = String(cat[CATEGORY_FIELDS.name] ?? cat.id);
+          categorySelect.appendChild(opt);
+        }
+        categorySelect.classList.remove("hidden");
+      } catch {
+        // Category filter is a nice-to-have: a schema/collection
+        // mismatch here must not break the rest of the dictionary.
+        categorySelect.classList.add("hidden");
+      }
+    }
 
-		async function init() {
-			const user = await checkAppSession(networkWarning);
-			if (!user) return;
+    async function init() {
+      const user = await checkAppSession(networkWarning);
+      if (!user) return;
 
-			await loadCategories();
+      await loadCategories();
 
-			const modal = initSignModal(getCurrentUser);
-			attachDictionaryController({
-				searchInput: document.getElementById('dict-search') as HTMLInputElement,
-				resultsEl: document.getElementById('dict-results') as HTMLElement,
-				statusEl: document.getElementById('dict-status') as HTMLElement,
-				categorySelect,
-				limit: 24,
-				getUser: getCurrentUser,
-				onCardClick: (sign) => modal.show(sign),
-			});
+      const modal = initSignModal(getCurrentUser);
+      attachDictionaryController({
+        searchInput: document.getElementById("dict-search") as HTMLInputElement,
+        resultsEl: document.getElementById("dict-results") as HTMLElement,
+        statusEl: document.getElementById("dict-status") as HTMLElement,
+        categorySelect,
+        limit: 24,
+        getUser: getCurrentUser,
+        onCardClick: (sign) => modal.show(sign),
+      });
 
-			loading.classList.add('hidden');
-			content.classList.remove('hidden');
-			content.classList.add('flex');
-		}
+      loading.classList.add("hidden");
+      content.classList.remove("hidden");
+      content.classList.add("flex");
+    }
 
-		init();
+    init();
 
-		watchAppSession(() => {});
-	</script>
+    watchAppSession(() => {});
+  </script>
 </AppLayout>

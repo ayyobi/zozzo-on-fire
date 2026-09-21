@@ -15,6 +15,7 @@
 // lesson can't bypass it.
 import PocketBase from "pocketbase";
 import Layout from "../../../layouts/Layout.astro";
+import AppHeader from "../../../components/AppHeader.astro";
 
 export async function getStaticPaths() {
   const buildPb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
@@ -31,13 +32,7 @@ export async function getStaticPaths() {
 
 <Layout title="ZOZZO | Leçon" description="Une leçon ZOZZO.">
   <div class="lesson-page min-h-svh bg-white text-[#2450ef]">
-    <header
-      class="lesson-header flex h-[90px] items-center bg-white px-[38px] max-[901px]:h-[54px] max-[901px]:px-4"
-    >
-      <a href="/app#lecons" aria-label="ZOZZO — Retour aux leçons">
-        <img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-10 w-auto max-[901px]:h-7" />
-      </a>
-    </header>
+    <AppHeader compact class="lesson-app-header" />
     <p
       id="loading"
       class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline"
@@ -54,28 +49,31 @@ export async function getStaticPaths() {
     </p>
     <main
       id="lesson-content"
-      class="lesson-scene relative isolate min-h-[calc(100svh-90px)] bg-[#84a5ef] bg-[url('/images/lecon/bg-lecon.avif')] bg-size-[100%_100%] max-md:bg-cover bg-center bg-no-repeat data-[state=result]:bg-white data-[state=result]:bg-none data-[state=message]:bg-white data-[state=message]:bg-none max-[901px]:min-h-[calc(100svh-54px)] [&_.hidden]:hidden! hidden"
+      class="lesson-scene relative isolate min-h-[calc(100svh-90px)] bg-[#84a5ef] bg-[url('/images/lecon/bg-lecon.avif')] bg-cover bg-center bg-no-repeat data-[state=result]:bg-white data-[state=result]:bg-none data-[state=message]:bg-white data-[state=message]:bg-none max-[901px]:min-h-[calc(100svh-54px)] [&_.hidden]:hidden! hidden"
     >
       <div
         id="lesson-not-found"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
         <p>Cette leçon n'existe pas.</p><a href="/app#lecons"
-          >Retour aux leçons</a>
+          >Retour aux leçons</a
+        >
       </div>
       <div
         id="lesson-locked"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
         <p>Continue ton aventure pour débloquer cette leçon !</p><a
-          href="/app#lecons">Retour aux leçons</a>
+          href="/app#lecons">Retour aux leçons</a
+        >
       </div>
       <div
         id="lesson-empty"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
         <p>Cette leçon est bientôt prête !</p><a href="/app#lecons"
-          >Retour aux leçons</a>
+          >Retour aux leçons</a
+        >
       </div>
       <div
         id="lesson-error"
@@ -96,7 +94,7 @@ export async function getStaticPaths() {
           class="relative left-1/2 mb-[38px] w-screen -translate-x-1/2 max-[901px]:mb-8"
         >
           <div
-            class="lesson-frame relative mx-auto aspect-[1.68] w-[min(calc((100vw-64px)*0.66),818.4px)] rounded-3xl border-[54px] border-[#fcdfd7] bg-white max-[901px]:rounded-[20px] max-[901px]:border-[28px] max-[901px]:aspect-[1.2] max-[901px]:w-[calc(100%-24px)] max-[481px]:border-[14px]"
+            class="lesson-frame relative mx-auto aspect-[1.68] w-[min(calc((100vw-64px)*0.48),520px)] max-h-[42vh] rounded-3xl border-[36px] border-[#fcdfd7] bg-white max-[901px]:rounded-[20px] max-[901px]:border-[28px] max-[901px]:aspect-[1.2] max-[901px]:w-[calc(100%-24px)] max-[901px]:max-h-[38vh] max-[481px]:border-[14px]"
           >
             <div
               class="lesson-media absolute inset-0 grid place-items-center overflow-hidden [&_video]:absolute [&_video]:inset-0 [&_video]:size-full [&_video]:object-contain [&_img]:absolute [&_img]:inset-0 [&_img]:size-full [&_img]:object-contain [&_#exercise-reaction]:px-3 [&_#exercise-reaction]:pt-2"
@@ -108,7 +106,6 @@ export async function getStaticPaths() {
                 muted
                 loop
                 playsinline
-                controls
                 aria-label="Signe à reconnaître"></video>
               <img
                 id="exercise-image"
@@ -144,17 +141,11 @@ export async function getStaticPaths() {
             role="status"
           >
           </p>
-          <button
-            id="exercise-continue"
-            type="button"
-            class="lesson-next cursor-pointer rounded-full bg-[#fcdfd7] px-[22px] py-2.5 text-[#2450ef] hidden"
-            >Continuer</button
-          >
         </div>
       </section>
       <section
         id="result-view"
-        class="lesson-result px-6 pt-5 pb-12 text-center [&>img]:mx-auto [&>img]:mb-3 [&>img]:block [&>img]:h-[440px] [&>img]:w-[430px] [&>img]:max-w-4/5 [&>img]:object-contain max-[901px]:[&>img]:size-[330px] [&>h1]:mb-[26px] [&>h1]:text-[38px] [&>h1]:leading-[1.2] [&>h1]:font-normal max-[901px]:[&>h1]:text-[30px] [&>p]:mx-auto [&>p]:max-w-[780px] [&>p]:text-[22px] [&>p]:leading-[1.4] [&>p]:whitespace-pre-line max-[901px]:[&>p]:text-[18px] [&>#result-score]:mt-4 [&>#result-score]:text-[17px] hidden"
+        class="lesson-result px-6 pt-4 pb-8 text-center [&>img]:mx-auto [&>img]:mb-2 [&>img]:block [&>img]:h-[24vh] [&>img]:max-h-[220px] [&>img]:w-auto [&>img]:max-w-[70vw] [&>img]:object-contain max-[901px]:[&>img]:h-[18vh] max-[901px]:[&>img]:max-h-[160px] [&>h1]:mb-3 [&>h1]:text-[32px] [&>h1]:leading-[1.2] [&>h1]:font-normal max-[901px]:[&>h1]:text-[26px] [&>p]:mx-auto [&>p]:max-w-[780px] [&>p]:text-[19px] [&>p]:leading-[1.4] [&>p]:whitespace-pre-line max-[901px]:[&>p]:text-[16px] [&>#result-score]:mt-3 [&>#result-score]:text-[16px] hidden"
         aria-labelledby="result-title"
       >
         <img id="result-image" alt="" />
@@ -162,7 +153,7 @@ export async function getStaticPaths() {
         <p id="result-text"></p>
         <p id="result-score"></p>
         <div
-          class="lesson-result-actions mt-8 flex flex-wrap justify-center gap-4 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:px-6 [&>a]:py-3 [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:px-6 [&>button]:py-3 [&>button]:text-[#2450ef]"
+          class="lesson-result-actions mt-5 flex flex-wrap justify-center gap-4 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:px-6 [&>a]:py-3 [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:px-6 [&>button]:py-3 [&>button]:text-[#2450ef]"
         >
           <button id="result-retry" type="button">Refaire la leçon</button>
           <a href="/app#lecons">Retour aux leçons</a>
@@ -186,8 +177,11 @@ export async function getStaticPaths() {
       isCorrectOption,
       getOptionLabel,
       getResultTier,
+      getResultStars,
       type ExerciseQuestion,
     } from "../../../lib/lessonExercise";
+    import { saveLessonProgress } from "../../../lib/progression";
+    import { upsertClassementForUser } from "../../../lib/ranking";
     import type { SignRecord } from "../../../lib/dictionary";
 
     const loading = document.getElementById("loading") as HTMLElement;
@@ -226,9 +220,6 @@ export async function getStaticPaths() {
     const answersEl = document.getElementById(
       "exercise-answers",
     ) as HTMLElement;
-    const continueBtn = document.getElementById(
-      "exercise-continue",
-    ) as HTMLButtonElement;
 
     const resultView = document.getElementById("result-view") as HTMLElement;
     const resultImage = document.getElementById(
@@ -267,13 +258,13 @@ export async function getStaticPaths() {
     let currentIndex = 0;
     let correctCount = 0;
     let answered = false;
+    let currentUserId: string | null = null;
 
     function renderQuestion() {
       const question = questions[currentIndex];
       answered = false;
       reactionEl.classList.add("hidden");
       feedbackEl.classList.add("hidden");
-      continueBtn.classList.add("hidden");
       progressEl.textContent = `${currentIndex + 1} / ${questions.length}`;
 
       const videoUrl = getSignVideoUrl(question.sign);
@@ -286,7 +277,7 @@ export async function getStaticPaths() {
       if (videoUrl) {
         videoEl.src = videoUrl;
         videoEl.classList.remove("hidden");
-        videoEl.play().catch(() => {});
+        videoEl.play().catch(() => { videoEl.controls = true; });
       } else if (imageUrl) {
         imageEl.src = imageUrl;
         imageEl.classList.remove("hidden");
@@ -300,7 +291,7 @@ export async function getStaticPaths() {
           button.type = "button";
           button.dataset.optionId = option.id;
           button.className =
-            "lesson-answer min-h-[116px] cursor-pointer rounded-3xl bg-[#fcdfd7] px-6 py-[18px] text-[36px] font-normal text-[#2450ef] wrap-anywhere transition-colors duration-[160ms] enabled:hover:bg-[#fff1ec] disabled:cursor-default data-[state=correct]:bg-[#51bea6] data-[state=incorrect]:bg-[#f96346] data-[state=incorrect]:text-[#fff000] max-[901px]:min-h-[74px] max-[901px]:rounded-2xl max-[901px]:p-3 max-[901px]:text-[24px] max-[481px]:min-h-[88px] max-[481px]:text-[26px]";
+            "lesson-answer min-h-[84px] cursor-pointer rounded-3xl bg-[#fcdfd7] px-6 py-[14px] text-[28px] font-normal text-[#2450ef] wrap-anywhere transition-colors duration-[160ms] enabled:hover:bg-[#fff1ec] disabled:cursor-default data-[state=correct]:bg-[#51bea6] data-[state=incorrect]:bg-[#f96346] data-[state=incorrect]:text-[#fff000] max-[901px]:min-h-[74px] max-[901px]:rounded-2xl max-[901px]:p-3 max-[901px]:text-[24px] max-[481px]:min-h-[88px] max-[481px]:text-[26px]";
           button.textContent = getOptionLabel(option);
           button.addEventListener("click", () => onAnswer(question, button));
           return button;
@@ -342,20 +333,18 @@ export async function getStaticPaths() {
         : "La bonne réponse est « " + getOptionLabel(question.sign) + " ».";
       feedbackEl.classList.remove("hidden");
 
-      continueBtn.classList.remove("hidden");
-      continueBtn.textContent =
-        currentIndex < questions.length - 1 ? "Continuer" : "Voir mon résultat";
-      continueBtn.focus({ preventScroll: true });
+      window.setTimeout(
+        () => {
+          if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion();
+          } else {
+            showResult();
+          }
+        },
+        correct ? 700 : 1400,
+      );
     }
-
-    continueBtn.addEventListener("click", () => {
-      if (currentIndex < questions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-      } else {
-        showResult();
-      }
-    });
 
     function showResult() {
       videoEl.pause();
@@ -370,6 +359,23 @@ export async function getStaticPaths() {
       resultView.classList.remove("hidden");
       content.dataset.state = "result";
       resultTitle.focus();
+
+      // Best-effort: the result screen must never depend on this succeeding
+      // (e.g. if `progression`'s API rules aren't open yet).
+      if (currentUserId) {
+        const percent = questions.length
+          ? Math.round((correctCount / questions.length) * 100)
+          : 0;
+        const userId = currentUserId;
+        saveLessonProgress(userId, lessonId, {
+          done: true,
+          percent,
+          stars: getResultStars(tier),
+          score: correctCount,
+        })
+          .then(() => upsertClassementForUser(userId))
+          .catch(() => {});
+      }
     }
 
     function startExercise() {
@@ -387,6 +393,7 @@ export async function getStaticPaths() {
     async function init() {
       const user = await checkAppSession(networkWarning);
       if (!user) return;
+      currentUserId = user.id;
 
       loading.classList.add("hidden");
       content.classList.remove("hidden");

@@ -14,20 +14,20 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 
 <AppLayout home title="ZOZZO | Accueil" description="Ton espace ZOZZO." loadingText="Chargement de ton espace ZOZZO...">
 	<div class="app-home-viewport overflow-x-auto bg-[#fcdfd7]">
-	<main id="app-content" class="app-home mx-auto box-border h-[986px] w-[1440px] grid-cols-[410px_minmax(0,1fr)_336px] grid-rows-[682px_136px] items-start gap-x-16 gap-y-[54px] px-16 pt-[70px] pb-11 max-md:h-auto max-md:w-full max-md:grid-cols-1 max-md:grid-rows-none max-md:gap-6 max-md:px-5 max-md:pt-7 max-md:pb-8 [&:not(.hidden)]:grid hidden">
-		<div class="app-dictionary max-md:row-start-4 max-md:w-full max-md:max-w-[420px] max-md:justify-self-center">
+	<main id="app-content" class="app-home mx-auto box-border h-[986px] w-[1440px] grid-cols-[410px_minmax(0,1fr)_336px] grid-rows-[682px_136px] items-start gap-x-16 gap-y-[54px] px-16 pt-[70px] pb-11 max-xl:h-auto max-xl:w-full max-xl:grid-cols-1 max-xl:grid-rows-none max-xl:gap-6 max-xl:px-5 max-xl:pt-7 max-xl:pb-8 [&:not(.hidden)]:grid hidden">
+		<div class="app-dictionary max-xl:row-start-4 max-xl:w-full max-xl:max-w-[420px] max-xl:justify-self-center">
 			<DictionaryPanel />
 		</div>
 
-		<div class="app-character w-full self-center max-md:row-start-2">
+		<div class="app-character w-full self-center max-xl:row-start-2">
 			<UserCharacter />
 		</div>
 
-		<div class="app-profile min-w-0 pt-[54px] max-md:row-start-1 max-md:pt-0">
+		<div class="app-profile min-w-0 pt-[54px] max-xl:row-start-1 max-xl:pt-0">
 			<UserQuickProfile />
 		</div>
 
-		<div class="app-bonus col-span-full w-[900px] translate-x-7 justify-self-center max-md:row-start-3 max-md:w-full max-md:max-w-[420px] max-md:translate-x-0">
+		<div class="app-bonus col-span-full w-[900px] translate-x-7 justify-self-center max-xl:row-start-3 max-xl:w-full max-xl:max-w-[420px] max-xl:translate-x-0">
 			<BonusBar />
 		</div>
 	</main>

@@ -1,10 +1,21 @@
 ---
-import Layout from './Layout.astro';
+import Layout from "./Layout.astro";
+import AppHeader from "../components/AppHeader.astro";
 ---
+
 <Layout title="ZOZZO | Histoire">
-	<div class="min-h-dvh bg-white">
-		<p id="network-warning" class="hidden bg-yellow-50 p-3 text-center text-sm text-yellow-800" role="status">Connexion interrompue. Réessaie dans quelques instants.</p>
-		<p id="loading" class="py-24 text-center text-neutral-600">Chargement de l’histoire…</p>
-		<slot />
-	</div>
+  <AppHeader compact />
+  <div class="min-h-dvh bg-white">
+    <p
+      id="network-warning"
+      class="hidden bg-yellow-50 p-3 text-center text-sm text-yellow-800"
+      role="status"
+    >
+      Connexion interrompue. Réessaie dans quelques instants.
+    </p>
+    <p id="loading" class="py-24 text-center text-neutral-600">
+      Chargement de l’histoire…
+    </p>
+    <slot />
+  </div>
 </Layout>

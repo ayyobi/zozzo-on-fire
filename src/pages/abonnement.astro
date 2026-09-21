@@ -1,87 +1,112 @@
 ---
-import MinimalLayout from '../layouts/MinimalLayout.astro';
+import MinimalLayout from "../layouts/MinimalLayout.astro";
 ---
 
 <MinimalLayout
-	title="ZOZZO | Abonnement"
-	description="Gère l'abonnement Premium de ton compte ZOZZO."
-	bodyClass="m-0 min-h-dvh flex items-center justify-center px-4 py-12 bg-[var(--color-pale-pink)]"
+  title="ZOZZO | Abonnement"
+  description="Gère l'abonnement Premium de ton compte ZOZZO."
+  bodyClass="m-0 min-h-dvh flex items-center justify-center px-4 py-12 bg-[var(--color-pale-pink)]"
+  navigation="app"
 >
-	<div class="w-full max-w-lg">
-		<a href="/profil" class="mb-6 inline-block text-sm text-neutral-500 hover:underline">&larr; Retour au profil</a>
+  <div class="w-full max-w-lg">
+    <a
+      href="/profil"
+      class="mb-6 inline-block text-sm text-neutral-500 hover:underline"
+      >&larr; Retour au profil</a
+    >
 
-		<div id="loading" class="py-24 text-center text-neutral-500">Chargement...</div>
+    <div id="loading" class="py-24 text-center text-neutral-500">
+      Chargement...
+    </div>
 
-		<div id="content" class="hidden rounded-3xl bg-white p-8 text-center shadow-lg">
-			<p id="status-badge" class="mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold"></p>
-			<h1 class="text-2xl font-medium text-neutral-900">Abonnement Premium</h1>
+    <div
+      id="content"
+      class="hidden rounded-3xl bg-white p-8 text-center shadow-lg"
+    >
+      <p
+        id="status-badge"
+        class="mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold"
+      >
+      </p>
+      <h1 class="text-2xl font-medium text-neutral-900">Abonnement Premium</h1>
 
-			<div id="free-block" class="hidden">
-				<p class="mt-3 text-sm text-neutral-600">
-					Le paiement en ligne pour l'abonnement Premium n'est pas encore disponible sur ZOZZO. La mise en place
-					d'un paiement sécurisé est en préparation.
-				</p>
-				<p class="mt-3 text-sm text-neutral-600">
-					Comme ZOZZO s'adresse aux enfants, l'étape de paiement sera pensée pour être gérée par un parent ou
-					un tuteur, jamais directement par l'enfant.
-				</p>
-				<a
-					href="/contact"
-					class="mt-6 inline-block rounded-full bg-[var(--color-coral)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
-				>
-					Être prévenu·e à l'ouverture
-				</a>
-			</div>
+      <div id="free-block" class="hidden">
+        <p class="mt-3 text-sm text-neutral-600">
+          Le paiement en ligne pour l'abonnement Premium n'est pas encore
+          disponible sur ZOZZO. La mise en place d'un paiement sécurisé est en
+          préparation.
+        </p>
+        <p class="mt-3 text-sm text-neutral-600">
+          Comme ZOZZO s'adresse aux enfants, l'étape de paiement sera pensée
+          pour être gérée par un parent ou un tuteur, jamais directement par
+          l'enfant.
+        </p>
+        <a
+          href="/contact"
+          class="mt-6 inline-block rounded-full bg-[var(--color-coral)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          Être prévenu·e à l'ouverture
+        </a>
+      </div>
 
-			<div id="premium-block" class="hidden">
-				<p class="mt-3 text-sm text-neutral-600">Ton compte a accès à toutes les fonctionnalités Premium.</p>
-				<p class="mt-3 text-xs text-neutral-400">
-					La gestion de facturation (moyen de paiement, annulation) sera disponible ici une fois le paiement en
-					ligne activé.
-				</p>
-			</div>
-		</div>
-	</div>
+      <div id="premium-block" class="hidden">
+        <p class="mt-3 text-sm text-neutral-600">
+          Ton compte a accès à toutes les fonctionnalités Premium.
+        </p>
+        <p class="mt-3 text-xs text-neutral-400">
+          La gestion de facturation (moyen de paiement, annulation) sera
+          disponible ici une fois le paiement en ligne activé.
+        </p>
+      </div>
+    </div>
+  </div>
 
-	<script>
-		import { refreshAuth, getCurrentUser, pb, type ZozzoUser } from '../lib/pocketbase';
+  <script>
+    import {
+      refreshAuth,
+      getCurrentUser,
+      pb,
+      type ZozzoUser,
+    } from "../lib/pocketbase";
 
-		const loading = document.getElementById('loading') as HTMLElement;
-		const content = document.getElementById('content') as HTMLElement;
-		const statusBadge = document.getElementById('status-badge') as HTMLElement;
-		const freeBlock = document.getElementById('free-block') as HTMLElement;
-		const premiumBlock = document.getElementById('premium-block') as HTMLElement;
+    const loading = document.getElementById("loading") as HTMLElement;
+    const content = document.getElementById("content") as HTMLElement;
+    const statusBadge = document.getElementById("status-badge") as HTMLElement;
+    const freeBlock = document.getElementById("free-block") as HTMLElement;
+    const premiumBlock = document.getElementById(
+      "premium-block",
+    ) as HTMLElement;
 
-		function render(user: ZozzoUser) {
-			const isPremium = user.abonnement_actif === true;
-			statusBadge.textContent = isPremium ? 'Premium actif' : 'Compte gratuit';
-			statusBadge.className = isPremium
-				? 'mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold bg-[var(--color-yellow)] text-neutral-900'
-				: 'mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold bg-neutral-100 text-neutral-700';
-			freeBlock.classList.toggle('hidden', isPremium);
-			premiumBlock.classList.toggle('hidden', !isPremium);
-		}
+    function render(user: ZozzoUser) {
+      const isPremium = user.abonnement_actif === true;
+      statusBadge.textContent = isPremium ? "Premium actif" : "Compte gratuit";
+      statusBadge.className = isPremium
+        ? "mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold bg-[var(--color-yellow)] text-neutral-900"
+        : "mx-auto mb-4 w-fit rounded-full px-4 py-1 text-sm font-semibold bg-neutral-100 text-neutral-700";
+      freeBlock.classList.toggle("hidden", isPremium);
+      premiumBlock.classList.toggle("hidden", !isPremium);
+    }
 
-		async function init() {
-			if (!pb.authStore.isValid) {
-				window.location.replace('/login');
-				return;
-			}
-			const result = await refreshAuth();
-			if (result === 'invalid') {
-				window.location.replace('/login?raison=expired');
-				return;
-			}
-			const user = getCurrentUser();
-			if (!user) {
-				window.location.replace('/login');
-				return;
-			}
-			render(user);
-			loading.classList.add('hidden');
-			content.classList.remove('hidden');
-		}
+    async function init() {
+      if (!pb.authStore.isValid) {
+        window.location.replace("/login");
+        return;
+      }
+      const result = await refreshAuth();
+      if (result === "invalid") {
+        window.location.replace("/login?raison=expired");
+        return;
+      }
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.replace("/login");
+        return;
+      }
+      render(user);
+      loading.classList.add("hidden");
+      content.classList.remove("hidden");
+    }
 
-		init();
-	</script>
+    init();
+  </script>
 </MinimalLayout>
