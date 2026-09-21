@@ -1,0 +1,29 @@
+---
+import StoryPage from './StoryPage.astro';
+import StoryNavigation from './StoryNavigation.astro';
+import StoryReward from './StoryReward.astro';
+interface Props { storyId?: string }
+const { storyId = '' } = Astro.props;
+---
+<main id="story-content" data-story-id={storyId} class="relative isolate hidden min-h-dvh flex-col overflow-hidden bg-[#6fc6b4] [&:not(.hidden)]:flex">
+	<img id="story-backdrop" alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover opacity-60 blur-xl" />
+	<div id="story-toolbar" class="absolute inset-x-0 top-0 z-30 mx-auto flex w-full items-center justify-between gap-3 px-3 py-1 text-sm text-[#2439a7]">
+		<a href="/app#histoires" class="inline-flex min-h-11 items-center rounded-full bg-white/85 px-3 hover:underline">← Retour aux histoires</a>
+		<h1 id="story-title" class="sr-only"></h1>
+		<button id="story-fullscreen" type="button" class="min-h-11 rounded-full bg-white/85 px-3 hover:bg-blue-50" aria-label="Afficher l’histoire en plein écran">⛶ Plein écran</button>
+	</div>
+	<div id="story-message" class="hidden px-4 py-20 text-center" role="status">
+		<p id="story-message-text"></p>
+		<a id="story-message-link" href="/app#histoires" class="mt-5 inline-block rounded-full bg-[#fff000] px-6 py-3 text-[#2439a7]">Retour aux histoires</a>
+	</div>
+	<article id="story-reader" class="hidden flex-1 flex-col [&:not(.hidden)]:flex" aria-label="Lecteur d’histoire">
+		<div id="story-canvas" class="relative flex min-h-dvh flex-1 items-center justify-center"><StoryPage /><StoryNavigation /></div>
+		<p id="story-image-error" class="hidden p-4 text-center" role="status">Cette illustration ne peut pas être chargée. <button id="story-image-retry" type="button" class="min-h-11 underline">Réessayer</button></p>
+		<StoryReward />
+	</article>
+</main>
+<noscript><p class="p-8 text-center">Active JavaScript pour lire les histoires.</p></noscript>
+<script>
+	import { initStoryReader } from '../../lib/storyReader';
+	void initStoryReader();
+</script>

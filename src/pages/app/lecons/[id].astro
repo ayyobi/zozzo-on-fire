@@ -1,0 +1,423 @@
+---
+// Dynamic lesson exercise — ONE file handles every lesson (no per-title
+// .astro file). Routed by PocketBase's own record `id` (no `slug` field on
+// `lecons`), same pattern as /app/histoires/[id].astro.
+//
+// IMPORTANT (static site, no SSR/adapter): getStaticPaths() runs at
+// `npm run build` time with no logged-in user, so it needs `lecons` to be
+// publicly readable — it is today. If that's ever locked down, no lesson
+// pages will be generated at build time.
+//
+// The lesson content, open/locked check, and the actual quiz (from
+// `lecon_signes`) are still fetched client-side with the real logged-in
+// session — getStaticPaths only decides which URLs exist. The lock check
+// is repeated here (not just hidden on /app) so a direct URL to a locked
+// lesson can't bypass it.
+import PocketBase from "pocketbase";
+import Layout from "../../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const buildPb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
+  try {
+    const lessons = await buildPb
+      .collection("lecons")
+      .getFullList({ sort: "ordre" });
+    return lessons.map((lesson) => ({ params: { id: lesson.id } }));
+  } catch {
+    return [];
+  }
+}
+---
+
+<Layout title="ZOZZO | Leçon" description="Une leçon ZOZZO.">
+  <div class="lesson-page min-h-svh bg-white text-[#2450ef]">
+    <header
+      class="lesson-header flex h-[90px] items-center bg-white px-[38px] max-[901px]:h-[54px] max-[901px]:px-4 [&_a]:text-[30px] [&_a]:font-semibold [&_a]:text-[#f96346] [&_a]:no-underline max-[901px]:[&_a]:text-[20px]"
+    >
+      <a href="/app#lecons" aria-label="ZOZZO — Retour aux leçons">ZOZZO</a>
+    </header>
+    <p
+      id="loading"
+      class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline"
+      role="status"
+    >
+      Chargement de la leçon...
+    </p>
+    <p
+      id="network-warning"
+      class="hidden lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline"
+      role="status"
+    >
+      Impossible de contacter le serveur. Réessayez dans quelques instants.
+    </p>
+    <main
+      id="lesson-content"
+      class="lesson-scene relative isolate min-h-[calc(100svh-90px)] bg-[#84a5ef] bg-[url('/images/lecon/bg-lecon.avif')] bg-size-[100%_100%] max-md:bg-cover bg-center bg-no-repeat data-[state=result]:bg-white data-[state=result]:bg-none data-[state=message]:bg-white data-[state=message]:bg-none max-[901px]:min-h-[calc(100svh-54px)] [&_.hidden]:hidden! hidden"
+    >
+      <div
+        id="lesson-not-found"
+        class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
+      >
+        <p>Cette leçon n'existe pas.</p><a href="/app#lecons"
+          >Retour aux leçons</a>
+      </div>
+      <div
+        id="lesson-locked"
+        class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
+      >
+        <p>Continue ton aventure pour débloquer cette leçon !</p><a
+          href="/app#lecons">Retour aux leçons</a>
+      </div>
+      <div
+        id="lesson-empty"
+        class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
+      >
+        <p>Cette leçon est bientôt prête !</p><a href="/app#lecons"
+          >Retour aux leçons</a>
+      </div>
+      <div
+        id="lesson-error"
+        class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
+      >
+        <p>
+          Impossible de charger la leçon. Réessaie dans quelques instants.
+        </p><a href="/app#lecons">Retour aux leçons</a>
+      </div>
+      <section
+        id="exercise-view"
+        class="lesson-exercise relative mx-auto w-[min(100%-64px,1240px)] pt-[46px] pb-12 max-[901px]:w-[calc(100%-32px)] max-[901px]:pt-[30px] max-[481px]:pt-6 hidden"
+        aria-labelledby="lesson-title"
+      >
+        <h1 id="lesson-title" class="sr-only"></h1>
+        <p id="exercise-progress" class="sr-only" aria-live="polite"></p>
+        <div
+          class="relative left-1/2 mb-[38px] w-screen -translate-x-1/2 max-[901px]:mb-8"
+        >
+          <div
+            class="lesson-frame relative mx-auto aspect-[1.68] w-[min(calc((100vw-64px)*0.66),818.4px)] rounded-3xl border-[54px] border-[#fcdfd7] bg-white max-[901px]:rounded-[20px] max-[901px]:border-[28px] max-[901px]:aspect-[1.2] max-[901px]:w-[calc(100%-24px)] max-[481px]:border-[14px]"
+          >
+            <div
+              class="lesson-media absolute inset-0 grid place-items-center overflow-hidden [&_video]:absolute [&_video]:inset-0 [&_video]:size-full [&_video]:object-contain [&_img]:absolute [&_img]:inset-0 [&_img]:size-full [&_img]:object-contain [&_#exercise-reaction]:px-3 [&_#exercise-reaction]:pt-2"
+            >
+              <video
+                id="exercise-video"
+                class="sign-video-media hidden"
+                autoplay
+                muted
+                loop
+                playsinline
+                controls
+                aria-label="Signe à reconnaître"></video>
+              <img
+                id="exercise-image"
+                alt="Signe à reconnaître"
+                class="hidden"
+              />
+              <img id="exercise-reaction" alt="" class="hidden" />
+              <span id="exercise-media-fallback" class="hidden"
+                >Média non disponible pour ce signe.</span
+              >
+            </div>
+          </div>
+          <img
+            src="/images/lecon/nuage.avif"
+            class="lesson-cloud pointer-events-none absolute right-0 -bottom-3 z-2 w-[38vw] max-w-[620px] max-md:w-[46vw] max-md:min-w-[160px] max-md:max-w-[280px]"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+        <div
+          id="exercise-answers"
+          class="lesson-answers grid grid-cols-2 gap-x-6 gap-y-4 max-[901px]:gap-3 max-[481px]:grid-cols-1"
+          role="group"
+          aria-label="Choisis la bonne réponse"
+        >
+        </div>
+        <div
+          class="lesson-controls flex min-h-[68px] items-center justify-center gap-6 pt-5 max-[481px]:flex-col max-[481px]:gap-2.5"
+        >
+          <p
+            id="exercise-feedback"
+            class="lesson-feedback text-center text-[18px] max-md:text-[16px] hidden"
+            role="status"
+          >
+          </p>
+          <button
+            id="exercise-continue"
+            type="button"
+            class="lesson-next cursor-pointer rounded-full bg-[#fcdfd7] px-[22px] py-2.5 text-[#2450ef] hidden"
+            >Continuer</button
+          >
+        </div>
+      </section>
+      <section
+        id="result-view"
+        class="lesson-result px-6 pt-5 pb-12 text-center [&>img]:mx-auto [&>img]:mb-3 [&>img]:block [&>img]:h-[440px] [&>img]:w-[430px] [&>img]:max-w-4/5 [&>img]:object-contain max-[901px]:[&>img]:size-[330px] [&>h1]:mb-[26px] [&>h1]:text-[38px] [&>h1]:leading-[1.2] [&>h1]:font-normal max-[901px]:[&>h1]:text-[30px] [&>p]:mx-auto [&>p]:max-w-[780px] [&>p]:text-[22px] [&>p]:leading-[1.4] [&>p]:whitespace-pre-line max-[901px]:[&>p]:text-[18px] [&>#result-score]:mt-4 [&>#result-score]:text-[17px] hidden"
+        aria-labelledby="result-title"
+      >
+        <img id="result-image" alt="" />
+        <h1 id="result-title" tabindex="-1"></h1>
+        <p id="result-text"></p>
+        <p id="result-score"></p>
+        <div
+          class="lesson-result-actions mt-8 flex flex-wrap justify-center gap-4 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:px-6 [&>a]:py-3 [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:px-6 [&>button]:py-3 [&>button]:text-[#2450ef]"
+        >
+          <button id="result-retry" type="button">Refaire la leçon</button>
+          <a href="/app#lecons">Retour aux leçons</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    import { checkAppSession } from "../../../lib/appPage";
+    import {
+      getLessonById,
+      listLessons,
+      isLessonOpen,
+      listLessonSigns,
+      getLessonTitle,
+    } from "../../../lib/lessons";
+    import { getSignImageUrl, getSignVideoUrl } from "../../../lib/dictionary";
+    import {
+      buildExerciseQuestions,
+      isCorrectOption,
+      getOptionLabel,
+      getResultTier,
+      type ExerciseQuestion,
+    } from "../../../lib/lessonExercise";
+    import type { SignRecord } from "../../../lib/dictionary";
+
+    const loading = document.getElementById("loading") as HTMLElement;
+    const networkWarning = document.getElementById(
+      "network-warning",
+    ) as HTMLElement;
+    const content = document.getElementById("lesson-content") as HTMLElement;
+    const notFoundEl = document.getElementById(
+      "lesson-not-found",
+    ) as HTMLElement;
+    const lockedEl = document.getElementById("lesson-locked") as HTMLElement;
+    const emptyEl = document.getElementById("lesson-empty") as HTMLElement;
+    const titleEl = document.getElementById("lesson-title") as HTMLElement;
+
+    const exerciseView = document.getElementById(
+      "exercise-view",
+    ) as HTMLElement;
+    const progressEl = document.getElementById(
+      "exercise-progress",
+    ) as HTMLElement;
+    const videoEl = document.getElementById(
+      "exercise-video",
+    ) as HTMLVideoElement;
+    const imageEl = document.getElementById(
+      "exercise-image",
+    ) as HTMLImageElement;
+    const mediaFallback = document.getElementById(
+      "exercise-media-fallback",
+    ) as HTMLElement;
+    const reactionEl = document.getElementById(
+      "exercise-reaction",
+    ) as HTMLImageElement;
+    const feedbackEl = document.getElementById(
+      "exercise-feedback",
+    ) as HTMLElement;
+    const answersEl = document.getElementById(
+      "exercise-answers",
+    ) as HTMLElement;
+    const continueBtn = document.getElementById(
+      "exercise-continue",
+    ) as HTMLButtonElement;
+
+    const resultView = document.getElementById("result-view") as HTMLElement;
+    const resultImage = document.getElementById(
+      "result-image",
+    ) as HTMLImageElement;
+    const resultTitle = document.getElementById("result-title") as HTMLElement;
+    const resultText = document.getElementById("result-text") as HTMLElement;
+    const resultScore = document.getElementById("result-score") as HTMLElement;
+    const retryBtn = document.getElementById(
+      "result-retry",
+    ) as HTMLButtonElement;
+
+    const lessonId =
+      window.location.pathname.split("/").filter(Boolean).pop() ?? "";
+
+    const RESULT_CONTENT = {
+      excellent: {
+        image: "/images/lecon/tres-bien.avif",
+        title: "Très bien acquis !",
+        text: "Bravo !\nTu maîtrises très bien cette leçon. Continue comme ça, tu es prêt pour la suite !",
+      },
+      consolider: {
+        image: "/images/lecon/consolider.avif",
+        title: "À consolider",
+        text: "C’est en bonne voie !\nTu connais déjà plusieurs signes. Entraîne-toi encore un peu, tu vas maîtriser les bases.",
+      },
+      revoir: {
+        image: "/images/lecon/a-revoir.avif",
+        title: "À revoir",
+        text: "Ne t’inquiète pas !\nChaque apprentissage prend du temps. Regarde la leçon tranquillement et réessaie, tu vas y arriver !",
+      },
+    } as const;
+
+    let signs: SignRecord[] = [];
+    let questions: ExerciseQuestion[] = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let answered = false;
+
+    function renderQuestion() {
+      const question = questions[currentIndex];
+      answered = false;
+      reactionEl.classList.add("hidden");
+      feedbackEl.classList.add("hidden");
+      continueBtn.classList.add("hidden");
+      progressEl.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+      const videoUrl = getSignVideoUrl(question.sign);
+      const imageUrl = getSignImageUrl(question.sign);
+      videoEl.classList.add("hidden");
+      imageEl.classList.add("hidden");
+      mediaFallback.classList.add("hidden");
+      videoEl.pause();
+
+      if (videoUrl) {
+        videoEl.src = videoUrl;
+        videoEl.classList.remove("hidden");
+        videoEl.play().catch(() => {});
+      } else if (imageUrl) {
+        imageEl.src = imageUrl;
+        imageEl.classList.remove("hidden");
+      } else {
+        mediaFallback.classList.remove("hidden");
+      }
+
+      answersEl.replaceChildren(
+        ...question.options.map((option) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.optionId = option.id;
+          button.className =
+            "lesson-answer min-h-[116px] cursor-pointer rounded-3xl bg-[#fcdfd7] px-6 py-[18px] text-[36px] font-normal text-[#2450ef] wrap-anywhere transition-colors duration-[160ms] enabled:hover:bg-[#fff1ec] disabled:cursor-default data-[state=correct]:bg-[#51bea6] data-[state=incorrect]:bg-[#f96346] data-[state=incorrect]:text-[#fff000] max-[901px]:min-h-[74px] max-[901px]:rounded-2xl max-[901px]:p-3 max-[901px]:text-[24px] max-[481px]:min-h-[88px] max-[481px]:text-[26px]";
+          button.textContent = getOptionLabel(option);
+          button.addEventListener("click", () => onAnswer(question, button));
+          return button;
+        }),
+      );
+    }
+
+    function onAnswer(
+      question: ExerciseQuestion,
+      chosenBtn: HTMLButtonElement,
+    ) {
+      if (answered) return;
+      answered = true;
+
+      const chosenOption = question.options.find(
+        (o) => o.id === chosenBtn.dataset.optionId,
+      );
+      const correct = !!chosenOption && isCorrectOption(question, chosenOption);
+      if (correct) correctCount++;
+
+      answersEl
+        .querySelectorAll<HTMLButtonElement>("[data-option-id]")
+        .forEach((btn) => {
+          btn.disabled = true;
+          if (btn.dataset.optionId === question.sign.id)
+            btn.dataset.state = "correct";
+          else if (btn === chosenBtn) btn.dataset.state = "incorrect";
+        });
+      videoEl.pause();
+      videoEl.classList.add("hidden");
+      imageEl.classList.add("hidden");
+      mediaFallback.classList.add("hidden");
+      reactionEl.src = correct
+        ? "/images/lecon/bonne-reponse.avif"
+        : "/images/lecon/mouvaise-reponse.avif";
+      reactionEl.classList.remove("hidden");
+      feedbackEl.textContent = correct
+        ? "Bravo, c’est la bonne réponse !"
+        : "La bonne réponse est « " + getOptionLabel(question.sign) + " ».";
+      feedbackEl.classList.remove("hidden");
+
+      continueBtn.classList.remove("hidden");
+      continueBtn.textContent =
+        currentIndex < questions.length - 1 ? "Continuer" : "Voir mon résultat";
+      continueBtn.focus({ preventScroll: true });
+    }
+
+    continueBtn.addEventListener("click", () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      videoEl.pause();
+      exerciseView.classList.add("hidden");
+      const tier = getResultTier(correctCount, questions.length);
+      const info = RESULT_CONTENT[tier];
+      resultImage.src = info.image;
+      resultImage.alt = info.title;
+      resultTitle.textContent = info.title;
+      resultText.textContent = info.text;
+      resultScore.textContent = `${correctCount} / ${questions.length} signes reconnus`;
+      resultView.classList.remove("hidden");
+      content.dataset.state = "result";
+      resultTitle.focus();
+    }
+
+    function startExercise() {
+      content.dataset.state = "exercise";
+      questions = buildExerciseQuestions(signs);
+      currentIndex = 0;
+      correctCount = 0;
+      resultView.classList.add("hidden");
+      exerciseView.classList.remove("hidden");
+      renderQuestion();
+    }
+
+    retryBtn.addEventListener("click", startExercise);
+
+    async function init() {
+      const user = await checkAppSession(networkWarning);
+      if (!user) return;
+
+      loading.classList.add("hidden");
+      content.classList.remove("hidden");
+      content.dataset.state = "message";
+
+      const lesson = await getLessonById(lessonId);
+      if (!lesson) {
+        notFoundEl.classList.remove("hidden");
+        return;
+      }
+
+      const allLessons = await listLessons();
+      if (!isLessonOpen(lesson, allLessons)) {
+        lockedEl.classList.remove("hidden");
+        return;
+      }
+
+      titleEl.textContent = getLessonTitle(lesson) || "Leçon";
+
+      signs = await listLessonSigns(lesson.id);
+      if (signs.length === 0) {
+        emptyEl.classList.remove("hidden");
+        return;
+      }
+
+      startExercise();
+    }
+
+    init().catch(() => {
+      loading.classList.add("hidden");
+      content.classList.remove("hidden");
+      content.dataset.state = "message";
+      document.getElementById("lesson-error")?.classList.remove("hidden");
+    });
+  </script>
+</Layout>

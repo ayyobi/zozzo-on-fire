@@ -4,10 +4,10 @@
 // full browsing experience lives on /dictionnaire.
 ---
 
-<section class="dictionary-panel" aria-labelledby="dico-title">
-	<h2 id="dico-title">Dico</h2>
+<section class="dictionary-panel max-md:h-[420px] max-md:rounded-3xl max-md:[&_.dico-card>span:not(.absolute):first-of-type]:h-[104px] max-md:[&_.dico-card>span:not(.absolute):first-of-type]:rounded-2xl max-md:[&_.dico-card>span.absolute+span]:h-[104px] max-md:[&_.dico-card>span.absolute+span]:rounded-2xl max-md:[&_.dico-card>span:last-child]:text-[16px] max-md:[&_.dico-card>span:last-child]:leading-6 max-md:[&_.dico-card_img]:p-2 h-[682px] w-full overflow-hidden rounded-[36px] bg-white text-[#2450ef] [&_.dico-card]:gap-0 [&_.dico-card]:rounded-none [&_.dico-card]:border-0 [&_.dico-card]:bg-transparent [&_.dico-card]:p-0 [&_.dico-card]:shadow-none [&_.dico-card>span:not(.absolute):first-of-type]:h-[154px] [&_.dico-card>span:not(.absolute):first-of-type]:rounded-[28px] [&_.dico-card>span:not(.absolute):first-of-type]:border-3 [&_.dico-card>span:not(.absolute):first-of-type]:border-[#2850ff] [&_.dico-card>span:not(.absolute):first-of-type]:bg-white [&_.dico-card>span.absolute+span]:h-[154px] [&_.dico-card>span.absolute+span]:rounded-[28px] [&_.dico-card>span.absolute+span]:border-3 [&_.dico-card>span.absolute+span]:border-[#2850ff] [&_.dico-card>span.absolute+span]:bg-white [&_.dico-card_img]:min-h-0 [&_.dico-card_img]:object-contain [&_.dico-card_img]:p-4 [&_.dico-card>span:last-child]:text-[22px] [&_.dico-card>span:last-child]:leading-8 [&_.dico-card>span:last-child]:font-normal [&_.dico-card>span:last-child]:text-[#2047ff]" aria-labelledby="dico-title">
+	<h2 id="dico-title" class="mx-[38px] mt-5 text-[44px] max-md:mx-5 max-md:mt-4 max-md:text-[28px] leading-[1.4] font-normal">Dico</h2>
 
-	<label class="dictionary-search">
+	<label class="dictionary-search max-md:mx-5 max-md:mb-5 max-md:h-9 max-md:px-3 max-md:[&_input]:text-[16px] max-md:[&_svg]:size-5 mt-0 mr-[34px] mb-[34px] ml-[38px] flex h-[42px] items-center gap-2 rounded-full bg-[#eceaea] px-[18px] text-[#aaa] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#2450ef] [&_input]:text-[22px] [&_input]:text-[#303030] [&_input]:placeholder:text-[#aaa] [&_svg]:size-7 [&_svg]:shrink-0">
 		<span class="sr-only">Rechercher un signe</span>
 		<input
 			id="dico-search"
@@ -18,13 +18,13 @@
 		<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="10" cy="10" r="6.5" stroke="currentColor" stroke-width="3" /><path d="m15 15 5 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg>
 	</label>
 
-	<div class="dictionary-scroll">
+	<div class="dictionary-scroll max-md:h-[308px] max-md:px-4 max-md:pb-4 h-[524px] overflow-y-auto px-[26px] pb-[26px] [scrollbar-width:thin] [scrollbar-color:#c5d1ff_transparent]">
 	<p id="dico-status" class="mt-4 hidden text-center text-sm text-neutral-400"></p>
-	<div id="dico-results" class="dictionary-results"></div>
+	<div id="dico-results" class="dictionary-results max-md:gap-x-3 max-md:gap-y-4 grid grid-cols-2 gap-x-2.5 gap-y-[26px]"></div>
 
 	<a
 		href="/dictionnaire"
-		class="dictionary-more"
+		class="dictionary-more max-md:text-[16px] mt-4 block text-center text-[20px] hover:underline"
 	>
 		Voir le dictionnaire →
 	</a>
@@ -51,22 +51,3 @@
 		onCardClick: (sign) => modal.show(sign),
 	});
 </script>
-
-<style>
-.dictionary-panel { height: 414px; width: 100%; overflow: hidden; border-radius: 22px; background: white; color: #2450ef; }
-#dico-title { margin: 12px 23px 0; font-size: 28px; font-weight: 400; line-height: 1.4; }
-.dictionary-search { display: flex; align-items: center; gap: 8px; height: 26px; margin: 0 20px 21px 23px; padding: 0 11px; border-radius: 999px; background: #eceaea; color: #aaa; }
-.dictionary-search input { font-size: 14px; color: #303030; }
-.dictionary-search input::placeholder { color: #aaa; }
-.dictionary-search svg { flex-shrink: 0; }
-.dictionary-search:focus-within { outline: 2px solid #2450ef; outline-offset: 2px; }
-.dictionary-scroll { height: 316px; padding: 0 16px 16px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c5d1ff transparent; }
-.dictionary-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 6px; }
-.dictionary-panel :global(.dico-card) { gap: 0; border: 0; border-radius: 0; padding: 0; background: transparent; box-shadow: none; }
-.dictionary-panel :global(.dico-card > span:first-of-type:not(.absolute)) ,
-.dictionary-panel :global(.dico-card > span.absolute + span) { height: 94px; border: 2px solid #2850ff; border-radius: 17px; background: white; }
-.dictionary-panel :global(.dico-card img) { object-fit: contain; padding: 10px; }
-.dictionary-panel :global(.dico-card > span:last-child) { color: #2047ff; font-size: 14px; font-weight: 400; line-height: 20px; }
-.dictionary-more { display: block; margin-top: 16px; font-size: 13px; text-align: center; }
-.dictionary-more:hover { text-decoration: underline; }
-</style>

@@ -1,0 +1,262 @@
+---
+// Dynamic cahier page — ONE file handles every cahier (no per-title .astro
+// file). Routed by the real `slug` field on `cahiers` (unlike
+// histoires/lecons, this collection does have one).
+//
+// IMPORTANT (static site, no SSR/adapter): getStaticPaths() runs at
+// `npm run build` time with no logged-in user, so it needs `cahiers` to be
+// publicly readable. It currently is NOT (anonymous read returns "Only
+// superusers can perform this action") — until that's fixed in PocketBase,
+// this build-time fetch fails and NO /cahiers/[slug] pages get generated
+// (the site still builds fine, this route just won't exist). See the
+// report for exactly what to check.
+//
+// Only the Alphabet cahier has real interactive content right now (the
+// book). Any other *open* cahier falls back to a simple "coming soon"
+// view using its own PocketBase fields — never fake content.
+import PocketBase from 'pocketbase';
+import AppLayout from '../../layouts/AppLayout.astro';
+import { ALPHABET_LETTERS } from '../../lib/alphabet';
+
+export async function getStaticPaths() {
+	const buildPb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
+	try {
+		const cahiers = await buildPb.collection('cahiers').getFullList({ sort: 'ordre' });
+		return cahiers.map((cahier) => ({
+			params: { slug: String(cahier.slug || cahier.id) },
+		}));
+	} catch {
+		return [];
+	}
+}
+---
+
+<AppLayout title="ZOZZO | Cahier" description="Le cahier ZOZZO." loadingText="Chargement du cahier...">
+	<main id="cahier-content" class="hidden bg-[var(--color-pale-pink)] px-4 py-8 sm:px-6 lg:py-12">
+		<div class="mx-auto max-w-3xl">
+			<a href="/app#cahier" class="mb-6 inline-block text-sm font-medium text-[#2854d7] hover:underline">
+				&larr; Retour au cahier
+			</a>
+
+			<div id="cahier-not-found" class="hidden rounded-3xl bg-white p-8 text-center shadow-lg">
+				<p class="text-lg font-medium text-neutral-800">Ce cahier n'existe pas.</p>
+				<a href="/app#cahier" class="mt-5 inline-block rounded-full bg-[var(--color-coral)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90">
+					Retour au cahier
+				</a>
+			</div>
+
+			<div id="cahier-locked" class="hidden rounded-3xl bg-white p-8 text-center shadow-lg">
+				<p class="text-lg font-medium text-neutral-800">Ce cahier est disponible avec ZOZZO Premium.</p>
+				<a href="/abonnement" class="mt-5 inline-block rounded-full bg-[var(--color-coral)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90">
+					Découvrir Premium
+				</a>
+			</div>
+
+			<!-- Generic placeholder for an open cahier that isn't the Alphabet
+			     book yet (no fake content, per the brief). -->
+			<div id="cahier-placeholder" class="hidden rounded-3xl bg-white p-8 text-center shadow-lg">
+				<img id="placeholder-image" src="" alt="" class="mx-auto h-40 w-auto object-contain" />
+				<h1 id="placeholder-title" class="mt-4 text-2xl font-semibold text-[#2854d7]"></h1>
+				<p class="mt-2 text-neutral-500">Ce cahier arrive bientôt !</p>
+			</div>
+
+			<!-- The Alphabet book -->
+			<section id="alphabet-book" class="hidden">
+				<h1 id="book-title" class="mb-4 text-center text-2xl font-semibold text-[#2854d7] sm:text-3xl">L'alphabet</h1>
+
+				<div class="relative mx-auto w-full max-w-2xl" style="aspect-ratio: 2328 / 1656;">
+					<img src="/images/cahier.avif" alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full object-contain" />
+
+					<!-- Page zones are positioned by percentage over the book
+					     illustration. Estimated (no way to inspect the artwork
+					     visually this session) — nudge these two blocks' inline
+					     styles once you can see it rendered. -->
+					<div class="absolute flex flex-col items-center justify-center text-center" style="left: 9%; top: 20%; width: 34%; height: 52%;">
+						<span id="book-letter-left" class="block font-bold text-[var(--color-royal-blue)]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
+						<img id="book-image-left" src="" alt="" class="mt-1 h-[55%] w-full object-contain" />
+					</div>
+					<div class="absolute flex flex-col items-center justify-center text-center" style="left: 57%; top: 20%; width: 34%; height: 52%;">
+						<span id="book-letter-right" class="block font-bold text-[var(--color-royal-blue)]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
+						<img id="book-image-right" src="" alt="" class="mt-1 hidden h-[55%] w-full object-contain" />
+					</div>
+
+					<button
+						id="book-next"
+						type="button"
+						aria-label="Lettres suivantes"
+						class="absolute right-[4%] bottom-[4%] flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-coral)] text-white shadow-md transition hover:scale-105 active:scale-95 sm:h-12 sm:w-12"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
+				</div>
+
+				<p id="book-status" class="mt-4 hidden text-center text-sm text-neutral-500"></p>
+
+				<div id="alphabet-keyboard" class="mx-auto mt-6 flex max-w-xl flex-wrap justify-center gap-2" role="group" aria-label="Alphabet">
+					{
+						ALPHABET_LETTERS.map((letter) => (
+							<button
+								type="button"
+								data-letter={letter}
+								class="alphabet-key flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-yellow)] text-base font-semibold text-[var(--color-royal-blue)] transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-coral)] active:scale-95 sm:h-12 sm:w-12"
+							>
+								{letter}
+							</button>
+						))
+					}
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<script>
+		import { checkAppSession } from '../../lib/appPage';
+		import { getCahierBySlug, isCahierOpen, getCahierTitle, getCahierImageUrl, getCahierCategoryId } from '../../lib/cahiers';
+		import { listAlphabetSigns, buildLetterMap, ALPHABET_LETTERS } from '../../lib/alphabet';
+		import { getSignImageUrl, type SignRecord } from '../../lib/dictionary';
+
+		const loading = document.getElementById('loading') as HTMLElement;
+		const networkWarning = document.getElementById('network-warning') as HTMLElement;
+		const content = document.getElementById('cahier-content') as HTMLElement;
+		const notFoundEl = document.getElementById('cahier-not-found') as HTMLElement;
+		const lockedEl = document.getElementById('cahier-locked') as HTMLElement;
+		const placeholderEl = document.getElementById('cahier-placeholder') as HTMLElement;
+		const placeholderImg = document.getElementById('placeholder-image') as HTMLImageElement;
+		const placeholderTitle = document.getElementById('placeholder-title') as HTMLElement;
+
+		const bookEl = document.getElementById('alphabet-book') as HTMLElement;
+		const bookTitle = document.getElementById('book-title') as HTMLElement;
+		const bookStatus = document.getElementById('book-status') as HTMLElement;
+		const letterLeftEl = document.getElementById('book-letter-left') as HTMLElement;
+		const letterRightEl = document.getElementById('book-letter-right') as HTMLElement;
+		const imageLeftEl = document.getElementById('book-image-left') as HTMLImageElement;
+		const imageRightEl = document.getElementById('book-image-right') as HTMLImageElement;
+		const nextBtn = document.getElementById('book-next') as HTMLButtonElement;
+		const keyboardButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.alphabet-key'));
+
+		const slug = window.location.pathname.split('/').filter(Boolean).pop() ?? '';
+
+		let letterMap = new Map<string, SignRecord>();
+		let currentLeftLetter = 'A';
+
+		function setKeyState(letter: string, active: boolean) {
+			const btn = keyboardButtons.find((b) => b.dataset.letter === letter);
+			if (!btn) return;
+			btn.classList.toggle('bg-[var(--color-blue)]', active);
+			btn.classList.toggle('text-white', active);
+			btn.classList.toggle('bg-[var(--color-yellow)]', !active);
+			btn.classList.toggle('text-[var(--color-royal-blue)]', !active);
+			btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+		}
+
+		function showPage(letter: string, letterEl: HTMLElement, imageEl: HTMLImageElement) {
+			letterEl.textContent = letter;
+			const sign = letterMap.get(letter);
+			const url = sign ? getSignImageUrl(sign) : null;
+			if (url) {
+				imageEl.src = url;
+				imageEl.alt = `Signe de la lettre ${letter}`;
+				imageEl.classList.remove('hidden');
+			} else {
+				imageEl.removeAttribute('src');
+				imageEl.classList.add('hidden');
+			}
+		}
+
+		function clearPage(letterEl: HTMLElement, imageEl: HTMLImageElement) {
+			letterEl.textContent = '';
+			imageEl.removeAttribute('src');
+			imageEl.classList.add('hidden');
+		}
+
+		function renderPair(leftLetter: string) {
+			const index = ALPHABET_LETTERS.indexOf(leftLetter);
+			if (index === -1) return;
+			const rightLetter = index < ALPHABET_LETTERS.length - 1 ? ALPHABET_LETTERS[index + 1] : null;
+
+			keyboardButtons.forEach((btn) => setKeyState(btn.dataset.letter ?? '', false));
+
+			currentLeftLetter = leftLetter;
+			showPage(leftLetter, letterLeftEl, imageLeftEl);
+			setKeyState(leftLetter, true);
+
+			if (rightLetter) {
+				showPage(rightLetter, letterRightEl, imageRightEl);
+				setKeyState(rightLetter, true);
+			} else {
+				clearPage(letterRightEl, imageRightEl);
+			}
+		}
+
+		keyboardButtons.forEach((btn) => {
+			btn.addEventListener('click', () => renderPair(btn.dataset.letter ?? 'A'));
+		});
+
+		nextBtn.addEventListener('click', () => {
+			const index = ALPHABET_LETTERS.indexOf(currentLeftLetter);
+			const nextIndex = Math.min(index + 2, ALPHABET_LETTERS.length - 1);
+			renderPair(ALPHABET_LETTERS[nextIndex]);
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (bookEl.classList.contains('hidden')) return;
+			const target = e.target as HTMLElement | null;
+			if (target && ['INPUT', 'TEXTAREA'].includes(target.tagName)) return;
+			const letter = e.key.toUpperCase();
+			if (ALPHABET_LETTERS.includes(letter)) renderPair(letter);
+		});
+
+		async function init() {
+			const user = await checkAppSession(networkWarning);
+			if (!user) return;
+
+			loading.classList.add('hidden');
+			content.classList.remove('hidden');
+
+			const cahier = await getCahierBySlug(slug);
+			if (!cahier) {
+				notFoundEl.classList.remove('hidden');
+				return;
+			}
+
+			if (!isCahierOpen(cahier)) {
+				lockedEl.classList.remove('hidden');
+				return;
+			}
+
+			const categoryId = await getCahierCategoryId(cahier);
+			if (!categoryId) {
+				placeholderTitle.textContent = getCahierTitle(cahier) || 'Cahier';
+				const imgUrl = getCahierImageUrl(cahier);
+				if (imgUrl) placeholderImg.src = imgUrl;
+				placeholderEl.classList.remove('hidden');
+				return;
+			}
+
+			try {
+				const signs = await listAlphabetSigns(categoryId);
+				letterMap = buildLetterMap(signs);
+
+				if (letterMap.size === 0) {
+					placeholderTitle.textContent = getCahierTitle(cahier) || 'Cahier';
+					const imgUrl = getCahierImageUrl(cahier);
+					if (imgUrl) placeholderImg.src = imgUrl;
+					placeholderEl.classList.remove('hidden');
+					return;
+				}
+
+				bookTitle.textContent = getCahierTitle(cahier) || "L'alphabet";
+				bookEl.classList.remove('hidden');
+				renderPair('A');
+			} catch {
+				bookStatus.textContent = 'Impossible de charger le cahier pour le moment.';
+				bookStatus.classList.remove('hidden');
+				bookEl.classList.remove('hidden');
+			}
+		}
+
+		init();
+	</script>
+</AppLayout>

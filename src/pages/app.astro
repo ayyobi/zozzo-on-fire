@@ -5,30 +5,36 @@ import UserQuickProfile from '../components/UserQuickProfile.astro';
 import DictionaryPanel from '../components/DictionaryPanel.astro';
 import BonusBar from '../components/BonusBar.astro';
 import StoriesSection from '../components/StoriesSection.astro';
+import LessonsSection from '../components/LessonsSection.astro';
+import CahierSection from '../components/CahierSection.astro';
 import SignModal from '../components/SignModal.astro';
 import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 ---
 
-<AppLayout title="ZOZZO | Accueil" description="Ton espace ZOZZO." loadingText="Chargement de ton espace ZOZZO...">
-	<main id="app-content" class="app-home hidden">
-		<div class="app-dictionary">
+<AppLayout home title="ZOZZO | Accueil" description="Ton espace ZOZZO." loadingText="Chargement de ton espace ZOZZO...">
+	<div class="app-home-viewport overflow-x-auto bg-[#fcdfd7]">
+	<main id="app-content" class="app-home mx-auto box-border h-[986px] w-[1440px] grid-cols-[410px_minmax(0,1fr)_336px] grid-rows-[682px_136px] items-start gap-x-16 gap-y-[54px] px-16 pt-[70px] pb-11 max-md:h-auto max-md:w-full max-md:grid-cols-1 max-md:grid-rows-none max-md:gap-6 max-md:px-5 max-md:pt-7 max-md:pb-8 [&:not(.hidden)]:grid hidden">
+		<div class="app-dictionary max-md:row-start-4 max-md:w-full max-md:max-w-[420px] max-md:justify-self-center">
 			<DictionaryPanel />
 		</div>
 
-		<div class="app-character">
+		<div class="app-character w-full self-center max-md:row-start-2">
 			<UserCharacter />
 		</div>
 
-		<div class="app-profile">
+		<div class="app-profile min-w-0 pt-[54px] max-md:row-start-1 max-md:pt-0">
 			<UserQuickProfile />
 		</div>
 
-		<div class="app-bonus">
+		<div class="app-bonus col-span-full w-[900px] translate-x-7 justify-self-center max-md:row-start-3 max-md:w-full max-md:max-w-[420px] max-md:translate-x-0">
 			<BonusBar />
 		</div>
 	</main>
+	</div>
 
 	<StoriesSection />
+	<LessonsSection />
+	<CahierSection />
 
 	<SignModal />
 	<AvatarPickerModal />
@@ -95,23 +101,3 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 		});
 	</script>
 </AppLayout>
-
-<style>
-.app-home { max-width: 1292px; min-height: calc(100svh - 54px); margin-inline: auto; padding: 42px 4.3% 20px; grid-template-columns: 31.4% minmax(0, 1fr) 25.7%; grid-template-rows: minmax(414px, 1fr) 83px; gap: 32px 4%; align-items: start; }
-.app-home:not(.hidden) { display: grid; }
-.app-character { align-self: center; justify-self: center; width: 100%; }
-.app-profile { padding-top: 30px; min-width: 0; }
-.app-bonus { grid-column: 1 / -1; width: min(100%, 544px); justify-self: center; transform: translateX(17px); }
-@media (min-width: 1292px) { .app-home { padding-inline: 56px; } }
-/* Mobile is a real re-composition, not the desktop grid shrunk down:
-   pseudo + Profil button above the character (both full width, centered),
-   then the character, then the Dico panel, then the Bonus bar — matching
-   the stacked mobile reference layout, not a 2-column crop of desktop. */
-@media (max-width: 767px) {
-.app-home { padding: 28px 20px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 20px; justify-items: center; }
-.app-profile { grid-column: 1; grid-row: 1; padding-top: 0; width: 100%; }
-.app-character { grid-column: 1; grid-row: 2; }
-.app-dictionary { grid-column: 1; grid-row: 3; width: min(100%, 420px); }
-.app-bonus { grid-column: 1; grid-row: 4; width: min(100%, 420px); transform: none; }
-}
-</style>

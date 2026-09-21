@@ -1,0 +1,89 @@
+---
+// Encapsulates the Leçons composition: title, coral background, PocketBase
+// fetch, horizontal card row. Embedded on /app below Histoires — reachable
+// by scrolling, or via /app#lecons from anywhere (AppHeader).
+//
+// Self-contained like StoriesSection/DictionaryPanel: reads the already-
+// loaded PocketBase authStore itself, since Astro components can't receive
+// data fetched client-side by their parent page.
+---
+
+<section
+  id="lecons"
+  class="scroll-mt-[98px] bg-[#f96346] pt-10 pb-[82px] max-md:pt-7 max-md:pb-8 text-[#fcdfd7]"
+  aria-labelledby="lessons-heading"
+>
+  <div>
+    <h2
+      id="lessons-heading"
+      class="mb-11 max-md:mb-6 text-center text-[clamp(48px,7vw,100px)] leading-[1.2] font-medium text-[#fcdfd7]"
+    >
+      Leçons
+    </h2>
+    <p
+      id="lessons-status"
+      class="hidden px-6 py-[60px] text-center text-[24px]"
+      role="status"
+    >
+    </p>
+  </div>
+
+  <!-- Keep the lessons in one horizontal rail at every viewport size so
+	     cards remain readable and the interaction stays consistent. -->
+  <div
+    id="lessons-flow"
+    class="hidden flex-nowrap justify-start touch-pan-x scroll-smooth snap-x snap-proximity gap-8 overflow-x-auto overscroll-x-contain px-12 py-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden max-md:scroll-px-5 max-md:gap-4 max-md:px-5"
+  >
+  </div>
+</section>
+
+<script>
+  import { listLessons, isLessonOpen, type LessonRecord } from "../lib/lessons";
+  import { renderLessonCardHTML } from "../lib/lessonCardUi";
+  import { showAppToast } from "../lib/toast";
+
+  const status = document.getElementById("lessons-status") as HTMLElement;
+  const flow = document.getElementById("lessons-flow") as HTMLElement;
+
+  function attachLockedHandlers() {
+    flow
+      .querySelectorAll<HTMLButtonElement>("[data-locked-lesson]")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          showAppToast("Continue ton aventure pour débloquer cette leçon !");
+        });
+      });
+  }
+
+  async function load() {
+    status.textContent = "Chargement des leçons...";
+    status.classList.remove("hidden");
+    flow.classList.add("hidden");
+
+    try {
+      const lessons: LessonRecord[] = await listLessons();
+
+      if (lessons.length === 0) {
+        status.textContent =
+          "Les prochaines leçons de Zozzo arrivent bientôt !";
+        status.classList.remove("hidden");
+        return;
+      }
+
+      status.classList.add("hidden");
+      flow.innerHTML = lessons
+        .map((lesson) =>
+          renderLessonCardHTML(lesson, isLessonOpen(lesson, lessons)),
+        )
+        .join("");
+      flow.classList.remove("hidden");
+      flow.classList.add("flex");
+      attachLockedHandlers();
+    } catch {
+      status.textContent = "Impossible de charger les leçons pour le moment.";
+      status.classList.remove("hidden");
+    }
+  }
+
+  load();
+</script>

@@ -1,0 +1,10 @@
+---
+import SignVideo from './SignVideo.astro';
+---
+<div id="story-stage" class="pointer-events-none relative z-20 mx-auto w-full">
+	<div id="story-artwork" class="relative">
+		<img id="story-image" alt="" class="block h-auto w-full object-contain" decoding="async" />
+		<div id="story-signs" class="absolute inset-0 [&>[data-sign-placement]]:pointer-events-auto"></div>
+	</div>
+</div>
+<SignVideo />

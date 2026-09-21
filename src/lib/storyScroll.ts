@@ -30,16 +30,14 @@ export function createStoryScroll(section: HTMLElement, viewport: HTMLElement) {
   reset();
   const headerHeight = header?.getBoundingClientRect().height ?? 54;
   const headingHeight = section.querySelector('h2')!.getBoundingClientRect().height;
-  const scale = desktop.matches
-   ? Math.max(.2, Math.min(.95, (window.innerHeight - headerHeight - headingHeight - 48) / STORY_SCENE_HEIGHT))
-   : Math.max(.5, Math.min(.68, window.innerWidth / 720));
+  const scale = desktop.matches ? 1.66 : Math.min(.78, Math.max(.55, (window.innerWidth - 48) / 434));
   section.style.setProperty('--story-unit', scale + 'px');
   section.style.setProperty('--story-header', headerHeight + 'px');
   section.style.setProperty('--story-scene-width', String(sceneWidth));
   section.style.scrollMarginTop = headerHeight + 'px';
   const distance = () => Math.max(0, viewport.scrollWidth - viewport.clientWidth);
   // Wait until the auth-controlled home is visible so pin positions are real.
-  if (!desktop.matches || reduced.matches || distance() <= 1 || home?.classList.contains('hidden')) {
+  if (!desktop.matches || reduced.matches || STORY_SCENE_HEIGHT * scale + headingHeight + headerHeight > window.innerHeight || distance() <= 1 || home?.classList.contains('hidden')) {
    resumeProgress = null;
    return;
   }

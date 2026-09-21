@@ -10,14 +10,15 @@ interface Props {
 	title?: string;
 	description?: string;
 	loadingText?: string;
+	home?: boolean;
 }
 
-const { title = 'ZOZZO', description = 'Ton espace ZOZZO.', loadingText = 'Chargement...' } = Astro.props;
+const { title = 'ZOZZO', description = 'Ton espace ZOZZO.', loadingText = 'Chargement...', home = false } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
-	<div class="min-h-dvh bg-[var(--color-pale-pink)]">
-		<AppHeader compact />
+	<div id="app-shell" class="min-h-dvh bg-[var(--color-pale-pink)]">
+		<AppHeader compact home={home} />
 
 		<p
 			id="network-warning"

@@ -7,7 +7,7 @@ const bonuses = [
 ];
 ---
 
-<div class="bonus-bar" role="group" aria-label="Objets à débloquer après chaque histoire">
+<div class="bonus-bar flex h-[136px] w-full items-center justify-between gap-5 rounded-[42px] bg-[#f96346] py-2.5 pr-[42px] pl-6 max-md:h-20 max-md:gap-2 max-md:rounded-3xl max-md:px-3" role="group" aria-label="Objets à débloquer après chaque histoire">
 	{
 		bonuses.map((bonus, index) => (
 			<button
@@ -17,10 +17,10 @@ const bonuses = [
 				aria-label={`${bonus.label} verrouillé — termine ${index + 1} histoire${index ? 's' : ''} pour le débloquer`}
 				title={`Termine ${index + 1} histoire${index ? 's' : ''} pour débloquer cet objet`}
 				disabled
-				class="bonus-item"
+				class="bonus-item max-md:size-[58px] max-md:[&>img]:h-[58px] max-md:[&>img]:max-w-[64px] max-md:first:[&>img]:h-12 grid size-[116px] shrink-0 place-items-center rounded-full transition-transform duration-150 disabled:cursor-not-allowed enabled:hover:-translate-y-1 enabled:hover:scale-105 enabled:active:scale-95 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#2453f5] [&>img]:col-start-1 [&>img]:row-start-1 [&>img]:h-[116px] [&>img]:w-auto [&>img]:max-w-[132px] [&>img]:object-contain first:[&>img]:h-[94px] enabled:[&>.bonus-lock]:hidden motion-reduce:transition-none motion-reduce:enabled:hover:transform-none motion-reduce:enabled:active:transform-none"
 			>
 				<img src={bonus.icon} alt="" />
-				<svg class="bonus-lock" width="22" height="35" viewBox="0 0 40 64" fill="none" aria-hidden="true">
+				<svg class="bonus-lock pointer-events-none z-1 col-start-1 row-start-1 block h-[58px] w-9 max-md:h-8 max-md:w-5 min-w-[22px] max-w-none overflow-visible" width="22" height="35" viewBox="0 0 40 64" fill="none" aria-hidden="true">
 					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#fff000" stroke-width="3" />
 					<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#2453f5" stroke-width="1" />
 					<path d="M2 29H38V62H2Z" fill="#fff000" stroke="#e3ca00" />
@@ -30,7 +30,7 @@ const bonuses = [
 		))
 	}
 </div>
-<p class="bonus-status" role="status" aria-live="polite">Termine une histoire pour débloquer un objet !</p>
+<p class="bonus-status sr-only" role="status" aria-live="polite">Termine une histoire pour débloquer un objet !</p>
 
 <script>
 	import { onAuthChange } from '../lib/pocketbase';
@@ -62,20 +62,3 @@ const bonuses = [
 		if (!item.disabled && status) status.textContent = `${item.dataset.bonusLabel} fait partie de ta collection !`;
 	}));
 </script>
-
-<style>
-.bonus-bar { display: flex; width: 100%; height: 83px; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 26px 6px 14px; border-radius: 25px; background: #f96346; }
-.bonus-item { display: grid; place-items: center; width: 70px; height: 71px; flex-shrink: 0; border-radius: 50%; transition: transform 150ms; }
-.bonus-item > img, .bonus-item > svg { grid-area: 1 / 1; }
-.bonus-item:disabled { cursor: not-allowed; }
-.bonus-item:enabled:hover { transform: translateY(-4px) scale(1.05); }
-.bonus-item:enabled:active { transform: scale(.95); }
-.bonus-item:focus-visible { outline: 3px solid #2453f5; outline-offset: 3px; }
-.bonus-item > .bonus-lock { display: block; z-index: 1; width: 22px; height: 35px; min-width: 22px; max-width: none; overflow: visible; pointer-events: none; }
-.bonus-item:enabled .bonus-lock { display: none; }
-.bonus-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
-@media (prefers-reduced-motion: reduce) { .bonus-item { transition: none; } .bonus-item:enabled:hover, .bonus-item:enabled:active { transform: none; } }
-.bonus-item img { width: auto; height: 70px; max-width: 80px; object-fit: contain; }
-.bonus-item:first-child img { height: 56px; }
-@media (max-width: 420px) { .bonus-bar { padding-inline: 12px; gap: 8px; } .bonus-item { width: 56px; } .bonus-item img { max-width: 60px; height: 60px; } }
-</style>

@@ -1,0 +1,66 @@
+---
+// Encapsulates the Cahier composition: title, blue background, PocketBase
+// fetch, card row. Embedded on /app below Leçons — reachable by
+// scrolling, or via /app#cahier from anywhere (AppHeader).
+//
+// Same desktop-wraps/mobile-scrolls pattern as LessonsSection (fixed after
+// the "no forced scroll on desktop" feedback) and the same self-contained
+// approach as the other home sections.
+---
+
+<section id="cahier" class="scroll-mt-20 bg-[#2854d7] py-12 lg:py-16" aria-labelledby="cahier-heading">
+	<div class="mx-auto max-w-3xl px-4 sm:px-6">
+		<h2 id="cahier-heading" class="text-center text-3xl font-bold text-[#ffe800] sm:text-4xl">Cahier</h2>
+		<p id="cahier-status" class="hidden py-16 text-center text-white/90" role="status"></p>
+	</div>
+
+	<div
+		id="cahier-flow"
+		class="hidden flex-wrap justify-center gap-5 overflow-visible px-4 py-8 max-md:flex-nowrap max-md:justify-start max-md:snap-x max-md:snap-proximity max-md:gap-4 max-md:overflow-x-auto max-md:px-5"
+		style="scroll-padding-inline: 1rem;"
+	></div>
+</section>
+
+<script>
+	import { listCahiers, isCahierOpen, type CahierRecord } from '../lib/cahiers';
+	import { renderCahierCardHTML } from '../lib/cahierCardUi';
+	import { showAppToast } from '../lib/toast';
+
+	const status = document.getElementById('cahier-status') as HTMLElement;
+	const flow = document.getElementById('cahier-flow') as HTMLElement;
+
+	function attachLockedHandlers() {
+		flow.querySelectorAll<HTMLButtonElement>('[data-locked-cahier]').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				showAppToast('Continue ton aventure pour débloquer ce cahier !');
+			});
+		});
+	}
+
+	async function load() {
+		status.textContent = 'Chargement des cahiers...';
+		status.classList.remove('hidden');
+		flow.classList.add('hidden');
+
+		try {
+			const cahiers: CahierRecord[] = await listCahiers();
+
+			if (cahiers.length === 0) {
+				status.textContent = 'Le cahier de Zozzo arrive bientôt !';
+				status.classList.remove('hidden');
+				return;
+			}
+
+			status.classList.add('hidden');
+			flow.innerHTML = cahiers.map((cahier) => renderCahierCardHTML(cahier, isCahierOpen(cahier))).join('');
+			flow.classList.remove('hidden');
+			flow.classList.add('flex');
+			attachLockedHandlers();
+		} catch {
+			status.textContent = 'Impossible de charger les cahiers pour le moment.';
+			status.classList.remove('hidden');
+		}
+	}
+
+	load();
+</script>

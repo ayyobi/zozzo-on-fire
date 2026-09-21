@@ -14,6 +14,9 @@
 // `histoires_terminees` is the real mechanism already wired into BonusBar.
 import { pb, type ZozzoUser } from './pocketbase';
 import type { RecordModel } from 'pocketbase';
+import illustrations from '../data/storyIllustrations.json';
+import orderCorrections from '../data/storyOrderCorrections.json';
+import type { SignRecord } from './dictionary';
 
 export const STORY_FIELDS = {
 	title: 'titre',
@@ -46,16 +49,26 @@ export async function listStories(): Promise<StoryRecord[]> {
 export async function getStoryById(id: string): Promise<StoryRecord | null> {
 	try {
 		return await pb.collection('histoires').getOne<StoryRecord>(id);
-	} catch {
-		return null;
+	} catch (error) {
+		if ((error as { status?: number }).status === 404) return null;
+		throw error;
 	}
 }
 
 export async function listScenes(storyId: string): Promise<SceneRecord[]> {
-	return pb.collection('pages_histoires').getFullList<SceneRecord>({
+	const scenes = await pb.collection('pages_histoires').getFullList<SceneRecord>({
 		filter: pb.filter(`${SCENE_FIELDS.story} = {:id}`, { id: storyId }),
 		sort: SCENE_FIELDS.order,
+		expand: 'signe_associe,signes_pages_histoires_via_page.signe',
 	});
+	// Temporary repair for the known negative order. The author confirmed the
+	// ball illustration belongs on page 16. Valid server ordering stays authoritative.
+	const correction = (orderCorrections as Record<string, { trigger: string; expectedOrder: number; orders: Record<string, number> }>)[storyId];
+	if (correction && scenes.some(scene => scene.id === correction.trigger && scene.ordre === correction.expectedOrder)) {
+		return scenes.map(scene => ({ ...scene, ordre: correction.orders[scene.id] ?? scene.ordre }))
+			.sort((a, b) => Number(a.ordre) - Number(b.ordre));
+	}
+	return scenes;
 }
 
 export function isStoryCompleted(user: ZozzoUser | null, storyId: string): boolean {
@@ -79,10 +92,11 @@ export async function markStoryCompleted(user: ZozzoUser, storyId: string): Prom
 export type LockReason = 'progression' | 'premium' | null;
 
 // A story is premium-locked if it's flagged premium and the user isn't.
-// Otherwise it's progression-locked unless the previous story (by `ordre`)
+// Jardin magique is available without completing the previous story.
+// Other stories are progression-locked unless the previous story (by `ordre`)
 // is marked done. The first story is never progression-locked. This reads
 // position from the `stories` array itself (their real PocketBase order),
-// never from a hardcoded title/id.
+// except for the explicitly unlocked Jardin magique record.
 export function getStoryLockReason(
 	story: StoryRecord,
 	index: number,
@@ -92,9 +106,12 @@ export function getStoryLockReason(
 	const isPremiumStory = !!story[STORY_FIELDS.premium];
 	if (isPremiumStory && user?.abonnement_actif !== true) return 'premium';
 
+	// Shared by the catalogue and reader so direct links follow the same rule.
+	if (story.id === '1a844mjzqx1uigg') return null;
+
 	if (index === 0) return null;
 	const previous = stories[index - 1];
-	if (!isStoryCompleted(user, previous.id)) return 'progression';
+	if (!previous || !isStoryCompleted(user, previous.id)) return 'progression';
 
 	return null;
 }
@@ -126,6 +143,7 @@ export function getStoryDifficulty(story: StoryRecord): string {
 function resolveFileUrl(record: RecordModel, field: string): string | null {
 	const value = record[field];
 	if (!value || typeof value !== 'string') return null;
+	if (value.startsWith('/') && !value.startsWith('//')) return value;
 	if (value.startsWith('http://') || value.startsWith('https://')) return value;
 	return pb.files.getURL(record, value);
 }
@@ -135,5 +153,38 @@ export function getStoryImageUrl(story: StoryRecord): string | null {
 }
 
 export function getSceneImageUrl(scene: SceneRecord): string | null {
+	if (typeof scene.image_chemin === 'string' && scene.image_chemin) return resolveFileUrl(scene, 'image_chemin');
+	if (!scene.type_page && legacyIllustration(scene)?.image) return legacyIllustration(scene)!.image;
 	return resolveFileUrl(scene, SCENE_FIELDS.image);
+}
+
+export interface SignPlacement {
+	signe: string;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+type Illustration = { image: string; type?: string; placements: SignPlacement[] };
+function legacyIllustration(scene: SceneRecord): Illustration | undefined {
+	return (illustrations as Record<string, Illustration>)[scene.id];
+}
+
+export function isRewardScene(scene: SceneRecord): boolean {
+	return scene.type_page === 'recompense' || (!scene.type_page && legacyIllustration(scene)?.type === 'recompense');
+}
+
+export function getSceneSigns(scene: SceneRecord): Array<SignPlacement & { sign: SignRecord }> {
+	const links = scene.expand?.signes_pages_histoires_via_page as RecordModel[] | undefined;
+	const candidates = links?.length
+		? [...links].sort((a, b) => Number(a.ordre) - Number(b.ordre)).map(link => ({ ...link, sign: link.expand?.signe as SignRecord }))
+		: !scene.type_page ? (legacyIllustration(scene)?.placements ?? []).map(placement => ({
+			...placement,
+			// The legacy config only supplies geometry. PocketBase still authorizes the association.
+			sign: (scene.expand?.signe_associe as SignRecord[] | undefined)?.find(sign => sign.id === placement.signe),
+		})) : [];
+	return candidates.filter((item) => item.sign &&
+		[item.x, item.y, item.width, item.height].every(value => typeof value === 'number' && Number.isFinite(value)) &&
+		item.x >= 0 && item.y >= 0 && item.width > 0 && item.height > 0 &&
+		item.x + item.width <= 100 && item.y + item.height <= 100) as Array<SignPlacement & { sign: SignRecord }>;
 }

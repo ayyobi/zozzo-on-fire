@@ -6,8 +6,8 @@
 // [data-mobile-panel] rules in global.css — only the content differs.
 const menuItems = [
 	{ id: 'histoire', icon: '/images/icon/histoire.svg', label: 'Histoires', href: '/app#histoires' },
-	{ id: 'lecon', icon: '/images/icon/lecon.svg', label: 'Leçons', href: null },
-	{ id: 'cahier', icon: '/images/icon/cahier.svg', label: 'Dictionnaire', href: '/dictionnaire' },
+	{ id: 'lecon', icon: '/images/icon/lecon.svg', label: 'Leçons', href: '/app#lecons' },
+	{ id: 'cahier', icon: '/images/icon/cahier.svg', label: 'Cahier', href: '/app#cahier' },
 	{ id: 'jeux', icon: '/images/icon/jeux.svg', label: 'Mini-jeux', href: null },
 ];
 
@@ -20,14 +20,18 @@ const mobileTrailingItems = [{ id: 'profil', label: 'Profil', href: '/profil' }]
 // (Astro.url.pathname is e.g. "/app/"), so normalize before comparing
 // against the plain hrefs below.
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
-interface Props { compact?: boolean; }
-const { compact = false } = Astro.props;
+interface Props { compact?: boolean; home?: boolean; }
+const { compact = false, home = false } = Astro.props;
 const LINK_BASE_DELAY = 100;
 const LINK_DELAY_STEP = 50;
 const allMobileItems = [...mobileOnlyItems, ...menuItems, ...mobileTrailingItems];
 ---
 
-<header data-menu-open="false" class:list={['sticky top-0 z-40 bg-white shadow-sm', { 'app-header-compact': compact }]}>
+<header data-menu-open="false" class:list={[
+ 'sticky top-0 z-40 bg-white shadow-sm',
+ { 'app-header-compact': compact },
+ home && "overflow-x-auto [&>div:first-child]:h-[98px]! [&>div:first-child]:w-[1440px]! [&>div:first-child]:max-w-none! [&>div:first-child]:px-10! [&>div:first-child]:py-3! [&>div:first-child>a_img]:h-[68px]! [&>div:first-child>a_img]:w-[226px]! [&_nav:first-of-type]:flex! [&_nav:first-of-type]:gap-[42px]! [&_.app-menu-btn]:h-[74px]! [&_.app-menu-btn]:w-[92px]! [&_.app-menu-btn_img]:h-16! [&_.app-menu-btn_img]:max-w-[106px]! [&_#app-burger-btn]:hidden! [&_#app-mobile-menu]:hidden! max-md:[&>div:first-child]:h-16! max-md:[&>div:first-child]:w-full! max-md:[&>div:first-child]:px-4! max-md:[&>div:first-child>a_img]:h-10! max-md:[&>div:first-child>a_img]:w-[110px]! max-md:[&_nav:first-of-type]:gap-1.5! max-md:[&_.app-menu-btn]:h-10! max-md:[&_.app-menu-btn]:w-9! max-md:[&_.app-menu-btn_img]:h-7! max-md:[&_.app-menu-btn_img]:max-w-9!",
+]}>
 	<div class="relative z-50 mx-auto flex max-w-[1292px] items-center justify-between bg-white px-4 py-4 sm:px-0">
 		<a href="/app" class="shrink-0">
 			<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-9 w-auto sm:h-10" />
