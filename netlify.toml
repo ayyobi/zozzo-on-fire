@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Netlify's "Pretty URLs" post-processing rewrites "/app" to "/app/",
+# which breaks "/app#section" links (the extra redirect drops the
+# fragment-scroll on some browsers) — confirmed live: localhost shows
+# "/app#jeux", the deployed site shows "/app/#jeux". Astro's static
+# build already outputs clean directory-style routes (/app/index.html
+# etc.), so this rewriting is unnecessary here.
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = false
