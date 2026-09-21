@@ -5,25 +5,26 @@
 //
 // IMPORTANT (static site, no SSR/adapter): getStaticPaths() runs at
 // `npm run build` time with no logged-in user, so it needs `cahiers` to be
-// publicly readable. It currently is NOT (anonymous read returns "Only
-// superusers can perform this action") — until that's fixed in PocketBase,
-// this build-time fetch fails and NO /cahiers/[slug] pages get generated
-// (the site still builds fine, this route just won't exist). See the
-// report for exactly what to check.
+// publicly readable — it now is (confirmed after Nargis opened the List/
+// View rules). URLs use a normalized slug (getCahierSlug), not the raw
+// PocketBase `slug` value, since the real data isn't clean
+// ("L’alphabet" with a curly apostrophe, "Les couleur" with a typo/spaces,
+// etc.) — see cahiers.ts.
 //
 // Only the Alphabet cahier has real interactive content right now (the
 // book). Any other *open* cahier falls back to a simple "coming soon"
 // view using its own PocketBase fields — never fake content.
 import PocketBase from 'pocketbase';
-import AppLayout from '../../layouts/AppLayout.astro';
-import { ALPHABET_LETTERS } from '../../lib/alphabet';
+import AppLayout from '../../../layouts/AppLayout.astro';
+import { ALPHABET_LETTERS } from '../../../lib/alphabet';
+import { getCahierSlug } from '../../../lib/cahiers';
 
 export async function getStaticPaths() {
 	const buildPb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
 	try {
 		const cahiers = await buildPb.collection('cahiers').getFullList({ sort: 'ordre' });
 		return cahiers.map((cahier) => ({
-			params: { slug: String(cahier.slug || cahier.id) },
+			params: { slug: getCahierSlug(cahier) },
 		}));
 	} catch {
 		return [];
@@ -112,10 +113,10 @@ export async function getStaticPaths() {
 	</main>
 
 	<script>
-		import { checkAppSession } from '../../lib/appPage';
-		import { getCahierBySlug, isCahierOpen, getCahierTitle, getCahierImageUrl, getCahierCategoryId } from '../../lib/cahiers';
-		import { listAlphabetSigns, buildLetterMap, ALPHABET_LETTERS } from '../../lib/alphabet';
-		import { getSignImageUrl, type SignRecord } from '../../lib/dictionary';
+		import { checkAppSession } from '../../../lib/appPage';
+		import { getCahierBySlug, isCahierOpen, getCahierTitle, getCahierImageUrl, getCahierCategoryId } from '../../../lib/cahiers';
+		import { listAlphabetSigns, buildLetterMap, ALPHABET_LETTERS } from '../../../lib/alphabet';
+		import { getSignImageUrl, type SignRecord } from '../../../lib/dictionary';
 
 		const loading = document.getElementById('loading') as HTMLElement;
 		const networkWarning = document.getElementById('network-warning') as HTMLElement;

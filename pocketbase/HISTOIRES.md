@@ -25,7 +25,6 @@ node --env-file=.env scripts/configure-stories.mjs --apply
 
 Ne jamais ajouter ce jeton à une variable `PUBLIC_*`, au code client ou au dépôt. Le premier appel est un audit sans écriture. Le second inspecte les schémas puis ajoute :
 
-- `pages_histoires.image_chemin` : texte facultatif, chemin local ou URL. Prioritaire sur `image`.
 - `pages_histoires.type_page` : select simple `narration` / `recompense`.
 - `signes_pages_histoires` : relations simples `page` et `signe`, nombres `ordre`, `x`, `y`, `width`, `height`.
 
@@ -42,10 +41,6 @@ Les relations sont récupérées en une requête de pages avec `expand=signe_ass
 
 ## Compatibilité avant configuration
 
-`src/data/storyIllustrations.json` fournit les originaux et les coordonnées des enregistrements existants uniquement, car les AVIF hébergés ne correspondent pas tous aux maquettes fournies. Il ne définit pas l’ordre de lecture. Les placements de compatibilité ne sont affichés que si la relation `signe_associe` est présente et développée par PocketBase. Aucune association n’est déduite du nom de fichier.
+`src/data/storyIllustrations.json` fournit uniquement les coordonn?es des vid?os et le type de r?compense des enregistrements existants. Aucun chemin de maquette n?est utilis? par le lecteur. Les illustrations viennent de `pages_histoires.image`, les noms et vid?os de `signes.mot` et `signes.video`. Les neuf signes du jardin sont li?s aux pages 2, 6, 7, 9, 11, 13, 18, 21 et 24 dans PocketBase.
 
-Dès que `type_page` est renseigné, le lecteur utilise exclusivement les champs et placements PocketBase. Pour les nouvelles histoires, appliquer la structure ci-dessus suffit. Les illustrations originales sont copiées sans retouche dans `public/images/histoires/rentree/`.
-
-## Vérifications
-
-Le lecteur gère les histoires vides/introuvables/verrouillées, les erreurs de réseau et de média, le refus d’autoplay via les contrôles vidéo, la réduction des animations et l’échec d’enregistrement avec un bouton Réessayer. La récompense reste visible après la fin. Relire ne rajoute pas une deuxième complétion.
+Les placements de compatibilit? ne sont affich?s que si la relation `signe_associe` est pr?sente et d?velopp?e par PocketBase. Aucune association n?est d?duite du nom de fichier. Les placements explicites de `signes_pages_histoires` sont prioritaires. Le script permet de transf?rer les coordonn?es dans cette collection avec un acc?s administrateur ; le lecteur fonctionne d?j? avec les relations existantes sans cette migration.

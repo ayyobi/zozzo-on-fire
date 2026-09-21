@@ -1,0 +1,67 @@
+---
+// Encapsulates the Mini-jeux composition: title, yellow background,
+// PocketBase fetch, card row. Embedded on /app below Cahier — reachable by
+// scrolling, or via /app#jeux from anywhere (AppHeader).
+//
+// Wide illustrated cards stacked vertically at every viewport size.
+//
+// The `jeux` collection has a `type = "quiz"` record that isn't a
+// Mini-jeux card — listJeux() already excludes it. Lock state comes
+// from `actif` and whether the game type is implemented — see jeux.ts.
+---
+
+<section id="jeux" class="scroll-mt-20 bg-[#f5ed46] pt-5 pb-10 sm:pt-8 sm:pb-14" aria-labelledby="jeux-heading">
+	<div class="mx-auto max-w-3xl px-4 sm:px-6">
+		<h2 id="jeux-heading" class="text-center text-[38px] leading-tight font-medium text-[#ff6849] sm:text-[52px]">Mini-jeux</h2>
+		<p id="jeux-status" class="hidden py-16 text-center text-[#2854d7]/80" role="status"></p>
+	</div>
+
+	<div
+		id="jeux-flow"
+		class="mx-auto hidden w-[calc(100%-40px)] max-w-[800px] flex-col gap-[22px] pt-5 sm:w-3/4 sm:gap-7 sm:pt-7"
+	></div>
+</section>
+
+<script>
+	import { listJeux, isJeuOpen, type JeuRecord } from '../lib/jeux';
+	import { renderJeuCardHTML } from '../lib/jeuCardUi';
+	import { showAppToast } from '../lib/toast';
+
+	const status = document.getElementById('jeux-status') as HTMLElement;
+	const flow = document.getElementById('jeux-flow') as HTMLElement;
+
+	function attachLockedHandlers() {
+		flow.querySelectorAll<HTMLButtonElement>('[data-locked-jeu]').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				showAppToast('Ce mini-jeu arrive bientôt !');
+			});
+		});
+	}
+
+	async function load() {
+		status.textContent = 'Chargement des mini-jeux...';
+		status.classList.remove('hidden');
+		flow.classList.add('hidden');
+
+		try {
+			const jeux: JeuRecord[] = await listJeux();
+
+			if (jeux.length === 0) {
+				status.textContent = 'Les mini-jeux de Zozzo arrivent bientôt !';
+				status.classList.remove('hidden');
+				return;
+			}
+
+			status.classList.add('hidden');
+			flow.innerHTML = jeux.map((jeu) => renderJeuCardHTML(jeu, isJeuOpen(jeu))).join('');
+			flow.classList.remove('hidden');
+			flow.classList.add('flex');
+			attachLockedHandlers();
+		} catch {
+			status.textContent = 'Impossible de charger les mini-jeux pour le moment.';
+			status.classList.remove('hidden');
+		}
+	}
+
+	load();
+</script>

@@ -1,0 +1,87 @@
+html:has(.jeu-page), body:has(.jeu-page) {
+ height: 100%;
+ overflow: hidden;
+ overflow: clip;
+ overscroll-behavior: none;
+}
+.jeu-page { position: fixed; inset: 0; width: 100%; height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; overflow: clip; }
+.jeu-page .jeu-header { height: 98px; flex-shrink: 0; padding: 16px 40px; justify-content: space-between; }
+.jeu-header > a img { width: 226px; height: auto; }
+.chrono-nav { display: flex; align-items: center; gap: 42px; }
+.chrono-nav img { width: 90px; height: 64px; object-fit: contain; }
+.jeu-page .jeu-scene { flex: 1; min-height: 0; overflow: hidden; container-type: size; background: white; }
+.jeu-scene[data-state="intro"], .jeu-scene[data-state="playing"] { background-color: #80a5ef; background-image: var(--chrono-background); background-position: center; background-size: contain; background-repeat: no-repeat; }
+.chrono-setup { height: 100%; min-height: 0; overflow: clip; display: flex; flex-direction: column; padding: 4cqh 6% 2cqh; text-align: center; }
+.chrono-setup h2 { color: #161616; font-size: clamp(24px, 3vw, 46px); font-weight: 400; }
+.chrono-levels { flex: 1; min-height: 0; width: 100%; display: grid; align-items: center; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 8%; max-width: 1280px; margin: 3cqh auto; }
+.chrono-level { height: 100%; max-height: 62cqh; min-height: 0; min-width: 0; display: flex; flex-direction: column; cursor: pointer; color: #2855dc; font-size: clamp(18px, 2.4vw, 36px); }
+.chrono-level > span:first-child { width: 100%; flex-shrink: 0; }
+.chrono-book { position: relative; display: block; flex: 1; min-height: 0; width: 100%; margin: 2cqh auto 0; max-width: 330px; }
+.chrono-book img { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.chrono-setup > .chrono-note { flex-shrink: 0; margin: 1cqh auto; }
+.chrono-book strong { position: absolute; top: 22%; left: 0; width: 100%; font-size: clamp(18px, 2.2vw, 32px); font-weight: 500; }
+.chrono-note { margin: 18px auto; text-align: center; font-size: 14px; max-width: 640px; padding: 0 16px; }
+.chrono-intro { position: relative; height: 100%; }
+.chrono-start { position: absolute; left: 38.3%; top: 45.8%; width: 23.4%; height: 8.4%; border-radius: 100px; background: #244bd4; color: white; font-size: clamp(20px, 2.5vw, 38px); cursor: pointer; }
+.chrono-start:disabled { opacity: .7; cursor: wait; }
+.chrono-back { display: inline-block; margin: 20px; border-radius: 30px; background: #fcdfd7; color: #2450ef; padding: 12px 22px; cursor: pointer; }
+.chrono-loading { position: absolute; left: 10%; right: 10%; top: 58%; text-align: center; border-radius: 20px; padding: 16px; background: white; }
+.jeu-page .jeu-play { width: 100%; max-width: 1440px; height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, .5fr) 28px; gap: 2cqh; padding: 42px 6% 1cqh; }
+.jeu-play > div:first-child { position: absolute; inset: 0; margin: 0; pointer-events: none; }
+#play-progress { position: absolute; top: 12px; left: 6%; border-radius: 20px; background: white; padding: 4px 15px; font-size: 16px; }
+.jeu-page .jeu-frame { width: 67%; height: 100%; min-height: 0; max-width: 842px; aspect-ratio: auto; border: 0; border-radius: 40px; background: #fcdfd7; padding: 3cqh; box-shadow: none; }
+.jeu-frame .jeu-media { position: relative; width: 100%; height: 100%; background: white; }
+.chrono-clock { position: absolute; right: 3.3%; top: 12px; width: min(14%, 18cqh); aspect-ratio: 1; border: 6px solid #fa6848; border-radius: 50%; background: conic-gradient(#244bd4 0deg 245deg, #f5ed46 245deg 360deg); }
+.chrono-hand { position: absolute; left: calc(50% - 3px); top: 14%; width: 6px; height: 36%; border-radius: 10px; background: #fa6848; transform-origin: 50% 100%; }
+#play-timer { position: absolute; top: 105%; width: 100%; text-align: center; color: #244bd4; background: #fff; border-radius: 20px; font-size: clamp(12px, 1.6vw, 22px); }
+.jeu-page #play-answers { min-height: 0; margin: 0; gap: 1.5cqh 26px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.jeu-page .chrono-answer { min-height: 0; padding: 4px 10px; border-radius: 28px; font-size: clamp(16px, 4cqh, 42px); line-height: 1.15; font-weight: 400; }
+#play-feedback { min-height: 0; margin: 0; background: white; border-radius: 20px; padding: 2px; font-size: 16px; }
+.chrono-result { position: relative; height: 100%; display: flex; flex-direction: column; padding: 2cqh 6%; text-align: center; }
+.chrono-result h1, .chrono-ranking h1 { font-size: clamp(30px, 3.5vw, 50px); font-weight: 500; }
+.chrono-stats { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10%; max-width: 900px; margin: 2cqh auto; }
+.chrono-stats svg { width: 14cqh; height: 14cqh; margin: 0 auto 1cqh; }
+.chrono-stats p { border-radius: 14px; font-size: clamp(18px, 4cqh, 48px); }
+#result-time { background: #84a2ef; color: #f5ed46; }
+#result-score { background: #f5ed46; color: #2450ef; }
+.chrono-character { display: block; flex: 1; min-height: 0; margin: auto; height: 0; width: 85%; object-fit: contain; }
+.chrono-result-actions { display: flex; justify-content: space-between; align-items: center; }
+#result-retry { padding: 12px 24px; border-radius: 24px; background: #fcdfd7; cursor: pointer; }
+.chrono-next { color: #fa6848; font-size: 76px; line-height: 1; cursor: pointer; }
+.chrono-ranking { height: 100%; padding: 2cqh 16px; text-align: center; background: url('/images/minijeux/bg-classement.avif') center / cover; }
+.chrono-ranking h1 { display: inline-block; background: #fcdfd7; padding: 6px 16px; border-radius: 14px; }
+#ranking-status { margin: 50px auto 25px; max-width: 540px; background: white; border-radius: 18px; padding: 20px; }
+#ranking-status:empty { display: none; }
+#ranking-list { max-width: 400px; margin: 2cqh auto; display: grid; gap: 1.5cqh; }
+#ranking-list li { background: #84a2ef; border-radius: 14px; padding: 1cqh; font-size: clamp(16px, 3cqh, 24px); }
+#ranking-list li:first-child { background: #f5ed46; }
+.chrono-ranking .chrono-next { position: absolute; right: 4%; bottom: 2cqh; display: block; text-align: right; margin: 0; }
+@media (max-width: 700px) {
+ .jeu-page .jeu-header { height: 64px; padding: 12px 16px; }
+ .jeu-header > a img { width: 110px; height: auto; }
+ .chrono-nav { gap: 10px; }
+ .chrono-nav img { width: 30px; height: 32px; }
+ .chrono-setup { padding: 3cqh 18px; }
+ .chrono-levels { gap: 15px; }
+ .chrono-book strong { font-size: 14px; }
+ .chrono-level { font-size: 16px; }
+ .chrono-start { left: 28%; width: 44%; }
+ .jeu-page .jeu-play { padding: min(95px, 18cqh) 16px 1cqh; }
+ .chrono-clock { width: min(56px, 10cqh); border-width: 4px; top: 8px; right: 18px; }
+ .jeu-page .jeu-frame { width: 100%; padding: 2cqh; border-radius: 25px; }
+ .jeu-page #play-answers { gap: 1.5cqh 12px; }
+ .jeu-page .chrono-answer { border-radius: 20px; }
+ .chrono-stats { gap: 18px; }
+ .chrono-next { font-size: 56px; }
+}
+@media (max-height: 500px) {
+ .jeu-page .jeu-header { height: 48px; padding: 6px 16px; }
+ .jeu-header > a img { width: 100px; }
+ .chrono-nav img { width: 30px; height: 30px; }
+ .chrono-setup h2, .chrono-result h1, .chrono-ranking h1 { font-size: 22px; }
+ .chrono-book { margin-top: 1cqh; }
+ .chrono-level { font-size: 16px; }
+ .chrono-note { margin: 1cqh auto; font-size: 12px; }
+ .chrono-next { font-size: 36px; }
+ .chrono-back, #result-retry { margin: 8px; padding: 6px 12px; }
+}

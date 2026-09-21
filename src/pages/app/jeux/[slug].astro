@@ -1,0 +1,371 @@
+---
+// Top Chrono: static routes, live PocketBase questions, and illustrated game states.
+import PocketBase from 'pocketbase';
+import Layout from '../../../layouts/Layout.astro';
+import '../../../styles/topChrono.css';
+
+export async function getStaticPaths() {
+	const buildPb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
+	try {
+		const jeux = await buildPb.collection('jeux').getFullList({ sort: 'created' });
+		// The `type = "quiz"` record isn't a Mini-jeu (see jeux.ts) — no page
+		// is built for it, same as it's excluded from the home section.
+		return jeux
+			.filter((jeu) => jeu.type !== 'quiz')
+			.map((jeu) => ({ params: { slug: typeof jeu.slug === 'string' && jeu.slug ? jeu.slug : jeu.id } }));
+	} catch {
+		return [];
+	}
+}
+---
+
+<Layout title="ZOZZO | Top Chrono" description="Le mini-jeu Top Chrono de ZOZZO.">
+	<div class="jeu-page min-h-svh bg-white text-[#2450ef]">
+		<header
+			class="jeu-header flex h-[90px] items-center bg-white px-[38px] max-[901px]:h-[54px] max-[901px]:px-4"
+		>
+			<a href="/app#jeux" aria-label="ZOZZO — Retour aux mini-jeux">
+				<img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-10 w-auto max-[901px]:h-7" />
+			</a>
+		<nav aria-label="Navigation de l’application" class="chrono-nav">
+<a href="/app#histoires" aria-label="Histoires"><img src="/images/icon/histoire.svg" alt="" /></a>
+<a href="/app#lecons" aria-label="Leçons"><img src="/images/icon/lecon.svg" alt="" /></a>
+<a href="/app#cahier" aria-label="Cahiers"><img src="/images/icon/cahier.svg" alt="" /></a>
+<a href="/app#jeux" aria-label="Mini-jeux"><img src="/images/icon/jeux.svg" alt="" /></a>
+</nav></header>
+
+		<p id="loading" class="jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px]" role="status">Chargement du jeu...</p>
+		<p id="network-warning" class="hidden jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px]" role="status">
+			Impossible de contacter le serveur. Réessayez dans quelques instants.
+		</p>
+
+		<main
+			id="jeu-content"
+			class="jeu-scene relative isolate min-h-[calc(100svh-90px)] bg-[var(--color-yellow)] max-[901px]:min-h-[calc(100svh-54px)] data-[state=message]:bg-white [&_.hidden]:hidden! hidden"
+		>
+			<div id="jeu-not-found" class="jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden">
+				<p>Ce mini-jeu n'existe pas.</p><a href="/app#jeux">Retour aux mini-jeux</a>
+			</div>
+			<div id="jeu-locked" class="jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden">
+				<p>Ce mini-jeu arrive bientôt !</p><a href="/app#jeux">Retour aux mini-jeux</a>
+			</div>
+			<div id="jeu-empty" class="jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden">
+				<p>Aucun signe avec une vidéo n’est disponible pour ce mini-jeu pour le moment.</p><a href="/app#jeux">Retour aux mini-jeux</a>
+			</div>
+			<div id="jeu-error" class="jeu-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden">
+				<p>Impossible de charger ce mini-jeu. Réessaie dans quelques instants.</p><a href="/app#jeux">Retour aux mini-jeux</a>
+			</div>
+
+<section id="setup-view" class="chrono-setup hidden">
+<h1 id="jeu-title" class="sr-only">Top Chrono</h1>
+<h2>Choisis le nombre de mots à trouver</h2>
+<div id="level-choices" class="chrono-levels" aria-label="Nombre de mots"></div>
+<p class="chrono-note">Chaque partie utilise les questions disponibles, jusqu’au nombre choisi.</p>
+</section>
+<section id="intro-view" class="chrono-intro hidden" aria-label="Prêt à jouer">
+<button id="setup-play" type="button" class="chrono-start">Commencer</button>
+<button id="change-level" type="button" class="chrono-back">← Changer de niveau</button>
+<p id="round-loading" class="chrono-loading hidden" role="status">Chargement des signes…</p>
+</section>
+
+			<section id="play-view" class="jeu-play relative mx-auto w-[min(100%-48px,900px)] py-10 hidden" aria-labelledby="jeu-title">
+				<div class="mb-6 flex items-center justify-between text-lg font-bold text-[#2450ef]">
+					<span id="play-progress" aria-live="polite"></span>
+					<div class="chrono-clock" aria-label="Temps écoulé"><span class="chrono-hand" aria-hidden="true"></span><span id="play-timer" aria-live="off">00:00</span></div>
+				</div>
+
+				<div
+					class="jeu-frame relative mx-auto aspect-[1.68] w-full max-w-[720px] overflow-hidden rounded-3xl border-[24px] border-white bg-[#fcdfd7] shadow-lg max-[901px]:aspect-[1.2] max-[901px]:rounded-2xl max-[901px]:border-[14px]"
+				>
+					<div
+						class="jeu-media absolute inset-0 grid place-items-center [&_video]:absolute [&_video]:inset-0 [&_video]:size-full [&_video]:object-contain [&_img]:absolute [&_img]:inset-0 [&_img]:size-full [&_img]:object-contain"
+					>
+						<video id="play-video" class="hidden" autoplay muted loop playsinline aria-label="Signe à reconnaître"></video>
+						<img id="play-image" alt="Signe à reconnaître" class="hidden" />
+						<img id="play-reaction" alt="" class="hidden" />
+						<p id="play-media-fallback" class="hidden px-6 text-center text-2xl font-semibold text-[#2450ef]">Trouve le bon mot !</p>
+					</div>
+				</div>
+
+				<div id="play-answers" class="mt-8 grid grid-cols-2 gap-4 max-[481px]:grid-cols-1" role="group" aria-label="Choisis la bonne réponse"></div>
+				<p id="play-feedback" class="mt-4 min-h-8 text-center text-lg font-semibold hidden" role="status"></p>
+			</section>
+
+<section id="result-view" class="chrono-result hidden" aria-labelledby="result-title">
+<h1 id="result-title" tabindex="-1">Résultat</h1>
+<div class="chrono-stats">
+<div><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="#fcdfd7" stroke="#84a2ef" stroke-width="7"/><path d="M50 15V50L75 74" fill="none" stroke="#2450ef" stroke-width="4" stroke-linecap="round"/></svg><p id="result-time"></p></div>
+<div><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M25 10H75V40Q75 65 55 68V85H70V93H30V85H45V68Q25 65 25 40ZM25 20H12Q2 48 29 49M75 20H88Q98 48 71 49" fill="#f5ed46" stroke="#b9a600" stroke-width="2"/></svg><p id="result-score"></p></div>
+</div>
+<img id="result-character" class="chrono-character" src="/images/minijeux/niveau1%20(1).avif" alt="Zozzo fête la fin de la partie" />
+<p id="score-status" class="chrono-note" role="status"></p>
+<div class="chrono-result-actions"><button id="result-retry" type="button">Rejouer</button><button id="show-ranking" type="button" class="chrono-next" aria-label="Voir le classement">➜</button></div>
+</section>
+<section id="ranking-view" class="chrono-ranking hidden" aria-labelledby="ranking-title">
+<h1 id="ranking-title" tabindex="-1">Classement</h1>
+<p id="ranking-status" role="status"></p>
+<ol id="ranking-list"></ol>
+<button id="ranking-retry" type="button" class="chrono-back">Réessayer</button>
+<a href="/app#jeux" class="chrono-next" aria-label="Retour aux mini-jeux">➜</a>
+</section>
+		</main>
+	</div>
+
+	<script>
+		import { checkAppSession } from '../../../lib/appPage';
+		import { getCurrentUser } from '../../../lib/pocketbase';
+		import { pb } from '../../../lib/pocketbase';
+		import { getJeuBySlug, isJeuOpen, getJeuTitle } from '../../../lib/jeux';
+		import { fetchGameQuestions, formatTime, LEVELS, type GameQuestion, type Level } from '../../../lib/topChrono';
+
+		const loading = document.getElementById('loading') as HTMLElement;
+		const networkWarning = document.getElementById('network-warning') as HTMLElement;
+		const content = document.getElementById('jeu-content') as HTMLElement;
+		const notFoundEl = document.getElementById('jeu-not-found') as HTMLElement;
+		const lockedEl = document.getElementById('jeu-locked') as HTMLElement;
+		const emptyEl = document.getElementById('jeu-empty') as HTMLElement;
+		const titleEl = document.getElementById('jeu-title') as HTMLElement;
+
+		const introView = document.getElementById('intro-view')!;
+		const themes = {15: {background: 'bg-n-1.avif', image: 'niveau1', label: 'Une partie rapide'},30: {background: 'bg-n-2.avif', image: 'niveau2', label: 'Presque un expert'},50: {background: 'bg-n-3.avif', image: 'niveau3', label: 'Expert'}};
+		const setupView = document.getElementById('setup-view') as HTMLElement;
+		const levelChoices = document.getElementById('level-choices') as HTMLElement;
+		const setupPlay = document.getElementById('setup-play') as HTMLButtonElement;
+
+		const playView = document.getElementById('play-view') as HTMLElement;
+		const progressEl = document.getElementById('play-progress') as HTMLElement;
+		const timerEl = document.getElementById('play-timer') as HTMLElement;
+		const videoEl = document.getElementById('play-video') as HTMLVideoElement;
+		const imageEl = document.getElementById('play-image') as HTMLImageElement;
+		const reactionEl = document.getElementById('play-reaction') as HTMLImageElement;
+		const mediaFallback = document.getElementById('play-media-fallback') as HTMLElement;
+		const answersEl = document.getElementById('play-answers') as HTMLElement;
+		const feedbackEl = document.getElementById('play-feedback') as HTMLElement;
+
+		const resultView = document.getElementById('result-view') as HTMLElement;
+		const resultTitle = document.getElementById('result-title') as HTMLElement;
+		const resultScore = document.getElementById('result-score') as HTMLElement;
+		const resultTime = document.getElementById('result-time') as HTMLElement;
+		const retryBtn = document.getElementById('result-retry') as HTMLButtonElement;
+
+		const slug = window.location.pathname.split('/').filter(Boolean).pop() ?? '';
+
+		let jeuId = '';
+		let selectedLevel: Level = 15;
+		let questions: GameQuestion[] = [];
+		let currentIndex = 0;
+		let correctCount = 0;
+		let answered = false;
+		let elapsedSeconds = 0;
+		let timerHandle: number | undefined;
+
+function showSetup() {
+stopTimer(); videoEl.pause(); introView.classList.add('hidden'); resultView.classList.add('hidden');
+document.getElementById('ranking-view')!.classList.add('hidden');
+content.dataset.state = 'setup'; setupView.classList.remove('hidden');
+}
+levelChoices.replaceChildren(...LEVELS.map(level => {
+const theme = themes[level]; const btn = document.createElement('button');
+btn.type = 'button'; btn.dataset.level = String(level); btn.className = 'chrono-level';
+btn.innerHTML = '<span>'+theme.label+'</span><span class="chrono-book"><img src="/images/minijeux/'+theme.image+'.avif" alt="" /><strong>'+level+' mots</strong></span>';
+btn.addEventListener('click', () => {
+selectedLevel = level; setupView.classList.add('hidden'); content.dataset.state = 'intro';
+content.style.setProperty('--chrono-background', 'url("/images/minijeux/'+theme.background+'")');
+introView.classList.remove('hidden'); setupPlay.focus();
+}); return btn;
+}));
+document.getElementById('change-level')!.addEventListener('click', showSetup);
+let answerTimeout: number | undefined;
+let startedAt = 0;
+window.addEventListener('pagehide', () => { stopTimer(); window.clearTimeout(answerTimeout); videoEl.pause(); });
+
+		function startTimer() {
+			elapsedSeconds = 0;
+			startedAt = performance.now();
+			timerEl.textContent = formatTime(0);
+			window.clearInterval(timerHandle);
+			timerHandle = window.setInterval(() => {
+				elapsedSeconds = Math.floor((performance.now() - startedAt) / 1000);
+				document.querySelector<HTMLElement>('.chrono-hand')!.style.transform = `rotate(${elapsedSeconds * 6}deg)`;
+				timerEl.textContent = formatTime(elapsedSeconds);
+			}, 1000);
+		}
+
+		function stopTimer() {
+			window.clearInterval(timerHandle);
+		}
+
+		function renderQuestion() {
+			const question = questions[currentIndex];
+			answered = false;
+			feedbackEl.classList.add('hidden');
+			reactionEl.classList.add('hidden');
+			progressEl.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+			videoEl.pause();
+			videoEl.classList.add('hidden');
+			imageEl.classList.add('hidden');
+			mediaFallback.classList.add('hidden');
+
+			if (question.signVideoUrl) {
+				videoEl.src = question.signVideoUrl;
+				videoEl.classList.remove('hidden');
+				videoEl.play().catch(() => { videoEl.controls = true; });
+			} else if (question.signImageUrl) {
+				imageEl.src = question.signImageUrl;
+				imageEl.classList.remove('hidden');
+			} else {
+				mediaFallback.classList.remove('hidden');
+			}
+
+			answersEl.replaceChildren(
+				...question.options.map((option) => {
+					const button = document.createElement('button');
+					button.type = 'button';
+					button.dataset.option = option;
+					button.className =
+						'chrono-answer min-h-[72px] cursor-pointer rounded-2xl bg-[#fcdfd7] px-5 py-3 text-xl font-semibold text-[#2450ef] wrap-anywhere transition-colors duration-150 enabled:hover:bg-[#fff1ec] disabled:cursor-default data-[state=correct]:bg-[#51bea6] data-[state=incorrect]:bg-[#f96346] data-[state=incorrect]:text-[#fff000]';
+					button.textContent = option;
+					button.addEventListener('click', () => onAnswer(question, button));
+					return button;
+				}),
+			);
+		}
+
+		function onAnswer(question: GameQuestion, chosenBtn: HTMLButtonElement) {
+			if (answered) return;
+			answered = true;
+
+			const correct = chosenBtn.dataset.option === question.correctAnswer;
+			if (correct) correctCount++;
+
+			answersEl.querySelectorAll<HTMLButtonElement>('[data-option]').forEach((btn) => {
+				btn.disabled = true;
+				if (btn.dataset.option === question.correctAnswer) btn.dataset.state = 'correct';
+				else if (btn === chosenBtn) btn.dataset.state = 'incorrect';
+			});
+
+			if (correct) {
+				videoEl.pause();
+				videoEl.classList.add('hidden');
+				imageEl.classList.add('hidden');
+				mediaFallback.classList.add('hidden');
+				reactionEl.src = '/images/lecon/bonne-reponse.avif';
+				reactionEl.classList.remove('hidden');
+			}
+			feedbackEl.textContent = correct ? 'Bravo, c’est la bonne réponse !' : `La bonne réponse est « ${question.correctAnswer} ».`;
+			feedbackEl.classList.remove('hidden');
+
+			answerTimeout = window.setTimeout(
+				() => {
+					if (currentIndex < questions.length - 1) {
+						currentIndex++;
+						renderQuestion();
+					} else {
+						void showResult();
+					}
+				},
+				correct ? 700 : 1400,
+			);
+		}
+
+		async function showResult() {
+			stopTimer();
+			videoEl.pause();
+			playView.classList.add('hidden');
+			resultTitle.textContent = 'Résultat';
+			(document.getElementById('result-character') as HTMLImageElement).src = '/images/minijeux/'+themes[selectedLevel].image+'%20(1).avif';
+			resultScore.textContent = `${correctCount} / ${questions.length} mots`;
+			resultTime.textContent = `${Math.floor(elapsedSeconds / 60)} min ${elapsedSeconds % 60} s`;
+			resultView.classList.remove('hidden');
+			content.dataset.state = 'result';
+			resultTitle.focus();
+
+			// `scores` currently rejects every request ("Only superusers can
+			// perform this action"), even authenticated ones — see the report.
+			// Saving is best-effort and never blocks showing the result.
+			document.getElementById('score-status')!.textContent = '';
+			const user = getCurrentUser();
+			if (user) {
+				try {
+					await pb.collection('scores').create({
+						user: user.id,
+						game: jeuId,
+						level: selectedLevel,
+						score: correctCount,
+						time: elapsedSeconds,
+						date: new Date().toISOString(),
+					});
+				} catch {
+					document.getElementById('score-status')!.textContent = 'Ton résultat est affiché ici, mais son enregistrement est indisponible.';
+				}
+			}
+		}
+
+async function startGame() {
+if (setupPlay.disabled) return;
+setupPlay.disabled = true;
+(document.getElementById('change-level') as HTMLButtonElement).disabled = true;
+document.getElementById('round-loading')!.textContent = 'Chargement des signes…';
+document.getElementById('round-loading')!.classList.remove('hidden');
+try {
+questions = await fetchGameQuestions(jeuId, selectedLevel);
+introView.classList.add('hidden');
+if (!questions.length) { content.dataset.state = 'message'; emptyEl.classList.remove('hidden'); return; }
+content.dataset.state = 'playing'; currentIndex = 0; correctCount = 0;
+playView.classList.remove('hidden'); startTimer(); renderQuestion();
+} catch { document.getElementById('round-loading')!.textContent = 'Impossible de charger les signes. Réessaie en cliquant sur Commencer.'; }
+finally { setupPlay.disabled = false; (document.getElementById('change-level') as HTMLButtonElement).disabled = false; }
+}
+setupPlay.addEventListener('click', () => void startGame());
+retryBtn.addEventListener('click', showSetup);
+videoEl.addEventListener('error', () => { videoEl.classList.add('hidden'); mediaFallback.textContent = 'La vidéo ne peut pas être chargée.'; mediaFallback.classList.remove('hidden'); });
+async function showRanking() {
+resultView.classList.add('hidden'); content.dataset.state = 'ranking';
+document.getElementById('ranking-view')!.classList.remove('hidden');
+document.getElementById('ranking-title')!.focus();
+const status = document.getElementById('ranking-status')!;
+const list = document.getElementById('ranking-list')!;
+list.replaceChildren(); status.textContent = 'Chargement du classement…';
+try {
+const scores = await pb.collection('scores').getList(1,5,{filter: pb.filter('game = {:game} && level = {:level}',{game:jeuId,level:selectedLevel}),sort:'-score,time'});
+status.textContent = scores.items.length ? '' : 'Aucun résultat pour ce niveau pour le moment.';
+for(const score of scores.items){const li=document.createElement('li');li.textContent=String(score.score)+' mots · '+formatTime(Number(score.time));list.append(li);}
+} catch {status.textContent = 'Le classement est indisponible pour le moment.';}
+}
+document.getElementById('show-ranking')!.addEventListener('click', () => void showRanking());
+document.getElementById('ranking-retry')!.addEventListener('click', () => void showRanking());
+
+		async function init() {
+			const user = await checkAppSession(networkWarning);
+			if (!user) return;
+
+			loading.classList.add('hidden');
+			content.classList.remove('hidden');
+			content.dataset.state = 'message';
+
+			const jeu = await getJeuBySlug(slug);
+			if (!jeu) {
+				notFoundEl.classList.remove('hidden');
+				return;
+			}
+
+			if (!isJeuOpen(jeu)) {
+				lockedEl.classList.remove('hidden');
+				return;
+			}
+
+			jeuId = jeu.id;
+			titleEl.textContent = `⚡ ${getJeuTitle(jeu) || 'Top Chrono'}`;
+			content.dataset.state = 'setup';
+			setupView.classList.remove('hidden');
+		}
+
+		init().catch(() => {
+			loading.classList.add('hidden');
+			content.classList.remove('hidden');
+			content.dataset.state = 'message';
+			document.getElementById('jeu-error')?.classList.remove('hidden');
+		});
+	</script>
+</Layout>

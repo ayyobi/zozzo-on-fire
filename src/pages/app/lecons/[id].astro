@@ -32,9 +32,11 @@ export async function getStaticPaths() {
 <Layout title="ZOZZO | Leçon" description="Une leçon ZOZZO.">
   <div class="lesson-page min-h-svh bg-white text-[#2450ef]">
     <header
-      class="lesson-header flex h-[90px] items-center bg-white px-[38px] max-[901px]:h-[54px] max-[901px]:px-4 [&_a]:text-[30px] [&_a]:font-semibold [&_a]:text-[#f96346] [&_a]:no-underline max-[901px]:[&_a]:text-[20px]"
+      class="lesson-header flex h-[90px] items-center bg-white px-[38px] max-[901px]:h-[54px] max-[901px]:px-4"
     >
-      <a href="/app#lecons" aria-label="ZOZZO — Retour aux leçons">ZOZZO</a>
+      <a href="/app#lecons" aria-label="ZOZZO — Retour aux leçons">
+        <img src="/images/zozzo-logo.svg" alt="ZOZZO" class="h-10 w-auto max-[901px]:h-7" />
+      </a>
     </header>
     <p
       id="loading"

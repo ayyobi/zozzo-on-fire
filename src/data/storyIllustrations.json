@@ -1,19 +1,208 @@
 {
-  "gr7y62qsy01v0pm": { "image": "/images/histoires/rentree/histoire1_rentree@2x.png", "placements": [] },
-  "9p2qnxma1m2jkvq": { "image": "/images/histoires/rentree/histoire1_rentree@2x-1.png", "placements": [] },
-  "e1ql3ml77re4gfx": { "image": "/images/histoires/rentree/histoire1_rentree@2x-2.png", "placements": [] },
-  "5ijhcx8rcg6nq2p": { "image": "/images/histoires/rentree/histoire1_rentree@2x-3.png", "placements": [{ "signe": "hf74oihpj4ud1it", "x": 76.1, "y": 50.05, "width": 21.65, "height": 37.1 }] },
-  "jvqvapeqe8002fw": { "image": "/images/histoires/rentree/histoire1_rentree@2x-4.png", "placements": [{ "signe": "uf4pnlrlxvf9ehi", "x": 70.66, "y": 58.55, "width": 27.85, "height": 35.2 }] },
-  "iryl9m5g4fzbwxa": { "image": "/images/histoires/rentree/histoire1_rentree@2x-5.png", "placements": [{ "signe": "qeepytnd3y5o9rs", "x": 23.52, "y": 63.8, "width": 22.25, "height": 33.75 }, { "signe": "ap1rmlud87p82pp", "x": 75.46, "y": 55.65, "width": 22.25, "height": 39.5 }] },
-  "7di7c94oey64fs5": { "image": "/images/histoires/rentree/histoire1_rentree@2x-6.png", "placements": [] },
-  "xv2mz0dhiz6jlyo": { "image": "/images/histoires/rentree/histoire1_rentree@2x-7.png", "placements": [] },
-  "ebv13qm9cczmcx6": { "image": "/images/histoires/rentree/histoire1_rentree@2x-8.png", "placements": [{ "signe": "viu9uq9lhnerh10", "x": 67.9, "y": 48.8, "width": 27.4, "height": 45.4 }] },
-  "whz8hcrto0yj0ob": { "image": "/images/histoires/rentree/histoire1_rentree@2x-9.png", "placements": [] },
-  "7h9kn076zdk77dk": { "image": "/images/histoires/rentree/histoire1_rentree@2x-10.png", "placements": [] },
-  "tejjhxxp4cez6pl": { "image": "/images/histoires/rentree/histoire1_rentree@2x-11.png", "placements": [] },
-  "868i70uhbuixcvm": { "image": "/images/histoires/rentree/histoire1_rentree@2x-12.png", "placements": [{ "signe": "4bcq6w9efgubfrp", "x": 70.4, "y": 55.35, "width": 27.4, "height": 41.7 }] },
-  "bbemnwnwqyxz4k8": { "image": "/images/histoires/rentree/histoire1_rentree@2x-13.png", "placements": [] },
-  "b9hc1jj7v10pi5q": { "image": "/images/histoires/rentree/histoire1_rentree@2x-14.png", "placements": [{ "signe": "7elhxzcygpgbs07", "x": 76.52, "y": 63.4, "width": 21.7, "height": 31.95 }] },
-  "chrjpnbue4dm7gz": { "image": "/images/histoires/rentree/histoire1_rentree@2x-15.png", "placements": [] },
-  "mwp7a4ux4qzle5v": { "image": "/images/histoires/rentree/Recompense@2x.png", "type": "recompense", "placements": [] }
+  "gr7y62qsy01v0pm": {
+    "placements": []
+  },
+  "9p2qnxma1m2jkvq": {
+    "placements": []
+  },
+  "e1ql3ml77re4gfx": {
+    "placements": []
+  },
+  "5ijhcx8rcg6nq2p": {
+    "placements": [
+      {
+        "signe": "hf74oihpj4ud1it",
+        "x": 76.1,
+        "y": 50.05,
+        "width": 21.65,
+        "height": 37.1
+      }
+    ]
+  },
+  "jvqvapeqe8002fw": {
+    "placements": [
+      {
+        "signe": "uf4pnlrlxvf9ehi",
+        "x": 70.66,
+        "y": 58.55,
+        "width": 27.85,
+        "height": 35.2
+      }
+    ]
+  },
+  "iryl9m5g4fzbwxa": {
+    "placements": [
+      {
+        "signe": "qeepytnd3y5o9rs",
+        "x": 23.52,
+        "y": 63.8,
+        "width": 22.25,
+        "height": 33.75
+      },
+      {
+        "signe": "ap1rmlud87p82pp",
+        "x": 75.46,
+        "y": 55.65,
+        "width": 22.25,
+        "height": 39.5
+      }
+    ]
+  },
+  "7di7c94oey64fs5": {
+    "placements": []
+  },
+  "xv2mz0dhiz6jlyo": {
+    "placements": []
+  },
+  "ebv13qm9cczmcx6": {
+    "placements": [
+      {
+        "signe": "viu9uq9lhnerh10",
+        "x": 67.9,
+        "y": 48.8,
+        "width": 27.4,
+        "height": 45.4
+      }
+    ]
+  },
+  "whz8hcrto0yj0ob": {
+    "placements": []
+  },
+  "7h9kn076zdk77dk": {
+    "placements": []
+  },
+  "tejjhxxp4cez6pl": {
+    "placements": []
+  },
+  "868i70uhbuixcvm": {
+    "placements": [
+      {
+        "signe": "4bcq6w9efgubfrp",
+        "x": 70.4,
+        "y": 55.35,
+        "width": 27.4,
+        "height": 41.7
+      }
+    ]
+  },
+  "bbemnwnwqyxz4k8": {
+    "placements": []
+  },
+  "b9hc1jj7v10pi5q": {
+    "placements": [
+      {
+        "signe": "7elhxzcygpgbs07",
+        "x": 76.52,
+        "y": 63.4,
+        "width": 21.7,
+        "height": 31.95
+      }
+    ]
+  },
+  "chrjpnbue4dm7gz": {
+    "placements": []
+  },
+  "mwp7a4ux4qzle5v": {
+    "type": "recompense",
+    "placements": []
+  },
+  "9qj6vtxlkvjd8dr": {
+    "placements": [
+      {
+        "signe": "kh1lh6qj50hexe3",
+        "x": 69.44,
+        "y": 52.42,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "iykzfmad2ru0vj4": {
+    "placements": [
+      {
+        "signe": "ike9xrp1pz0s13n",
+        "x": 74.95,
+        "y": 52.42,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "gyn9ast4kwq913z": {
+    "placements": [
+      {
+        "signe": "4yyzz88q9gezqjf",
+        "x": 70.82,
+        "y": 52.42,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "b8br0xfqet7rtna": {
+    "placements": [
+      {
+        "signe": "lrr2rpugmpp6avu",
+        "x": 72.41,
+        "y": 52.42,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "8errr9y2kiqb2lc": {
+    "placements": [
+      {
+        "signe": "zs1hgioif10nule",
+        "x": 71.35,
+        "y": 48.8,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "fwng4pcmjoqt1mh": {
+    "placements": [
+      {
+        "signe": "y1of23hweanx9cb",
+        "x": 72.78,
+        "y": 52.51,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "6wgk2bryrqc7t3a": {
+    "placements": [
+      {
+        "signe": "11o1l62j9qr4axc",
+        "x": 74.42,
+        "y": 49.62,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "ygkieeyrebu7pfg": {
+    "placements": [
+      {
+        "signe": "tmq9urlumzudjd2",
+        "x": 73.67,
+        "y": 49.62,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  },
+  "jzokkg9qmrv68qo": {
+    "placements": [
+      {
+        "signe": "te1fooozfy83cwx",
+        "x": 74.1,
+        "y": 50.53,
+        "width": 22.36,
+        "height": 43.93
+      }
+    ]
+  }
 }

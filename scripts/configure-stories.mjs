@@ -23,7 +23,7 @@ async function main() {
 			if (!page.signe_associe?.includes(placement.signe)) throw new Error(`Association à vérifier dans PocketBase : ${id} / ${placement.signe}.`);
 		}
 	}
-	console.log('17 pages existantes vérifiées. 7 placements, originaux locaux et type de page à configurer.');
+	console.log(`${Object.keys(config).length} pages vérifiées ; ${Object.values(config).reduce((count, item) => count + item.placements.length, 0)} placements à configurer. Les fichiers image et vidéo restent dans PocketBase.`);
 	console.log('Correction prévue : illustration du ballon en page 16, conformément à la correction de l’auteur.');
 	if (!apply) { console.log('Audit seul : aucune donnée modifiée. Ajouter --apply avec un jeton superuser pour appliquer.'); return; }
 
@@ -32,7 +32,6 @@ async function main() {
 	const signSchema = await pb.collections.getOne('signes');
 	if (!Array.isArray(pageSchema.fields)) throw new Error('Version PocketBase non compatible : format fields attendu.');
 	const addedFields = [
-		{ name: 'image_chemin', type: 'text', max: 2048 },
 		{ name: 'type_page', type: 'select', maxSelect: 1, values: ['narration', 'recompense'] },
 	];
 	for (const field of addedFields) {
@@ -76,7 +75,6 @@ async function main() {
 		}
 		const page = existing.get(id);
 		const patch = {};
-		if (!page.image_chemin) patch.image_chemin = item.image;
 		if (!page.type_page) patch.type_page = item.type ?? 'narration';
 		if (Object.keys(patch).length) await pb.collection('pages_histoires').update(id, patch);
 	}

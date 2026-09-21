@@ -6,7 +6,7 @@
 // Plain TS render function, not a literal `CahierCard.astro`, for the same
 // reason as lessonCardUi.ts: the data comes from a client-side PocketBase
 // fetch (auth-gated, no SSR).
-import { CAHIER_FIELDS, getCahierImageUrl, getCahierTitle, type CahierRecord } from './cahiers';
+import { getCahierImageUrl, getCahierSlug, getCahierTitle, type CahierRecord } from './cahiers';
 
 function escapeHtml(str: string): string {
 	return str.replace(/[&<>"']/g, (c) => {
@@ -37,12 +37,11 @@ const LOCK_SVG = `
 export function renderCahierCardHTML(cahier: CahierRecord, open: boolean): string {
 	const title = escapeHtml(getCahierTitle(cahier) || '—');
 	const imageUrl = getCahierImageUrl(cahier);
-	const slugValue = cahier[CAHIER_FIELDS.slug];
-	const slug = typeof slugValue === 'string' && slugValue ? slugValue : cahier.id;
+	const slug = getCahierSlug(cahier);
 
 	const tag = open ? 'a' : 'button';
 	const attrs = open
-		? `href="/cahiers/${encodeURIComponent(slug)}"`
+		? `href="/app/cahiers/${encodeURIComponent(slug)}"`
 		: `type="button" data-locked-cahier aria-label="${title} (verrouillé)"`;
 
 	const img = imageUrl
@@ -54,15 +53,15 @@ export function renderCahierCardHTML(cahier: CahierRecord, open: boolean): strin
 		: '';
 
 	return `
-		<div class="w-40 shrink-0 snap-start sm:w-48">
+		<div class="h-52 w-40 shrink-0 snap-start sm:h-56 sm:w-48">
 			<${tag} ${attrs} data-cahier-card
-				class="group flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-lg transition-transform duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffe800] active:scale-95 ${open ? '' : 'opacity-90 [&_.cahier-card-image]:grayscale [&_.cahier-card-image]:opacity-70'}"
+				class="group flex h-full w-full flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-lg transition-transform duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffe800] active:scale-95 ${open ? '' : 'opacity-90 [&_.cahier-card-image]:grayscale [&_.cahier-card-image]:opacity-70'}"
 			>
 				<span class="relative flex h-28 items-center justify-center bg-[var(--color-pale-pink)] sm:h-32">
 					${img}
 					${lockOverlay}
 				</span>
-				<span class="flex-1 px-3 py-3 text-center text-sm font-semibold text-[#2854d7] sm:text-base">
+				<span class="flex flex-1 items-center justify-center px-3 py-3 text-center text-sm font-semibold text-[#2854d7] sm:text-base">
 					${title}
 				</span>
 			</${tag}>

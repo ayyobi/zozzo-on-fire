@@ -70,8 +70,8 @@ export async function initStoryReader() {
 	function render() {
 		clearVideos();
 		const finished = index === pages.length;
-		const scene = finished ? rewardPage : pages[index];
-		const url = scene ? getSceneImageUrl(scene) : '/images/histoires/rentree/Recompense@2x.png';
+		const scene = finished ? rewardPage ?? pages[pages.length - 1] : pages[index];
+		const url = scene ? getSceneImageUrl(scene) : null;
 		signs.classList.add('hidden');
 		el('story-image-error').classList.toggle('hidden', !!url);
 		if (url) { image.src = url; el<HTMLImageElement>('story-backdrop').src = url; } else { image.removeAttribute('src'); el('story-backdrop').removeAttribute('src'); }
@@ -90,6 +90,7 @@ export async function initStoryReader() {
 				const video = box.querySelector('video')!;
 				const error = box.querySelector('[data-media-error]') as HTMLElement;
 				const word = getSignWord(placement.sign);
+				box.querySelector('[data-sign-label]')!.textContent = word;
 				video.setAttribute('aria-label', `Signe LSF : ${word}`);
 				video.muted = true;
 				const locked = isSignLocked(placement.sign, user);

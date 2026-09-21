@@ -153,8 +153,6 @@ export function getStoryImageUrl(story: StoryRecord): string | null {
 }
 
 export function getSceneImageUrl(scene: SceneRecord): string | null {
-	if (typeof scene.image_chemin === 'string' && scene.image_chemin) return resolveFileUrl(scene, 'image_chemin');
-	if (!scene.type_page && legacyIllustration(scene)?.image) return legacyIllustration(scene)!.image;
 	return resolveFileUrl(scene, SCENE_FIELDS.image);
 }
 
@@ -165,7 +163,7 @@ export interface SignPlacement {
 	width: number;
 	height: number;
 }
-type Illustration = { image: string; type?: string; placements: SignPlacement[] };
+type Illustration = { type?: string; placements: SignPlacement[] };
 function legacyIllustration(scene: SceneRecord): Illustration | undefined {
 	return (illustrations as Record<string, Illustration>)[scene.id];
 }
