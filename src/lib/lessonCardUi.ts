@@ -26,14 +26,7 @@ function escapeHtml(str: string): string {
 	});
 }
 
-const LOCK_SVG = `
-	<svg width="34" height="54" viewBox="0 0 40 64" fill="none" class="drop-shadow-md" aria-hidden="true">
-		<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#fff000" stroke-width="3" />
-		<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#2453f5" stroke-width="1" />
-		<path d="M2 29H38V62H2Z" fill="#fff000" stroke="#e3ca00" />
-		<path d="M24 43a4 4 0 1 0-7 2l-2 9h10l-2-9a4 4 0 0 0 1-2Z" fill="#2453f5" />
-	</svg>
-`;
+const LOCK_IMAGE = `<img src="/images/lock.svg" alt="" class="block object-contain drop-shadow-md" />`;
 
 export function renderLessonCardHTML(lesson: LessonRecord, open: boolean): string {
 	const rawTitle = getLessonTitle(lesson);
@@ -54,7 +47,7 @@ export function renderLessonCardHTML(lesson: LessonRecord, open: boolean): strin
 		: `<span class="text-4xl" aria-hidden="true">📘</span>`;
 
 	const lockOverlay = !open
-		? `<span class="lesson-card-lock absolute inset-0 grid place-items-center [&_svg]:h-28 [&_svg]:w-[70px] max-md:[&_svg]:h-[135px] max-md:[&_svg]:w-[86px]" aria-hidden="true">${LOCK_SVG}</span>`
+		? `<span class="lesson-card-lock absolute inset-0 grid place-items-center [&_img]:h-28 [&_img]:w-[70px] max-md:[&_img]:h-[135px] max-md:[&_img]:w-[86px]" aria-hidden="true">${LOCK_IMAGE}</span>`
 		: '';
 
 	// Desktop cards are deliberately modest now (basis-[320px], wrapped in

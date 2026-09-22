@@ -30,9 +30,12 @@ const {
         const loadingEls = document.querySelectorAll("#loading");
         for (const el of loadingEls) {
           if (el.querySelector("video[data-global-loader]")) continue;
+          const shell = document.createElement("div");
+          shell.className = "global-loader-shell";
+
           const text = (el.textContent || "").trim() || "Chargement...";
           const video = document.createElement("video");
-          video.src = "/video/chargement.mov";
+          video.src = "/video/chargement.mp4";
           video.autoplay = true;
           video.muted = true;
           video.loop = true;
@@ -40,23 +43,20 @@ const {
           video.preload = "auto";
           video.dataset.globalLoader = "true";
           video.setAttribute("aria-label", "Chargement en cours");
-          video.className =
-            "h-28 w-auto max-w-full rounded-2xl object-contain shadow-sm shadow-slate-200";
+          video.className = "global-loader-video";
+          video.addEventListener("canplay", () => {
+            void video.play().catch(() => {});
+          });
+
           const label = document.createElement("p");
           label.textContent = text;
-          label.className = "text-sm font-medium text-neutral-600";
-          el.classList.add(
-            "flex",
-            "flex-col",
-            "items-center",
-            "justify-center",
-            "gap-3",
-            "py-20",
-            "text-center",
-          );
+          label.className = "global-loader-label";
+
+          el.classList.add("global-loader");
           el.innerHTML = "";
-          el.appendChild(video);
-          el.appendChild(label);
+          shell.appendChild(video);
+          shell.appendChild(label);
+          el.appendChild(shell);
         }
       })();
     </script>
@@ -66,5 +66,63 @@ const {
 <style>
   html {
     scroll-behavior: smooth;
+  }
+
+  :global(#app-shell:has(#loading:not(.hidden))) {
+    background: #fff;
+  }
+
+  :global(.global-loader:not(.hidden)) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    min-height: min(48svh, 420px);
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 3vw, 1.25rem);
+  }
+
+  :global(.global-loader-shell) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.75rem, 2vw, 1rem);
+    width: min(100%, clamp(240px, 36vw, 420px));
+    max-width: 100%;
+    padding: clamp(0.9rem, 2vw, 1.4rem);
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(36, 57, 167, 0.08);
+    border: 1px solid rgba(120, 132, 186, 0.14);
+  }
+
+  :global(.global-loader-video) {
+    display: block;
+    width: min(100%, clamp(160px, 26vw, 300px));
+    max-width: 100%;
+    height: auto;
+    max-height: 42svh;
+    object-fit: contain;
+    border-radius: 16px;
+    background: #fff;
+    filter: drop-shadow(0 14px 20px rgba(36, 57, 167, 0.1));
+  }
+
+  :global([data-loader-home] .global-loader-shell) {
+    width: min(100%, clamp(300px, 52vw, 620px));
+  }
+
+  :global([data-loader-home] .global-loader-video) {
+    width: min(100%, clamp(240px, 44vw, 500px));
+    max-height: 56svh;
+  }
+
+  :global(.global-loader-label) {
+    margin: 0;
+    font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #2f3a59;
+    text-align: center;
   }
 </style>

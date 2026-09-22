@@ -85,7 +85,7 @@ export function initSignModal(getUser: () => ZozzoUser | null) {
 			if (isSignLocked(sign, getUser())) {
 				body!.innerHTML = `
 					<div class="flex flex-col items-center gap-4 py-4 text-center">
-						<p class="text-4xl" aria-hidden="true">🔒</p>
+						<img src="/images/lock.svg" alt="" aria-hidden="true" class="mx-auto h-12 w-8 object-contain" />
 						<p class="text-sm text-neutral-600">Ce signe fait partie du contenu Premium.</p>
 						<a href="/abonnement" class="rounded-full bg-[var(--color-coral)] px-6 py-2.5 text-sm font-semibold text-white transition hover:opacity-90">Découvrir Premium</a>
 					</div>

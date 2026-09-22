@@ -55,25 +55,19 @@ export async function getStaticPaths() {
         id="lesson-not-found"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Cette leçon n'existe pas.</p><a href="/app#lecons"
-          >Retour aux leçons</a
-        >
+        <p>Cette leçon n'existe pas.</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
       </div>
       <div
         id="lesson-locked"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Continue ton aventure pour débloquer cette leçon !</p><a
-          href="/app#lecons">Retour aux leçons</a
-        >
+        <p>Continue ton aventure pour débloquer cette leçon !</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
       </div>
       <div
         id="lesson-empty"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Cette leçon est bientôt prête !</p><a href="/app#lecons"
-          >Retour aux leçons</a
-        >
+        <p>Cette leçon est bientôt prête !</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
       </div>
       <div
         id="lesson-error"
@@ -81,7 +75,7 @@ export async function getStaticPaths() {
       >
         <p>
           Impossible de charger la leçon. Réessaie dans quelques instants.
-        </p><a href="/app#lecons">Retour aux leçons</a>
+        </p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
       </div>
       <section
         id="exercise-view"
@@ -145,7 +139,7 @@ export async function getStaticPaths() {
       </section>
       <section
         id="result-view"
-        class="lesson-result px-6 pt-4 pb-8 text-center [&>img]:mx-auto [&>img]:mb-2 [&>img]:block [&>img]:h-[24vh] [&>img]:max-h-[220px] [&>img]:w-auto [&>img]:max-w-[70vw] [&>img]:object-contain max-[901px]:[&>img]:h-[18vh] max-[901px]:[&>img]:max-h-[160px] [&>h1]:mb-3 [&>h1]:text-[32px] [&>h1]:leading-[1.2] [&>h1]:font-normal max-[901px]:[&>h1]:text-[26px] [&>p]:mx-auto [&>p]:max-w-[780px] [&>p]:text-[19px] [&>p]:leading-[1.4] [&>p]:whitespace-pre-line max-[901px]:[&>p]:text-[16px] [&>#result-score]:mt-3 [&>#result-score]:text-[16px] hidden"
+        class="lesson-result px-6 pt-4 pb-8 text-center [&>img]:mx-auto [&>img]:mb-2 [&>img]:block [&>img]:h-[48svh] [&>img]:max-h-[460px] [&>img]:w-auto [&>img]:max-w-full [&>img]:object-contain max-[901px]:[&>img]:h-[38svh] max-[901px]:[&>img]:max-h-[320px] [&>h1]:mb-3 [&>h1]:text-[32px] [&>h1]:leading-[1.2] [&>h1]:font-normal max-[901px]:[&>h1]:text-[26px] [&>p]:mx-auto [&>p]:max-w-[780px] [&>p]:text-[19px] [&>p]:leading-[1.4] [&>p]:whitespace-pre-line max-[901px]:[&>p]:text-[16px] [&>#result-score]:mt-3 [&>#result-score]:text-[16px] hidden"
         aria-labelledby="result-title"
       >
         <img id="result-image" alt="" />
@@ -153,10 +147,10 @@ export async function getStaticPaths() {
         <p id="result-text"></p>
         <p id="result-score"></p>
         <div
-          class="lesson-result-actions mt-5 flex flex-wrap justify-center gap-4 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:px-6 [&>a]:py-3 [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:px-6 [&>button]:py-3 [&>button]:text-[#2450ef]"
+          class="lesson-result-actions mt-5 flex flex-wrap items-center justify-center gap-3 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:text-[#2450ef]"
         >
-          <button id="result-retry" type="button">Refaire la leçon</button>
-          <a href="/app#lecons">Retour aux leçons</a>
+          <button id="result-retry" type="button" class="min-h-11 px-4 py-2 text-[14px] sm:text-[16px]">Refaire la leçon</button>
+          <a href="/app#lecons" class="inline-flex size-11 items-center justify-center text-[30px] leading-none transition hover:-translate-x-1 motion-reduce:transition-none" aria-label="Retour aux leçons">←</a>
         </div>
       </section>
     </main>

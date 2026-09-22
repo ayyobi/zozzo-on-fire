@@ -32,7 +32,7 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
         role="status"
       >
         Si un compte existe avec cette adresse email, un lien de
-        réinitialisation vient d'être envoyé.
+        réinitialisation va t’être envoyé. Vérifie aussi tes courriers indésirables.
       </p>
       <p
         id="error-msg"
@@ -54,6 +54,9 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
             name="email"
             required
             autocomplete="email"
+            inputmode="email"
+            autocapitalize="none"
+            spellcheck="false"
             placeholder="ton@email.com"
             class="w-full rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-[var(--color-coral)]"
           />
@@ -72,8 +75,9 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
     <p class="mt-6 text-center text-sm text-neutral-500">
       <a
         href="/login"
-        class="font-semibold text-[var(--color-royal-blue)] hover:underline"
-        >Retour à la connexion</a
+        class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+        aria-label="Retour à la connexion"
+        >←</a
       >
     </p>
   </div>
@@ -88,16 +92,17 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
     const submitBtn = document.getElementById(
       "submit-btn",
     ) as HTMLButtonElement;
+    const emailInput = document.getElementById("email") as HTMLInputElement;
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = (
-        document.getElementById("email") as HTMLInputElement
-      ).value.trim();
+      if (submitBtn.disabled) return;
 
       successMsg.classList.add("hidden");
       errorMsg.classList.add("hidden");
+      emailInput.value = emailInput.value.trim();
+      if (!form.reportValidity()) return;
+      const email = emailInput.value;
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Envoi...";
@@ -105,15 +110,18 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
       try {
         await requestPasswordReset(email);
         successMsg.classList.remove("hidden");
-        form.reset();
       } catch (error) {
-        // PocketBase normally returns success even for unknown emails
-        // (to avoid leaking which addresses have an account) — an error
-        // here is almost always a network/server problem.
-        errorMsg.textContent =
-          error instanceof ClientResponseError && error.status === 0
-            ? "Impossible de contacter le serveur. Réessayez dans quelques instants."
-            : "Une erreur est survenue. Merci de réessayer.";
+        const status = error instanceof ClientResponseError ? error.status : 0;
+        if (status === 0) {
+          errorMsg.textContent = "Impossible de contacter le serveur. Vérifie ta connexion et réessaie.";
+        } else if (status === 429) {
+          errorMsg.textContent = "Trop de demandes ont été envoyées. Patiente quelques minutes avant de réessayer.";
+        } else if (error instanceof ClientResponseError && error.response?.data?.email) {
+          errorMsg.textContent = "Saisis une adresse email valide.";
+          emailInput.focus();
+        } else {
+          errorMsg.textContent = "Le service de réinitialisation est momentanément indisponible. Réessaie plus tard.";
+        }
         errorMsg.classList.remove("hidden");
       } finally {
         submitBtn.disabled = false;

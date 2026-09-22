@@ -35,14 +35,14 @@ export async function getStaticPaths() {
 <AppLayout title="ZOZZO | Cahier" description="Le cahier ZOZZO." loadingText="Chargement du cahier...">
 	<main id="cahier-content" class="hidden bg-[var(--color-pale-pink)] px-4 py-8 sm:px-6 lg:py-4">
 		<div class="mx-auto max-w-3xl lg:max-w-5xl">
-			<a href="/app#cahier" class="mb-6 inline-block text-sm font-medium text-[#2854d7] hover:underline lg:mb-2">
-				&larr; Retour au cahier
+			<a href="/app#cahier" class="mb-6 inline-flex size-20 items-center justify-center text-[72px] leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24 sm:text-[96px] lg:mb-2" aria-label="Retour au cahier">
+				&larr;
 			</a>
 
 			<div id="cahier-not-found" class="hidden rounded-3xl bg-white p-8 text-center shadow-lg">
 				<p class="text-lg font-medium text-neutral-800">Ce cahier n'existe pas.</p>
-				<a href="/app#cahier" class="mt-5 inline-block rounded-full bg-[var(--color-coral)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90">
-					Retour au cahier
+				<a href="/app#cahier" class="mt-5 inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour au cahier">
+					&larr;
 				</a>
 			</div>
 
@@ -73,11 +73,11 @@ export async function getStaticPaths() {
 					     visually this session) — nudge these two blocks' inline
 					     styles once you can see it rendered. -->
 					<div class="absolute flex flex-col items-center justify-center text-center" style="left: 9%; top: 20%; width: 34%; height: 52%;">
-						<span id="book-letter-left" class="block font-bold text-[var(--color-royal-blue)]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
+						<span id="book-letter-left" class="block font-bold text-[#224ED1]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
 						<img id="book-image-left" src="" alt="" class="mt-1 h-[55%] w-full object-contain" />
 					</div>
 					<div class="absolute flex flex-col items-center justify-center text-center" style="left: 57%; top: 20%; width: 34%; height: 52%;">
-						<span id="book-letter-right" class="block font-bold text-[var(--color-royal-blue)]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
+						<span id="book-letter-right" class="block font-bold text-[#224ED1]" style="font-size: clamp(1.75rem, 6vw, 3.5rem);"></span>
 						<img id="book-image-right" src="" alt="" class="mt-1 hidden h-[55%] w-full object-contain" />
 					</div>
 
@@ -101,7 +101,7 @@ export async function getStaticPaths() {
 							<button
 								type="button"
 								data-letter={letter}
-								class="alphabet-key flex h-[clamp(2.25rem,6vw,3.5rem)] w-[clamp(2.25rem,6vw,3.5rem)] items-center justify-center rounded-full bg-[var(--color-yellow)] text-[clamp(0.85rem,1.6vw,1.125rem)] font-semibold text-[var(--color-royal-blue)] transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-coral)] active:scale-95"
+								class="alphabet-key flex h-[clamp(2.25rem,6vw,3.5rem)] w-[clamp(2.25rem,6vw,3.5rem)] items-center justify-center rounded-xl bg-[var(--color-yellow)] text-[clamp(0.85rem,1.6vw,1.125rem)] font-semibold text-[#224ED1] transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-coral)] active:scale-95"
 							>
 								{letter}
 							</button>
@@ -145,10 +145,8 @@ export async function getStaticPaths() {
 		function setKeyState(letter: string, active: boolean) {
 			const btn = keyboardButtons.find((b) => b.dataset.letter === letter);
 			if (!btn) return;
-			btn.classList.toggle('bg-[var(--color-blue)]', active);
-			btn.classList.toggle('text-white', active);
+			btn.classList.toggle('bg-[var(--color-blue)]/40', active);
 			btn.classList.toggle('bg-[var(--color-yellow)]', !active);
-			btn.classList.toggle('text-[var(--color-royal-blue)]', !active);
 			btn.setAttribute('aria-pressed', active ? 'true' : 'false');
 		}
 

@@ -14,20 +14,20 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 
 <AppLayout home title="ZOZZO | Accueil" description="Ton espace ZOZZO." loadingText="Chargement de ton espace ZOZZO...">
 	<div class="app-home-viewport overflow-x-auto bg-[#fcdfd7]">
-	<main id="app-content" class="app-home mx-auto box-border h-[986px] w-[1440px] grid-cols-[410px_minmax(0,1fr)_336px] grid-rows-[682px_136px] items-start gap-x-16 gap-y-[54px] px-16 pt-[70px] pb-11 max-xl:h-auto max-xl:w-full max-xl:grid-cols-1 max-xl:grid-rows-none max-xl:gap-6 max-xl:px-5 max-xl:pt-7 max-xl:pb-8 [&:not(.hidden)]:grid hidden">
-		<div class="app-dictionary max-xl:row-start-4 max-xl:w-full max-xl:max-w-[420px] max-xl:justify-self-center">
+	<main id="app-content" class="app-home mx-auto box-border grid w-full max-w-[1440px] grid-cols-[minmax(0,410px)_minmax(0,1fr)_minmax(0,336px)] items-start gap-x-[clamp(20px,3vw,64px)] gap-y-[clamp(24px,3vh,54px)] px-[clamp(20px,4vw,64px)] pt-[clamp(28px,6vh,70px)] pb-11 md:max-xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:max-xl:gap-x-6 md:max-xl:gap-y-4 md:max-xl:px-6 md:max-xl:py-6 max-md:grid-cols-1 max-md:gap-4 max-md:px-4 max-md:pt-5 max-md:pb-6 [&:not(.hidden)]:grid hidden">
+		<div class="app-dictionary min-w-0 md:max-xl:col-start-1 md:max-xl:row-start-1 md:max-xl:row-span-3 max-md:row-start-4 max-md:w-full max-md:max-w-[420px] max-md:justify-self-center">
 			<DictionaryPanel />
 		</div>
 
-		<div class="app-character w-full self-center max-xl:row-start-2">
+		<div class="app-character min-w-0 w-full self-center md:max-xl:col-start-2 md:max-xl:row-start-2 max-md:row-start-2">
 			<UserCharacter />
 		</div>
 
-		<div class="app-profile min-w-0 pt-[54px] max-xl:row-start-1 max-xl:pt-0">
+		<div class="app-profile min-w-0 pt-[clamp(12px,4vh,54px)] md:max-xl:col-start-2 md:max-xl:row-start-1 max-md:row-start-1 max-xl:pt-0">
 			<UserQuickProfile />
 		</div>
 
-		<div class="app-bonus col-span-full w-[900px] translate-x-7 justify-self-center max-xl:row-start-3 max-xl:w-full max-xl:max-w-[420px] max-xl:translate-x-0">
+		<div class="app-bonus col-span-full w-full max-w-[640px] justify-self-center md:max-xl:col-span-1 md:max-xl:col-start-2 md:max-xl:row-start-3 max-md:row-start-3 max-md:max-w-[420px]">
 			<BonusBar />
 		</div>
 	</main>

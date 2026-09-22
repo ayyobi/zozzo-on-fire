@@ -90,7 +90,11 @@ export async function initStoryReader() {
 		el('story-message-text').textContent = message;
 		const link = el<HTMLAnchorElement>('story-message-link');
 		link.href = retry ? location.href : premium ? '/abonnement' : '/app#histoires';
-		link.textContent = retry ? 'Réessayer' : premium ? 'Découvrir Premium' : 'Retour aux histoires';
+		const isBackLink = !retry && !premium;
+		const backLinkClasses = ['inline-flex', 'size-20', 'items-center', 'justify-center', 'text-7xl', 'leading-none', 'text-[#f06547]', 'transition', 'hover:-translate-x-1', 'motion-reduce:transition-none', 'sm:size-24'];
+		for (const className of backLinkClasses) link.classList.toggle(className, isBackLink);
+		link.setAttribute('aria-label', isBackLink ? 'Retour aux histoires' : retry ? 'Réessayer' : 'Découvrir Premium');
+		link.textContent = isBackLink ? '←' : retry ? 'Réessayer' : 'Découvrir Premium';
 	}
 
 	function render() {
@@ -118,21 +122,40 @@ export async function initStoryReader() {
 			for (const placement of getSceneSigns(scene)) {
 				const fragment = (el<HTMLTemplateElement>('sign-video-template')).content.cloneNode(true) as DocumentFragment;
 				const box = fragment.firstElementChild as HTMLElement;
-				Object.assign(box.style, { left: `${placement.x}%`, top: `${placement.y}%`, width: `${placement.width}%`, height: `${placement.height}%` });
+				// Grow with the illustration at every viewport size, keeping the
+				// bottom anchor and clamping the enlarged frame inside the page.
+				const width = Math.min(100, placement.width * 1.2);
+				const height = Math.min(placement.y + placement.height, placement.height * 1.2);
+				const x = Math.max(0, Math.min(100 - width, placement.x + (placement.width - width) / 2));
+				const y = placement.y + placement.height - height;
+				Object.assign(box.style, { left: `${x}%`, top: `${y}%`, width: `${width}%`, height: `${height}%` });
 				const video = box.querySelector('video')!;
 				const gifImg = box.querySelector<HTMLImageElement>('.sign-gif-media')!;
 				const error = box.querySelector('[data-media-error]') as HTMLElement;
 				const word = getSignWord(placement.sign);
 				const label = box.querySelector<HTMLElement>('[data-sign-label]')!;
 				label.textContent = word;
+				if (storyId === '1a844mjzqx1uigg') {
+					// Anchor the media at the bottom of its placement and let its
+					// intrinsic ratio set the frame height, so the caption stays close.
+					box.style.top = 'auto';
+					box.style.bottom = `${100 - placement.y - placement.height}%`;
+					box.style.height = 'auto';
+					video.classList.add('block');
+					for (const media of [video, gifImg]) {
+						media.style.width = '100%';
+						media.style.height = 'auto';
+					}
+					label.style.bottom = 'calc(100% + 2cqw)';
+				}
 				if (placement.label) {
 					// Match the caption painted into this illustration, independently of the video frame.
 					const rect = placement.label;
 					Object.assign(label.style, {
-						left: `${(rect.x - placement.x) / placement.width * 100}%`,
-						top: `${(rect.y - placement.y) / placement.height * 100}%`,
-						width: `${rect.width / placement.width * 100}%`,
-						height: `${rect.height / placement.height * 100}%`,
+						left: `${(rect.x - x) / width * 100}%`,
+						top: `${(rect.y - y) / height * 100}%`,
+						width: `${rect.width / width * 100}%`,
+						height: `${rect.height / height * 100}%`,
 						bottom: 'auto', maxWidth: 'none', transform: 'none',
 						padding: '0', display: 'grid', placeItems: 'center',
 						whiteSpace: 'nowrap', fontSize: '10cqw', lineHeight: '1',

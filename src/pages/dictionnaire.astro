@@ -31,12 +31,15 @@ import SignModal from "../components/SignModal.astro";
           placeholder="Rechercher un signe (ex : bonjour)"
           class="w-full bg-transparent text-base text-neutral-800 outline-none placeholder:text-neutral-400 sm:text-sm"
         />
-        <span aria-hidden="true" class="text-neutral-400">🔍</span>
+        <svg aria-hidden="true" class="size-5 shrink-0 text-[var(--color-video-orange)]" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="10" cy="10" r="7" />
+          <path d="m14 17 4.8 4.8a2.1 2.1 0 0 0 3-3L17 14Z" />
+        </svg>
       </label>
 
       <select
         id="dict-category"
-        class="h-12 w-full rounded-full border border-neutral-200 bg-white px-4 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
+        class="h-12 w-full appearance-none rounded-full border border-neutral-200 bg-white pl-4 pr-11 text-base text-neutral-700 sm:h-auto sm:w-56 sm:py-3 sm:text-sm"
       >
         <option value="">Toutes les catégories</option>
       </select>
@@ -52,6 +55,15 @@ import SignModal from "../components/SignModal.astro";
   </main>
 
   <SignModal />
+
+  <style>
+    #dict-category {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23404040' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-position: right 16px center;
+      background-repeat: no-repeat;
+      background-size: 16px 16px;
+    }
+  </style>
 
   <script>
     import { checkAppSession, watchAppSession } from "../lib/appPage";

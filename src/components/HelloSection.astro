@@ -4,14 +4,14 @@
 <section id="telecharger" class="hello-section bg-white px-6 py-16 md:px-10">
 	<div class="mx-auto flex max-w-3xl flex-col items-center">
 		<div class="w-full rounded-[2.5rem] bg-[var(--color-video-orange)] p-6 shadow-xl sm:p-10">
-			<div class="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl">
+			<div class="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl bg-white/20">
 				<img
 					id="bonjour-animation"
-					src="/video/bonjour-transparent.webp"
-					alt="Zozzo dit bonjour en langue des signes"
-					width="960"
-					height="540"
-					class="absolute inset-0 h-full w-full object-cover"
+					src="/images/intro/zozzo-magicienne.png"
+					alt="Zozzo, la mascotte"
+					width="640"
+					height="640"
+					class="absolute inset-0 h-full w-full object-contain"
 				/>
 			</div>
 		</div>
@@ -49,6 +49,6 @@ button { padding: 12px 22px; font-size: var(--desktop-button); }
 
 	btn?.addEventListener('click', () => {
 		if (!animation) return;
-		animation.src = `/video/bonjour-transparent.webp?replay=${Date.now()}`;
+		animation.src = `/images/intro/zozzo-magicienne.png?replay=${Date.now()}`;
 	});
 </script>

@@ -26,22 +26,15 @@ function escapeHtml(str: string): string {
 	});
 }
 
-// Yellow/blue padlock with an irregular outline, matching the illustrated map.
-const LOCK_SVG = `
-	<svg class="block h-[calc(200*var(--story-unit))] w-[calc(124*var(--story-unit))] overflow-visible" width="124" height="200" viewBox="0 0 40 64" fill="none" aria-hidden="true">
-		<path d="M4 30L5 20C6 10 11 4 20 2C29 4 34 11 35 21L36 31" stroke="#2453f5" stroke-width="3" />
-		<path d="M4 30L5 20C6 10 11 4 20 2C29 4 34 11 35 21L36 31" stroke="#fff000" stroke-width="1.5" />
-		<path d="M2 29L38 30L37 62L2 61Z" fill="#fff000" stroke="#2453f5" stroke-width="1.1" />
-		<path d="M24 43a4 4 0 1 0-7 2l-2 9h10l-2-9a4 4 0 0 0 1-2Z" fill="#2453f5" />
-	</svg>
-`;
+// Shared lock artwork, sized to match the illustrated map.
+const LOCK_IMAGE = `<img src="/images/lock.svg" alt="" class="block h-[calc(200*var(--story-unit))] w-[calc(124*var(--story-unit))] object-contain" />`;
 
 // Static utility strings let Tailwind discover every illustration layout.
 const layoutClasses = {
 	school: '[&_.story-illustration]:w-[120%] [&_.story-illustration]:h-auto [&_.story-illustration]:-left-[5%] [&_.story-illustration]:-top-[19%] [&_.story-card-title]:inset-x-[20%] [&_.story-card-title]:top-auto [&_.story-card-title]:bottom-[6%]',
 	garden: '[&_.story-illustration]:top-[14%] [&_.story-illustration]:-left-[2%] [&_.story-illustration]:w-[108%] [&_.story-illustration]:h-auto [&_.story-padlock]:top-[49%]',
 	sport: '[&_.story-illustration]:-top-[5%] [&_.story-illustration]:-left-[3%] [&_.story-illustration]:w-[106%] [&_.story-illustration]:h-auto [&_.story-card-title]:inset-x-[4%] [&_.story-card-title]:top-auto [&_.story-card-title]:bottom-[4%] [&_.story-padlock]:top-[40%]',
-	sky: '[&_.story-illustration]:top-[20%] [&_.story-illustration]:-left-[3%] [&_.story-illustration]:w-[112%] [&_.story-illustration]:h-3/4 [&_.story-padlock]:top-[58%] [&_.story-padlock_svg]:w-[calc(104*var(--story-unit))] [&_.story-padlock_svg]:h-[calc(170*var(--story-unit))]',
+	sky: '[&_.story-illustration]:top-[20%] [&_.story-illustration]:-left-[3%] [&_.story-illustration]:w-[112%] [&_.story-illustration]:h-3/4 [&_.story-padlock]:top-[58%] [&_.story-padlock_img]:w-[calc(104*var(--story-unit))] [&_.story-padlock_img]:h-[calc(170*var(--story-unit))]',
 	space: '[&_.story-illustration]:left-0 [&_.story-illustration]:-top-[4%] [&_.story-illustration]:w-[105%] [&_.story-illustration]:h-[110%] [&_.story-card-title]:top-[34%] [&_.story-card-title]:right-auto [&_.story-card-title]:left-[3%] [&_.story-card-title]:w-[29%] [&_.story-padlock]:left-[52%]',
 };
 
@@ -71,7 +64,7 @@ export function renderStoryCardHTML(story: StoryRecord, index: number, lockReaso
 		: `<span class="story-image-fallback grid h-4/5 place-items-center text-[64px]" aria-hidden="true">📖</span>`;
 
 	const lockOverlay = locked
-		? `<span class="story-padlock pointer-events-none absolute top-1/2 left-1/2 z-3 -translate-1/2" aria-hidden="true">${LOCK_SVG}</span>`
+		? `<span class="story-padlock pointer-events-none absolute top-1/2 left-1/2 z-3 -translate-1/2" aria-hidden="true">${LOCK_IMAGE}</span>`
 		: '';
 
 	return `

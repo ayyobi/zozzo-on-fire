@@ -31,6 +31,18 @@ export type FetchState<T> =
 	| { status: 'empty' }
 	| { status: 'ok'; data: T };
 
+// The Dico (mini panel + full /dictionnaire page) is deliberately scoped
+// to just these two categories for now, per explicit request — not all 9
+// real categories in `categories`. Matched by title substring rather than
+// a hardcoded id, so it keeps working if the category record is ever
+// recreated. Widen/remove this list to show the rest of the dictionary
+// again later.
+const DICTIONARY_CATEGORY_MATCHERS = ['ecole', 'école', 'jardin'];
+function isDictionaryCategory(category: RecordModel): boolean {
+	const titre = String(category[CATEGORY_FIELDS.name] ?? '').toLowerCase();
+	return DICTIONARY_CATEGORY_MATCHERS.some((needle) => titre.includes(needle));
+}
+
 export async function searchSigns(
 	query: string,
 	opts: { categoryId?: string; limit?: number } = {},
@@ -44,6 +56,14 @@ export async function searchSigns(
 	if (opts.categoryId) {
 		const catFilter = pb.filter(`${SIGN_FIELDS.category} = {:c}`, { c: opts.categoryId });
 		filterExpr = filterExpr ? `${filterExpr} && ${catFilter}` : catFilter;
+	} else {
+		// No specific category picked: still restrict to the Dico's current
+		// scope (école + jardin) instead of the whole dictionary.
+		const categories = await listCategories();
+		if (categories.length > 0) {
+			const scopeFilter = categories.map((c) => pb.filter(`${SIGN_FIELDS.category} = {:c}`, { c: c.id })).join(' || ');
+			filterExpr = filterExpr ? `${filterExpr} && (${scopeFilter})` : scopeFilter;
+		}
 	}
 
 	const res = await pb.collection('signes').getList<SignRecord>(1, limit, {
@@ -64,7 +84,7 @@ export async function listCategories(): Promise<RecordModel[]> {
 	const categories = await pb.collection('categories').getFullList({ sort: CATEGORY_FIELDS.name });
 	// A blank/draft category (no titre) shouldn't show up as an empty
 	// option in the filter.
-	return categories.filter((c) => typeof c[CATEGORY_FIELDS.name] === 'string' && c[CATEGORY_FIELDS.name]);
+	return categories.filter((c) => typeof c[CATEGORY_FIELDS.name] === 'string' && c[CATEGORY_FIELDS.name] && isDictionaryCategory(c));
 }
 
 function resolveFileUrl(record: SignRecord, field: string): string | null {

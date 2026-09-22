@@ -27,7 +27,7 @@ const { title = 'ZOZZO', description = 'Ton espace ZOZZO.', loadingText = 'Charg
 			Impossible de contacter le serveur. Réessayez dans quelques instants.
 		</p>
 
-		<div id="loading" class="py-24 text-center text-neutral-500">{loadingText}</div>
+		<div id="loading" data-loader-home={home ? '' : undefined} class="py-24 text-center text-neutral-500">{loadingText}</div>
 
 		<slot />
 	</div>

@@ -32,6 +32,7 @@ html:has(.jeu-page), body:has(.jeu-page) {
 #play-progress { position: absolute; top: 12px; left: 6%; border-radius: 20px; background: white; padding: 4px 15px; font-size: 16px; }
 .jeu-page .jeu-frame { width: 67%; height: 100%; min-height: 0; max-width: 842px; aspect-ratio: auto; border: 0; border-radius: 40px; background: #fcdfd7; padding: 3cqh; box-shadow: none; }
 .jeu-frame .jeu-media { position: relative; width: 100%; height: 100%; background: white; }
+#play-reaction { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 2; }
 .chrono-clock { position: absolute; right: 3.3%; top: 12px; width: min(14%, 18cqh); aspect-ratio: 1; border: 6px solid #fa6848; border-radius: 50%; background: conic-gradient(#244bd4 0deg 245deg, #f5ed46 245deg 360deg); }
 .chrono-hand { position: absolute; left: calc(50% - 3px); top: 14%; width: 6px; height: 36%; border-radius: 10px; background: #fa6848; transform-origin: 50% 100%; }
 #play-timer { position: absolute; top: 105%; width: 100%; text-align: center; color: #244bd4; background: #fff; border-radius: 20px; font-size: clamp(12px, 1.6vw, 22px); }

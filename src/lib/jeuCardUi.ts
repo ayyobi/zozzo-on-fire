@@ -24,14 +24,7 @@ function escapeHtml(str: string): string {
 	});
 }
 
-const LOCK_SVG = `
-	<svg width="34" height="54" viewBox="0 0 40 64" fill="none" class="drop-shadow-md" aria-hidden="true">
-		<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#fff000" stroke-width="3" />
-		<path d="M5 30V21C5 10 11 3 20 3S35 10 35 21V30" stroke="#2453f5" stroke-width="1" />
-		<path d="M2 29H38V62H2Z" fill="#fff000" stroke="#e3ca00" />
-		<path d="M24 43a4 4 0 1 0-7 2l-2 9h10l-2-9a4 4 0 0 0 1-2Z" fill="#2453f5" />
-	</svg>
-`;
+const LOCK_IMAGE = `<img src="/images/lock.svg" alt="" class="block object-contain drop-shadow-md" />`;
 
 export function renderJeuCardHTML(jeu: JeuRecord, open: boolean): string {
 	const title = escapeHtml(getJeuTitle(jeu) || '—');
@@ -49,23 +42,21 @@ export function renderJeuCardHTML(jeu: JeuRecord, open: boolean): string {
 		: `type="button" data-locked-jeu aria-label="${title} (verrouillé)"`;
 
 	const background = imageUrl
-		? `style="background-image: url(${escapeHtml(JSON.stringify(imageUrl))}); background-size: cover; background-position: center; background-repeat: no-repeat;"`
+		? `<span class="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat ${open ? '' : 'grayscale opacity-30'}" style="background-image: url(${escapeHtml(JSON.stringify(imageUrl))});" aria-hidden="true"></span>`
 		: '';
-
-	const lockOverlay = !open
-		? `<span class="pointer-events-none absolute inset-0 z-10 grid place-items-center [&_svg]:h-[42px] [&_svg]:w-[26px] sm:[&_svg]:h-[54px] sm:[&_svg]:w-[34px]" aria-hidden="true">${LOCK_SVG}</span>`
-		: '';
+	const lock = !open ? `<span class="pointer-events-none absolute top-1/2 left-1/2 z-20 -translate-1/2 [&_img]:h-9 [&_img]:w-6 sm:[&_img]:h-11 sm:[&_img]:w-7" aria-hidden="true">${LOCK_IMAGE}</span>` : '';
 
 	return `
 		<div class="relative w-full">
-			<${tag} ${attrs} ${background} data-jeu-card
-				class="group relative flex min-h-[74px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-[26px] bg-[#84a2ef] px-[12%] py-3 text-center text-[#2855dc] sm:aspect-[5.385/1] sm:min-h-[100px] sm:rounded-[38px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#2855dc] motion-safe:transition-transform motion-safe:hover:scale-[1.015] motion-safe:active:scale-[0.99]"
+			<${tag} ${attrs} data-jeu-card
+				class="group relative flex min-h-[70px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-[22px] px-[12%] py-3 text-center sm:aspect-[5.385/1] sm:min-h-[100px] sm:rounded-[38px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#2855dc] motion-safe:transition-transform motion-safe:hover:scale-[1.015] motion-safe:active:scale-[0.99] ${open ? 'bg-[#84a2ef] text-[#2855dc]' : 'bg-[#a9abb0] text-[#626367]'}"
 			>
-				<span class="relative flex min-w-0 flex-col gap-2 sm:gap-3">
+				${background}
+				${lock}
+				<span class="relative z-10 flex min-w-0 flex-col items-center gap-2 sm:gap-3">
 					<span class="text-[16px] leading-tight font-normal sm:text-[24px]">${title}</span>
 					${description ? `<span class="text-[13px] leading-snug sm:text-[18px]">${description}</span>` : ''}
 				</span>
-				${lockOverlay}
 			</${tag}>
 		</div>
 	`;

@@ -30,11 +30,11 @@ export function renderSignCardHTML(sign: SignRecord, user: ZozzoUser | null): st
 	const locked = isSignLocked(sign, user);
 
 	const imgTag = imageUrl
-		? `<img src="${imageUrl}" alt="Signe : ${word}" class="h-full w-full object-cover" loading="lazy" />`
+		? `<img src="${imageUrl}" alt="Signe : ${word}" class="h-full w-full object-contain" loading="lazy" />`
 		: `<span class="text-2xl" aria-hidden="true">🤟</span>`;
 
 	const lockBadge = locked
-		? `<span class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs shadow" aria-hidden="true">🔒</span>`
+		? `<span class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs shadow" aria-hidden="true"><img src="/images/lock.svg" alt="" class="h-4! w-3! p-0! object-contain" /></span>`
 		: '';
 
 	return `
