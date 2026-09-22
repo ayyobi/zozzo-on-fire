@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Keep unused space around sign videos white without cropping the gesture. */
+.sign-video-media {
+	background-color: #fff;
+	border: 0;
+	object-fit: contain;
+}
+
 /* Compact desktop typography shared by all Tailwind-based pages. */
 @media (min-width: 1024px) {
 	:root {

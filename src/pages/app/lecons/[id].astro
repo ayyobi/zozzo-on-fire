@@ -31,7 +31,7 @@ export async function getStaticPaths() {
 ---
 
 <Layout title="ZOZZO | Leçon" description="Une leçon ZOZZO.">
-  <div class="lesson-page min-h-svh bg-white text-[#2450ef]">
+  <div class="lesson-page flex min-h-dvh flex-col bg-white text-[#2450ef]">
     <AppHeader compact class="lesson-app-header" />
     <p
       id="loading"
@@ -49,7 +49,7 @@ export async function getStaticPaths() {
     </p>
     <main
       id="lesson-content"
-      class="lesson-scene relative isolate min-h-[calc(100svh-90px)] bg-[#84a5ef] bg-[url('/images/lecon/bg-lecon.avif')] bg-cover bg-center bg-no-repeat data-[state=result]:bg-white data-[state=result]:bg-none data-[state=message]:bg-white data-[state=message]:bg-none max-[901px]:min-h-[calc(100svh-54px)] [&_.hidden]:hidden! hidden"
+      class="lesson-scene relative isolate flex-1 bg-[#84a5ef] bg-[url('/images/lecon/bg-lecon.avif')] bg-cover bg-center bg-no-repeat data-[state=result]:bg-white data-[state=result]:bg-none data-[state=message]:bg-white data-[state=message]:bg-none [&_.hidden]:hidden! hidden"
     >
       <div
         id="lesson-not-found"
@@ -104,7 +104,7 @@ export async function getStaticPaths() {
           class="relative left-1/2 mb-[38px] w-screen -translate-x-1/2 max-[901px]:mb-8"
         >
           <div
-            class="lesson-frame relative mx-auto aspect-[1.68] w-[min(calc((100vw-64px)*0.48),520px)] max-h-[42vh] rounded-3xl border-[36px] border-[#fcdfd7] bg-white max-[901px]:rounded-[20px] max-[901px]:border-[28px] max-[901px]:aspect-[1.2] max-[901px]:w-[calc(100%-24px)] max-[901px]:max-h-[38vh] max-[481px]:border-[14px]"
+            class="lesson-frame relative mx-auto aspect-[1.68] w-[min(calc((100vw-64px)*0.6),640px)] max-h-[50svh] rounded-3xl border-[24px] border-[#fcdfd7] bg-white max-[901px]:rounded-[20px] max-[901px]:border-[20px] max-[901px]:aspect-[1.2] max-[901px]:w-[calc(100%-24px)] max-[901px]:max-h-[46svh] max-[481px]:border-[12px]"
           >
             <div
               class="lesson-media absolute inset-0 grid place-items-center overflow-hidden [&_video]:absolute [&_video]:inset-0 [&_video]:size-full [&_video]:object-contain [&_img]:absolute [&_img]:inset-0 [&_img]:size-full [&_img]:object-contain [&_#exercise-reaction]:px-3 [&_#exercise-reaction]:pt-2"

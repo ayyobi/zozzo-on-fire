@@ -99,8 +99,8 @@ export function initSignModal(getUser: () => ZozzoUser | null) {
 			body!.innerHTML = !videoUrl
 				? '<p class="py-8 text-center text-sm text-neutral-500">Vidéo non disponible pour ce signe.</p>'
 				: isGifUrl(videoUrl)
-					? `<img src="${videoUrl}" alt="" class="w-full rounded-2xl bg-black object-contain" style="max-height:60vh" />`
-					: `<video src="${videoUrl}" controls autoplay playsinline class="w-full rounded-2xl bg-black" style="max-height:60vh"></video>`;
+					? `<img src="${videoUrl}" alt="" class="block w-full rounded-2xl bg-white object-contain" style="max-height:60vh" />`
+					: `<video src="${videoUrl}" controls autoplay playsinline class="sign-video-media block w-full rounded-2xl" style="max-height:60vh"></video>`;
 		} catch {
 			title!.textContent = 'Signe';
 			body!.innerHTML =
