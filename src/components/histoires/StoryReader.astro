@@ -1,50 +1,146 @@
 ---
-import StoryPage from './StoryPage.astro';
-import StoryNavigation from './StoryNavigation.astro';
-import StoryReward from './StoryReward.astro';
-interface Props { storyId?: string }
-const { storyId = '' } = Astro.props;
+import StoryPage from "./StoryPage.astro";
+import StoryNavigation from "./StoryNavigation.astro";
+import StoryReward from "./StoryReward.astro";
+interface Props {
+  storyId?: string;
+}
+const { storyId = "" } = Astro.props;
 ---
-<main id="story-content" data-story-id={storyId} class="relative isolate hidden min-h-dvh flex-col overflow-hidden bg-[#6fc6b4] [&:not(.hidden)]:flex">
-	<img id="story-backdrop" alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover opacity-60 blur-xl" />
-	<div id="story-toolbar" class="absolute inset-x-0 top-0 z-30 mx-auto flex w-full items-center justify-between gap-3 px-3 py-1 text-sm text-[#2439a7]">
-		<a href="/app#histoires" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux histoires">←</a>
-		<h1 id="story-title" class="sr-only"></h1>
-		<button id="story-fullscreen" type="button" class="min-h-11 rounded-full bg-white/85 px-3 hover:bg-blue-50" aria-label="Afficher l’histoire en plein écran">⛶ Plein écran</button>
-	</div>
-	<div id="story-rotate-prompt" class="hidden fixed inset-0 z-40 flex-col items-center justify-center gap-4 bg-[#2439a7]/95 px-6 text-center text-white [&:not(.hidden)]:flex">
-		<svg width="56" height="56" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="animate-[story-rotate_1.8s_ease-in-out_infinite]"><rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="1.6" /><path d="M12 18h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
-		<p class="max-w-xs text-lg font-medium">Tourne ton téléphone pour mieux voir l’histoire !</p>
-		<button id="story-rotate-fullscreen" type="button" class="min-h-11 rounded-full bg-white px-5 text-[#2439a7]">Passer en plein écran</button>
-		<button id="story-rotate-dismiss" type="button" class="min-h-11 rounded-full px-5 text-white/80 underline">Continuer sans tourner</button>
-	</div>
-	<div id="story-message" class="hidden px-4 py-20 text-center" role="status">
-		<p id="story-message-text"></p>
-		<a id="story-message-link" href="/app#histoires" class="mt-5 inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux histoires">←</a>
-	</div>
-	<article id="story-reader" class="hidden flex-1 flex-col [&:not(.hidden)]:flex" aria-label="Lecteur d’histoire">
-		<div id="story-canvas" class="story-canvas relative flex min-h-dvh flex-1 items-center justify-center"><StoryPage /><StoryNavigation /></div>
-		<p id="story-image-error" class="hidden p-4 text-center" role="status">Cette illustration ne peut pas être chargée. <button id="story-image-retry" type="button" class="min-h-11 underline">Réessayer</button></p>
-		<StoryReward />
-	</article>
+
+<main
+  id="story-content"
+  data-story-id={storyId}
+  class="relative isolate hidden min-h-dvh flex-col overflow-hidden bg-[#6fc6b4] [&:not(.hidden)]:flex"
+>
+  <img
+    id="story-backdrop"
+    alt=""
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover opacity-60 blur-xl"
+  />
+  <div
+    id="story-toolbar"
+    class="absolute inset-x-0 top-0 z-30 mx-auto flex w-full items-center justify-between gap-3 px-3 py-1 text-sm text-[#2439a7]"
+  >
+    <a
+      href="/app#histoires"
+      class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+      aria-label="Retour aux histoires">←</a
+    >
+    <h1 id="story-title" class="sr-only"></h1>
+    <button
+      id="story-fullscreen"
+      type="button"
+      class="min-h-11 rounded-full bg-white/85 px-3 hover:bg-blue-50"
+      aria-label="Afficher l’histoire en plein écran">⛶ Plein écran</button
+    >
+  </div>
+  <div
+    id="story-rotate-prompt"
+    class="hidden fixed inset-0 z-40 flex-col items-center justify-center gap-4 bg-[#2439a7]/95 px-6 text-center text-white [&:not(.hidden)]:flex"
+  >
+    <svg
+      width="56"
+      height="56"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      class="animate-[story-rotate_1.8s_ease-in-out_infinite]"
+      ><rect
+        x="6"
+        y="2"
+        width="12"
+        height="20"
+        rx="2"
+        stroke="currentColor"
+        stroke-width="1.6"></rect><path
+        d="M12 18h.01"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"></path></svg
+    >
+    <p class="max-w-xs text-lg font-medium">
+      Tourne ton téléphone pour mieux voir l’histoire !
+    </p>
+    <button
+      id="story-rotate-fullscreen"
+      type="button"
+      class="min-h-11 rounded-full bg-white px-5 text-[#2439a7]"
+      >Passer en plein écran</button
+    >
+    <button
+      id="story-rotate-dismiss"
+      type="button"
+      class="min-h-11 rounded-full px-5 text-white/80 underline"
+      >Continuer sans tourner</button
+    >
+  </div>
+  <div id="story-message" class="hidden px-4 py-20 text-center" role="status">
+    <p id="story-message-text"></p>
+    <a
+      id="story-message-link"
+      href="/app#histoires"
+      class="mt-5 inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+      aria-label="Retour aux histoires">←</a
+    >
+  </div>
+  <article
+    id="story-reader"
+    class="hidden flex-1 flex-col [&:not(.hidden)]:flex"
+    aria-label="Lecteur d’histoire"
+  >
+    <div
+      id="story-canvas"
+      class="story-canvas relative flex min-h-dvh flex-1 items-center justify-center"
+    >
+      <StoryPage /><StoryNavigation />
+    </div>
+    <p id="story-image-error" class="hidden p-4 text-center" role="status">
+      Cette illustration ne peut pas être chargée. <button
+        id="story-image-retry"
+        type="button"
+        class="min-h-11 underline">Réessayer</button>
+    </p>
+    <StoryReward />
+  </article>
 </main>
-<noscript><p class="p-8 text-center">Active JavaScript pour lire les histoires.</p></noscript>
+<noscript
+  ><p class="p-8 text-center">
+    Active JavaScript pour lire les histoires.
+  </p></noscript
+>
 <script>
-	import { initStoryReader } from '../../lib/storyReader';
-	void initStoryReader();
+  import { initStoryReader } from "../../lib/storyReader";
+  void initStoryReader();
 </script>
 <style>
-	@keyframes story-rotate {
-		0%, 100% { transform: rotate(0deg); }
-		50% { transform: rotate(-90deg); }
-	}
+  @keyframes story-rotate {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(-90deg);
+    }
+  }
 </style>
 <style is:global>
-	/* Reward screen: much shorter content than a normal reading page (image
+  /* Reward screen: much shorter content than a normal reading page (image
 	   + a couple lines + buttons), so it drops the full-screen reading
 	   canvas instead of leaving blank space above/below a short image and
 	   pushing the buttons off-screen. */
-	.story-canvas.is-finished { min-height: 0; }
-	.story-canvas.is-finished #story-stage { max-height: 40vh; width: auto; margin: 0 auto; }
-	.story-canvas.is-finished #story-image { max-height: 40vh; width: auto; margin: 0 auto; }
+  .story-canvas.is-finished {
+    min-height: 0;
+  }
+  .story-canvas.is-finished #story-stage {
+    max-height: 40vh;
+    width: auto;
+    margin: 0 auto;
+  }
+  .story-canvas.is-finished #story-image {
+    max-height: 40vh;
+    width: auto;
+    margin: 0 auto;
+  }
 </style>

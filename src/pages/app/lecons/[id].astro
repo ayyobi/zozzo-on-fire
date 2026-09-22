@@ -55,19 +55,31 @@ export async function getStaticPaths() {
         id="lesson-not-found"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Cette leçon n'existe pas.</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
+        <p>Cette leçon n'existe pas.</p><a
+          href="/app#lecons"
+          class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+          aria-label="Retour aux leçons">←</a
+        >
       </div>
       <div
         id="lesson-locked"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Continue ton aventure pour débloquer cette leçon !</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
+        <p>Continue ton aventure pour débloquer cette leçon !</p><a
+          href="/app#lecons"
+          class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+          aria-label="Retour aux leçons">←</a
+        >
       </div>
       <div
         id="lesson-empty"
         class="lesson-message m-auto max-w-[640px] px-6 py-20 text-center text-[22px] [&>a]:mt-6 [&>a]:inline-block [&>a]:underline hidden"
       >
-        <p>Cette leçon est bientôt prête !</p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
+        <p>Cette leçon est bientôt prête !</p><a
+          href="/app#lecons"
+          class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+          aria-label="Retour aux leçons">←</a
+        >
       </div>
       <div
         id="lesson-error"
@@ -75,7 +87,11 @@ export async function getStaticPaths() {
       >
         <p>
           Impossible de charger la leçon. Réessaie dans quelques instants.
-        </p><a href="/app#lecons" class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24" aria-label="Retour aux leçons">←</a>
+        </p><a
+          href="/app#lecons"
+          class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
+          aria-label="Retour aux leçons">←</a
+        >
       </div>
       <section
         id="exercise-view"
@@ -149,8 +165,17 @@ export async function getStaticPaths() {
         <div
           class="lesson-result-actions mt-5 flex flex-wrap items-center justify-center gap-3 [&>a]:cursor-pointer [&>a]:rounded-full [&>a]:bg-[#fcdfd7] [&>a]:text-[#2450ef] [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:bg-[#fcdfd7] [&>button]:text-[#2450ef]"
         >
-          <button id="result-retry" type="button" class="min-h-11 px-4 py-2 text-[14px] sm:text-[16px]">Refaire la leçon</button>
-          <a href="/app#lecons" class="inline-flex size-11 items-center justify-center text-[30px] leading-none transition hover:-translate-x-1 motion-reduce:transition-none" aria-label="Retour aux leçons">←</a>
+          <button
+            id="result-retry"
+            type="button"
+            class="min-h-11 px-4 py-2 text-[14px] sm:text-[16px]"
+            >Refaire la leçon</button
+          >
+          <a
+            href="/app#lecons"
+            class="inline-flex size-11 items-center justify-center text-[30px] leading-none transition hover:-translate-x-1 motion-reduce:transition-none"
+            aria-label="Retour aux leçons">←</a
+          >
         </div>
       </section>
     </main>
@@ -165,7 +190,11 @@ export async function getStaticPaths() {
       listLessonSigns,
       getLessonTitle,
     } from "../../../lib/lessons";
-    import { getSignImageUrl, getSignVideoUrl, isGifUrl } from "../../../lib/dictionary";
+    import {
+      getSignImageUrl,
+      getSignVideoUrl,
+      isGifUrl,
+    } from "../../../lib/dictionary";
     import {
       buildExerciseQuestions,
       isCorrectOption,
@@ -276,7 +305,9 @@ export async function getStaticPaths() {
       } else if (videoUrl) {
         videoEl.src = videoUrl;
         videoEl.classList.remove("hidden");
-        videoEl.play().catch(() => { videoEl.controls = true; });
+        videoEl.play().catch(() => {
+          videoEl.controls = true;
+        });
       } else if (imageUrl) {
         imageEl.src = imageUrl;
         imageEl.classList.remove("hidden");

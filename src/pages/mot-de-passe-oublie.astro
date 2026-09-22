@@ -32,7 +32,8 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
         role="status"
       >
         Si un compte existe avec cette adresse email, un lien de
-        réinitialisation va t’être envoyé. Vérifie aussi tes courriers indésirables.
+        réinitialisation va t’être envoyé. Vérifie aussi tes courriers
+        indésirables.
       </p>
       <p
         id="error-msg"
@@ -76,8 +77,7 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
       <a
         href="/login"
         class="inline-flex size-20 items-center justify-center text-7xl leading-none text-[#f06547] transition hover:-translate-x-1 motion-reduce:transition-none sm:size-24"
-        aria-label="Retour à la connexion"
-        >←</a
+        aria-label="Retour à la connexion">←</a
       >
     </p>
   </div>
@@ -113,14 +113,20 @@ import MinimalLayout from "../layouts/MinimalLayout.astro";
       } catch (error) {
         const status = error instanceof ClientResponseError ? error.status : 0;
         if (status === 0) {
-          errorMsg.textContent = "Impossible de contacter le serveur. Vérifie ta connexion et réessaie.";
+          errorMsg.textContent =
+            "Impossible de contacter le serveur. Vérifie ta connexion et réessaie.";
         } else if (status === 429) {
-          errorMsg.textContent = "Trop de demandes ont été envoyées. Patiente quelques minutes avant de réessayer.";
-        } else if (error instanceof ClientResponseError && error.response?.data?.email) {
+          errorMsg.textContent =
+            "Trop de demandes ont été envoyées. Patiente quelques minutes avant de réessayer.";
+        } else if (
+          error instanceof ClientResponseError &&
+          error.response?.data?.email
+        ) {
           errorMsg.textContent = "Saisis une adresse email valide.";
           emailInput.focus();
         } else {
-          errorMsg.textContent = "Le service de réinitialisation est momentanément indisponible. Réessaie plus tard.";
+          errorMsg.textContent =
+            "Le service de réinitialisation est momentanément indisponible. Réessaie plus tard.";
         }
         errorMsg.classList.remove("hidden");
       } finally {
