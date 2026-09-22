@@ -1,61 +1,70 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
-	title?: string;
-	description?: string;
+  title?: string;
+  description?: string;
 }
 
 const {
-	title = 'Zozzo — Apprendre la langue des signes en s\'amusant',
-	description = "Zozzo est une application éducative qui apprend la langue des signes aux enfants de 6 à 12 ans à travers des histoires ludiques et immersives.",
+  title = "Zozzo — Apprendre la langue des signes en s'amusant",
+  description = "Zozzo est une application éducative qui apprend la langue des signes aux enfants de 6 à 12 ans à travers des histoires ludiques et immersives.",
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="fr">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
-		<title>{title}</title>
-	</head>
-	<body class="overflow-x-hidden bg-white text-neutral-900 antialiased">
-		<slot />
-		<script is:inline>
-			(() => {
-				const loadingEls = document.querySelectorAll('#loading');
-				for (const el of loadingEls) {
-					if (el.querySelector('video[data-global-loader]')) continue;
-					const text = (el.textContent || '').trim() || 'Chargement...';
-					const video = document.createElement('video');
-					video.src = '/video/chargement.mov';
-					video.autoplay = true;
-					video.muted = true;
-					video.loop = true;
-					video.playsInline = true;
-					video.preload = 'auto';
-					video.dataset.globalLoader = 'true';
-					video.setAttribute('aria-label', 'Chargement en cours');
-					video.className = 'h-28 w-auto max-w-full rounded-2xl object-contain shadow-sm shadow-slate-200';
-					const label = document.createElement('p');
-					label.textContent = text;
-					label.className = 'text-sm font-medium text-neutral-600';
-					el.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'gap-3', 'py-20', 'text-center');
-					el.innerHTML = '';
-					el.appendChild(video);
-					el.appendChild(label);
-				}
-			})();
-		</script>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="overflow-x-hidden bg-white text-neutral-900 antialiased">
+    <slot />
+    <script is:inline>
+      (() => {
+        const loadingEls = document.querySelectorAll("#loading");
+        for (const el of loadingEls) {
+          if (el.querySelector("video[data-global-loader]")) continue;
+          const text = (el.textContent || "").trim() || "Chargement...";
+          const video = document.createElement("video");
+          video.src = "/video/chargement.mov";
+          video.autoplay = true;
+          video.muted = true;
+          video.loop = true;
+          video.playsInline = true;
+          video.preload = "auto";
+          video.dataset.globalLoader = "true";
+          video.setAttribute("aria-label", "Chargement en cours");
+          video.className =
+            "h-28 w-auto max-w-full rounded-2xl object-contain shadow-sm shadow-slate-200";
+          const label = document.createElement("p");
+          label.textContent = text;
+          label.className = "text-sm font-medium text-neutral-600";
+          el.classList.add(
+            "flex",
+            "flex-col",
+            "items-center",
+            "justify-center",
+            "gap-3",
+            "py-20",
+            "text-center",
+          );
+          el.innerHTML = "";
+          el.appendChild(video);
+          el.appendChild(label);
+        }
+      })();
+    </script>
+  </body>
 </html>
 
 <style>
-	html {
-		scroll-behavior: smooth;
-	}
+  html {
+    scroll-behavior: smooth;
+  }
 </style>
