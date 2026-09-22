@@ -1,0 +1,63 @@
+<div id="site-loader" hidden role="status" aria-label="Chargement du site" aria-live="polite">
+  <video muted autoplay loop playsinline preload="auto" aria-hidden="true">
+    <source src="/video/chargement.mp4" type="video/mp4" />
+  </video>
+  <span>Chargement…</span>
+</div>
+
+<script is:inline>
+  (() => {
+    const loader = document.getElementById('site-loader');
+    if (!loader) return;
+    const video = loader.querySelector('video');
+    let timeout;
+    const finish = () => {
+      clearTimeout(timeout);
+      window.removeEventListener('load', finish);
+      window.removeEventListener('pageshow', finish);
+      video.pause();
+      loader.remove();
+    };
+    if (document.readyState === 'complete') {
+      finish();
+      return;
+    }
+    loader.hidden = false;
+    video.muted = true;
+    void video.play().catch(() => {});
+    window.addEventListener('load', finish, { once: true });
+    window.addEventListener('pageshow', finish, { once: true });
+    // A slow external resource must never leave the indicator on screen forever.
+    timeout = window.setTimeout(finish, 8000);
+  })();
+</script>
+
+<style>
+  #site-loader:not([hidden]) {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    pointer-events: none;
+  }
+
+  video {
+    display: block;
+    width: min(100%, clamp(240px, 44vw, 500px));
+    height: auto;
+    max-height: 56svh;
+    object-fit: contain;
+  }
+
+  span {
+    color: #2f3a59;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+</style>

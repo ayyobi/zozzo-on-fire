@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import SiteLoader from "../components/SiteLoader.astro";
 import Header from "../components/Header.astro";
 import AppHeader from "../components/AppHeader.astro";
 
@@ -30,6 +31,7 @@ const {
     <title>{title}</title>
   </head>
   <body class:list={[bodyClass, { "minimal-navigation-page": navigation }]}>
+    {navigation !== "app" && <SiteLoader />}
     {
       navigation === "public" && (
         <div class="minimal-navigation">

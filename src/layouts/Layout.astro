@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import SiteLoader from "../components/SiteLoader.astro";
 
 interface Props {
   title?: string;
@@ -24,6 +25,7 @@ const {
     <title>{title}</title>
   </head>
   <body class="overflow-x-hidden bg-white text-neutral-900 antialiased">
+    {!/^\/(app(?:\/|$)|dictionnaire(?:\/|$))/.test(Astro.url.pathname) && <SiteLoader />}
     <slot />
     <script is:inline>
       (() => {
@@ -68,15 +70,10 @@ const {
     scroll-behavior: smooth;
   }
 
-  :global(#app-shell:has(#loading:not(.hidden))) {
-    background: #fff;
-  }
-
   :global(.global-loader:not(.hidden)) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
     min-height: min(48svh, 420px);
     padding: clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 3vw, 1.25rem);
   }
@@ -90,10 +87,6 @@ const {
     width: min(100%, clamp(240px, 36vw, 420px));
     max-width: 100%;
     padding: clamp(0.9rem, 2vw, 1.4rem);
-    border-radius: 22px;
-    background: #fff;
-    box-shadow: 0 18px 45px rgba(36, 57, 167, 0.08);
-    border: 1px solid rgba(120, 132, 186, 0.14);
   }
 
   :global(.global-loader-video) {
@@ -103,9 +96,6 @@ const {
     height: auto;
     max-height: 42svh;
     object-fit: contain;
-    border-radius: 16px;
-    background: #fff;
-    filter: drop-shadow(0 14px 20px rgba(36, 57, 167, 0.1));
   }
 
   :global([data-loader-home] .global-loader-shell) {
