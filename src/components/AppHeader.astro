@@ -223,6 +223,7 @@ const allMobileItems = [
 
 <script>
   import { initMobileMenu } from "../lib/mobileMenu";
+  import { initAppSectionNavigation } from "../lib/appSectionNavigation";
 
   const toast = document.getElementById("app-toast") as HTMLElement;
   let hideTimer: number | undefined;
@@ -256,6 +257,15 @@ const allMobileItems = [
   ) as HTMLButtonElement;
   const panel = document.getElementById("app-mobile-menu") as HTMLElement;
   const menu = initMobileMenu({ header, burgerBtn, panel });
+  const navigate = initAppSectionNavigation(header);
+
+  header.querySelectorAll<HTMLAnchorElement>('a.app-menu-btn[href]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      navigate(link.href);
+    });
+  });
 
   menu.mobileLinks.forEach((link) => {
     if (link.hasAttribute("data-soon")) {
@@ -265,10 +275,11 @@ const allMobileItems = [
       return;
     }
     link.addEventListener("click", (e) => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       const href = link.getAttribute("href") ?? "";
       menu.close(() => {
-        window.location.href = href;
+        navigate(href);
       });
     });
   });

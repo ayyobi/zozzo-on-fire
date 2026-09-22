@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* GSAP owns vertical smoothing on the app home; avoid competing CSS animation. */
+html:has(#app-content) {
+	scroll-behavior: auto;
+}
+
 body:has(#site-loader:not([hidden])),
 body:has(.global-loader:not(.hidden)) {
 	overflow: hidden;

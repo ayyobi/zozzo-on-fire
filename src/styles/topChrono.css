@@ -33,8 +33,8 @@ html:has(.jeu-page), body:has(.jeu-page) {
 .jeu-page .jeu-frame { width: 67%; height: 100%; min-height: 0; max-width: 842px; aspect-ratio: auto; border: 0; border-radius: 40px; background: #fcdfd7; padding: 3cqh; box-shadow: none; }
 .jeu-frame .jeu-media { position: relative; width: 100%; height: 100%; background: white; }
 #play-reaction { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 2; }
-.chrono-clock { position: absolute; right: 3.3%; top: 12px; width: min(14%, 18cqh); aspect-ratio: 1; border: 6px solid #fa6848; border-radius: 50%; background: conic-gradient(#244bd4 0deg 245deg, #f5ed46 245deg 360deg); }
-.chrono-hand { position: absolute; left: calc(50% - 3px); top: 14%; width: 6px; height: 36%; border-radius: 10px; background: #fa6848; transform-origin: 50% 100%; }
+.chrono-clock { position: absolute; right: 3.3%; top: 12px; width: min(14%, 18cqh); aspect-ratio: 1; }
+.chrono-clock-image { display: block; width: 100%; height: 100%; object-fit: contain; }
 #play-timer { position: absolute; top: 105%; width: 100%; text-align: center; color: #244bd4; background: #fff; border-radius: 20px; font-size: clamp(12px, 1.6vw, 22px); }
 .jeu-page #play-answers { min-height: 0; margin: 0; gap: 1.5cqh 26px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
 .jeu-page .chrono-answer { min-height: 0; padding: 4px 10px; border-radius: 28px; font-size: clamp(16px, 4cqh, 42px); line-height: 1.15; font-weight: 400; }
@@ -42,7 +42,7 @@ html:has(.jeu-page), body:has(.jeu-page) {
 .chrono-result { position: relative; height: 100%; display: flex; flex-direction: column; padding: 2cqh 6%; text-align: center; }
 .chrono-result h1, .chrono-ranking h1 { font-size: clamp(30px, 3.5vw, 50px); font-weight: 500; }
 .chrono-stats { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10%; max-width: 900px; margin: 2cqh auto; }
-.chrono-stats svg { width: 14cqh; height: 14cqh; margin: 0 auto 1cqh; }
+.chrono-stats img { display: block; width: 14cqh; height: 14cqh; margin: 0 auto 1cqh; object-fit: contain; }
 .chrono-stats p { border-radius: 14px; font-size: clamp(18px, 4cqh, 48px); }
 #result-time { background: #84a2ef; color: #f5ed46; }
 #result-score { background: #f5ed46; color: #2450ef; }
@@ -71,7 +71,7 @@ html:has(.jeu-page), body:has(.jeu-page) {
  .chrono-level { font-size: 16px; }
  .chrono-start { left: 28%; width: 44%; }
  .jeu-page .jeu-play { padding: min(95px, 18cqh) 16px 1cqh; }
- .chrono-clock { width: min(56px, 10cqh); border-width: 4px; top: 8px; right: 18px; }
+ .chrono-clock { width: min(56px, 10cqh); top: 8px; right: 18px; }
  .jeu-page .jeu-frame { width: 100%; padding: 2cqh; border-radius: 25px; }
  .jeu-page #play-answers { gap: 1.5cqh 12px; }
  .jeu-page .chrono-answer { border-radius: 20px; }

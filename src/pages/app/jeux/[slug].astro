@@ -141,7 +141,7 @@ export async function getStaticPaths() {
         >
           <span id="play-progress" aria-live="polite"></span>
           <div class="chrono-clock" aria-label="Temps écoulé">
-            <span class="chrono-hand" aria-hidden="true"></span><span
+            <img src="/images/minijeux/clock.svg" alt="" class="chrono-clock-image" /><span
               id="play-timer"
               aria-live="off">00:00</span
             >
@@ -196,29 +196,10 @@ export async function getStaticPaths() {
         <h1 id="result-title" tabindex="-1">Résultat</h1>
         <div class="chrono-stats">
           <div>
-            <svg viewBox="0 0 100 100" aria-hidden="true"
-              ><circle
-                cx="50"
-                cy="50"
-                r="44"
-                fill="#fcdfd7"
-                stroke="#84a2ef"
-                stroke-width="7"></circle><path
-                d="M50 15V50L75 74"
-                fill="none"
-                stroke="#2450ef"
-                stroke-width="4"
-                stroke-linecap="round"></path></svg
-            ><p id="result-time"></p>
+            <img src="/images/minijeux/clock.svg" alt="" /><p id="result-time"></p>
           </div>
           <div>
-            <svg viewBox="0 0 100 100" aria-hidden="true"
-              ><path
-                d="M25 10H75V40Q75 65 55 68V85H70V93H30V85H45V68Q25 65 25 40ZM25 20H12Q2 48 29 49M75 20H88Q98 48 71 49"
-                fill="#f5ed46"
-                stroke="#b9a600"
-                stroke-width="2"></path></svg
-            ><p id="result-score"></p>
+            <img src="/images/minijeux/priz.svg" alt="" /><p id="result-score"></p>
           </div>
         </div>
         <img
@@ -243,7 +224,7 @@ export async function getStaticPaths() {
         aria-labelledby="ranking-title"
       >
         <h1 id="ranking-title" tabindex="-1">Classement</h1>
-        <img src="/images/minijeux/cup.avif" alt="" class="zozzo-rank-cup" />
+        <img src="/images/minijeux/priz.svg" alt="" class="zozzo-rank-cup" />
         <div
           id="ranking-loading"
           class="zozzo-rank-loading hidden"
@@ -418,8 +399,6 @@ export async function getStaticPaths() {
       window.clearInterval(timerHandle);
       timerHandle = window.setInterval(() => {
         elapsedSeconds = Math.floor((performance.now() - startedAt) / 1000);
-        document.querySelector<HTMLElement>(".chrono-hand")!.style.transform =
-          `rotate(${elapsedSeconds * 6}deg)`;
         timerEl.textContent = formatTime(elapsedSeconds);
       }, 1000);
     }

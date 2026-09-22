@@ -46,6 +46,9 @@ import AvatarPickerModal from '../components/AvatarPickerModal.astro';
 		import { getCurrentUser, type ZozzoUser } from '../lib/pocketbase';
 		import { getAvatarImageUrl, resolveDisplayAvatar, type AvatarRecord } from '../lib/avatars';
 		import { initAvatarPicker } from '../lib/avatarPickerModal';
+		import { initAppScroll } from '../lib/appScroll';
+
+		initAppScroll();
 
 		const loading = document.getElementById('loading') as HTMLElement;
 		const networkWarning = document.getElementById('network-warning') as HTMLElement;
