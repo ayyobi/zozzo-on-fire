@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+body:has(#site-loader:not([hidden])),
+body:has(.global-loader:not(.hidden)) {
+	overflow: hidden;
+}
+
 /* Keep unused space around sign videos white without cropping the gesture. */
 .sign-video-media {
 	background-color: #fff;
