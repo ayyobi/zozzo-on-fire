@@ -1,6 +1,6 @@
 import { checkAppSession, watchAppSession } from './appPage';
 import { getCurrentUser, type ZozzoUser } from './pocketbase';
-import { getSignVideoUrl, getSignImageUrl, getSignWord, isSignLocked } from './dictionary';
+import { getSignVideoUrl, getSignImageUrl, getSignWord, isSignLocked, isGifUrl } from './dictionary';
 import { getStoryById, listStories, listScenes, getStoryLockReason, getStoryTitle,
 	getSceneImageUrl, getSceneSigns, isRewardScene, markStoryCompleted, type SceneRecord } from './stories';
 
@@ -104,6 +104,12 @@ export async function initStoryReader() {
 		image.alt = finished ? 'Récompense de fin d’histoire' : `${el('story-title').textContent} — page ${index + 1}`;
 		navigation.classList.toggle('hidden', finished);
 		reward.classList.toggle('hidden', !finished);
+		// The normal reading canvas reserves a full screen height so the page
+		// is comfortable to read; the reward screen is much shorter content
+		// (image + a couple of lines + buttons), so it drops that forced
+		// height instead of leaving blank space and pushing the buttons
+		// below the fold.
+		el('story-canvas').classList.toggle('is-finished', finished);
 		prev.classList.toggle('invisible', index === 0);
 		prev.disabled = index === 0;
 		next.setAttribute('aria-label', index === pages.length - 1 ? 'Terminer' : 'Page suivante');
@@ -114,15 +120,38 @@ export async function initStoryReader() {
 				const box = fragment.firstElementChild as HTMLElement;
 				Object.assign(box.style, { left: `${placement.x}%`, top: `${placement.y}%`, width: `${placement.width}%`, height: `${placement.height}%` });
 				const video = box.querySelector('video')!;
+				const gifImg = box.querySelector<HTMLImageElement>('.sign-gif-media')!;
 				const error = box.querySelector('[data-media-error]') as HTMLElement;
 				const word = getSignWord(placement.sign);
-				box.querySelector('[data-sign-label]')!.textContent = word;
+				const label = box.querySelector<HTMLElement>('[data-sign-label]')!;
+				label.textContent = word;
+				if (placement.label) {
+					// Match the caption painted into this illustration, independently of the video frame.
+					const rect = placement.label;
+					Object.assign(label.style, {
+						left: `${(rect.x - placement.x) / placement.width * 100}%`,
+						top: `${(rect.y - placement.y) / placement.height * 100}%`,
+						width: `${rect.width / placement.width * 100}%`,
+						height: `${rect.height / placement.height * 100}%`,
+						bottom: 'auto', maxWidth: 'none', transform: 'none',
+						padding: '0', display: 'grid', placeItems: 'center',
+						whiteSpace: 'nowrap', fontSize: '10cqw', lineHeight: '1',
+					});
+				}
 				video.setAttribute('aria-label', `Signe LSF : ${word}`);
 				video.muted = true;
 				const locked = isSignLocked(placement.sign, user);
 				const videoUrl = locked ? null : getSignVideoUrl(placement.sign);
-				const fail = () => { video.classList.add('hidden'); error.classList.replace('hidden', 'grid'); };
-				if (videoUrl) {
+				const fail = () => { video.classList.add('hidden'); gifImg.classList.add('hidden'); error.classList.replace('hidden', 'grid'); };
+				if (videoUrl && isGifUrl(videoUrl)) {
+					// A <video> element can't play a .gif — some signs have one
+					// uploaded in the video field instead of a real video.
+					video.classList.add('hidden');
+					gifImg.src = videoUrl;
+					gifImg.alt = `Signe LSF : ${word}`;
+					gifImg.classList.remove('hidden');
+					gifImg.addEventListener('error', fail, { once: true });
+				} else if (videoUrl) {
 					video.src = videoUrl;
 					const poster = getSignImageUrl(placement.sign);
 					if (poster) video.poster = poster;

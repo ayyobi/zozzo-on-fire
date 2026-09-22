@@ -162,6 +162,7 @@ export interface SignPlacement {
 	y: number;
 	width: number;
 	height: number;
+	label?: { x: number; y: number; width: number; height: number };
 }
 type Illustration = { type?: string; placements: SignPlacement[] };
 function legacyIllustration(scene: SceneRecord): Illustration | undefined {

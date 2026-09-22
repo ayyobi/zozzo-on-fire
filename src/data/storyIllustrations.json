@@ -12,10 +12,10 @@
     "placements": [
       {
         "signe": "hf74oihpj4ud1it",
-        "x": 76.1,
-        "y": 50.05,
-        "width": 21.65,
-        "height": 37.1
+        "x": 70,
+        "y": 30.5,
+        "width": 28,
+        "height": 36
       }
     ]
   },
@@ -78,10 +78,11 @@
     "placements": [
       {
         "signe": "4bcq6w9efgubfrp",
-        "x": 70.4,
-        "y": 55.35,
-        "width": 27.4,
-        "height": 41.7
+        "x": 72.25,
+        "y": 53.15,
+        "width": 21.7,
+        "height": 41.4,
+        "label": { "x": 69.1, "y": 46.6, "width": 26.9, "height": 6 }
       }
     ]
   },

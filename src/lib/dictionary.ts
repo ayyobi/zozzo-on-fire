@@ -84,6 +84,16 @@ export function getSignVideoUrl(sign: SignRecord): string | null {
 	return resolveFileUrl(sign, SIGN_FIELDS.video);
 }
 
+// Some signs have a .gif uploaded in the `video` field instead of a real
+// video file (confirmed live: 14 of 22 signs with a video are actually
+// GIFs). An HTML <video> element can't play a GIF — it just fails to
+// load — so every caller that renders getSignVideoUrl() must check this
+// and render an <img> instead when it's true (GIFs animate natively in
+// <img>, no <video>/autoplay wiring needed).
+export function isGifUrl(url: string): boolean {
+	return /\.gif(\?.*)?$/i.test(url);
+}
+
 export function getSignWord(sign: SignRecord): string {
 	const value = sign[SIGN_FIELDS.word];
 	return typeof value === 'string' ? value : '';

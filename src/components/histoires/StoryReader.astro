@@ -23,7 +23,7 @@ const { storyId = '' } = Astro.props;
 		<a id="story-message-link" href="/app#histoires" class="mt-5 inline-block rounded-full bg-[#fff000] px-6 py-3 text-[#2439a7]">Retour aux histoires</a>
 	</div>
 	<article id="story-reader" class="hidden flex-1 flex-col [&:not(.hidden)]:flex" aria-label="Lecteur d’histoire">
-		<div id="story-canvas" class="relative flex min-h-dvh flex-1 items-center justify-center"><StoryPage /><StoryNavigation /></div>
+		<div id="story-canvas" class="story-canvas relative flex min-h-dvh flex-1 items-center justify-center"><StoryPage /><StoryNavigation /></div>
 		<p id="story-image-error" class="hidden p-4 text-center" role="status">Cette illustration ne peut pas être chargée. <button id="story-image-retry" type="button" class="min-h-11 underline">Réessayer</button></p>
 		<StoryReward />
 	</article>
@@ -38,4 +38,13 @@ const { storyId = '' } = Astro.props;
 		0%, 100% { transform: rotate(0deg); }
 		50% { transform: rotate(-90deg); }
 	}
+</style>
+<style is:global>
+	/* Reward screen: much shorter content than a normal reading page (image
+	   + a couple lines + buttons), so it drops the full-screen reading
+	   canvas instead of leaving blank space above/below a short image and
+	   pushing the buttons off-screen. */
+	.story-canvas.is-finished { min-height: 0; }
+	.story-canvas.is-finished #story-stage { max-height: 40vh; width: auto; margin: 0 auto; }
+	.story-canvas.is-finished #story-image { max-height: 40vh; width: auto; margin: 0 auto; }
 </style>

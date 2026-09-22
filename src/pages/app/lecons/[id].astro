@@ -171,7 +171,7 @@ export async function getStaticPaths() {
       listLessonSigns,
       getLessonTitle,
     } from "../../../lib/lessons";
-    import { getSignImageUrl, getSignVideoUrl } from "../../../lib/dictionary";
+    import { getSignImageUrl, getSignVideoUrl, isGifUrl } from "../../../lib/dictionary";
     import {
       buildExerciseQuestions,
       isCorrectOption,
@@ -274,7 +274,12 @@ export async function getStaticPaths() {
       mediaFallback.classList.add("hidden");
       videoEl.pause();
 
-      if (videoUrl) {
+      // A <video> element can't play a .gif — some signs have one uploaded
+      // in the video field instead of a real video file.
+      if (videoUrl && isGifUrl(videoUrl)) {
+        imageEl.src = videoUrl;
+        imageEl.classList.remove("hidden");
+      } else if (videoUrl) {
         videoEl.src = videoUrl;
         videoEl.classList.remove("hidden");
         videoEl.play().catch(() => { videoEl.controls = true; });

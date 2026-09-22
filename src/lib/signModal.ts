@@ -5,7 +5,7 @@
 // The video is only loaded once a sign is actually opened (the <video src>
 // is written to the DOM here, not ahead of time), so the grid itself never
 // downloads video data.
-import { getSignById, getSignVideoUrl, getSignWord, isSignLocked, type SignRecord } from './dictionary';
+import { getSignById, getSignVideoUrl, getSignWord, isSignLocked, isGifUrl, type SignRecord } from './dictionary';
 import type { ZozzoUser } from './pocketbase';
 
 export function initSignModal(getUser: () => ZozzoUser | null) {
@@ -93,10 +93,14 @@ export function initSignModal(getUser: () => ZozzoUser | null) {
 				return;
 			}
 
+			// A <video> element can't play a .gif — some signs have one
+			// uploaded in the video field instead of a real video file.
 			const videoUrl = getSignVideoUrl(sign);
-			body!.innerHTML = videoUrl
-				? `<video src="${videoUrl}" controls autoplay playsinline class="w-full rounded-2xl bg-black" style="max-height:60vh"></video>`
-				: '<p class="py-8 text-center text-sm text-neutral-500">Vidéo non disponible pour ce signe.</p>';
+			body!.innerHTML = !videoUrl
+				? '<p class="py-8 text-center text-sm text-neutral-500">Vidéo non disponible pour ce signe.</p>'
+				: isGifUrl(videoUrl)
+					? `<img src="${videoUrl}" alt="" class="w-full rounded-2xl bg-black object-contain" style="max-height:60vh" />`
+					: `<video src="${videoUrl}" controls autoplay playsinline class="w-full rounded-2xl bg-black" style="max-height:60vh"></video>`;
 		} catch {
 			title!.textContent = 'Signe';
 			body!.innerHTML =

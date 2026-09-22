@@ -11,7 +11,7 @@
 // real data, `~` correctly matched all 9 questions linked to Top Chrono.
 import { pb } from './pocketbase';
 import type { RecordModel } from 'pocketbase';
-import { getSignImageUrl, getSignVideoUrl, SIGN_FIELDS, type SignRecord } from './dictionary';
+import { getSignImageUrl, getSignVideoUrl, isGifUrl, SIGN_FIELDS, type SignRecord } from './dictionary';
 
 export const QUESTION_FIELDS = {
 	game: 'jeu',
@@ -33,6 +33,10 @@ export interface GameQuestion {
 	options: string[];
 	signImageUrl: string | null;
 	signVideoUrl: string | null;
+	// True when signVideoUrl is actually a .gif (some signs have one
+	// uploaded in the video field instead of a real video) — a <video>
+	// element can't play it, callers must render it as an <img> instead.
+	signVideoIsGif: boolean;
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -74,13 +78,15 @@ export async function fetchGameQuestions(jeuId: string, count: number): Promise<
 			if (correctAnswer && !rawChoices.includes(correctAnswer)) rawChoices.push(correctAnswer);
 
 			const sign = row.expand?.[QUESTION_FIELDS.sign] as SignRecord | undefined;
+			const signVideoUrl = sign ? getSignVideoUrl(sign) : null;
 
 			return {
 				id: row.id,
 				correctAnswer,
 				options: shuffle(rawChoices),
 				signImageUrl: sign ? getSignImageUrl(sign) : null,
-				signVideoUrl: sign ? getSignVideoUrl(sign) : null,
+				signVideoUrl,
+				signVideoIsGif: signVideoUrl ? isGifUrl(signVideoUrl) : false,
 			};
 		});
 }

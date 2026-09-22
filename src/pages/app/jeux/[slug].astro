@@ -429,7 +429,12 @@ export async function getStaticPaths() {
       imageEl.classList.add("hidden");
       mediaFallback.classList.add("hidden");
 
-      if (question.signVideoUrl) {
+      if (question.signVideoUrl && question.signVideoIsGif) {
+        // A <video> element can't play a .gif — some signs have one
+        // uploaded in the video field instead of a real video file.
+        imageEl.src = question.signVideoUrl;
+        imageEl.classList.remove("hidden");
+      } else if (question.signVideoUrl) {
         videoEl.src = question.signVideoUrl;
         videoEl.classList.remove("hidden");
         videoEl.play().catch(() => {

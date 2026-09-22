@@ -1,16 +1,16 @@
 <template id="sign-video-template">
-  <div class="absolute bg-white [container-type:inline-size]" data-sign-placement>
+  <div class="absolute [container-type:inline-size]" data-sign-placement>
     <span data-sign-label class="absolute bottom-[calc(100%+2cqw)] left-1/2 max-w-full -translate-x-1/2 rounded-full bg-[#fff000] px-[8cqw] py-[1cqw] text-center text-[12cqw] leading-tight font-medium text-[#fa6848] first-letter:uppercase"></span>
     <video
-      class="sign-video-media size-full object-contain"
+      class="sign-video-media size-full object-cover"
       autoplay
       muted
       loop
       playsinline
-      controls
       preload="metadata"></video>
+    <img class="sign-gif-media hidden size-full object-cover" alt="" />
     <p
-      class="absolute inset-0 hidden place-content-center p-1 text-center text-xs text-neutral-700"
+      class="absolute inset-0 hidden place-content-center bg-white p-1 text-center text-xs text-neutral-700"
       data-media-error
       role="status"
     >
